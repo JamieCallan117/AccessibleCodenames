@@ -7,7 +7,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -205,7 +204,7 @@ public class settings extends AppCompatActivity {
     }
 
     public void updateColours() {
-       constraintLayout = findViewById(R.id.constraintLayout);
+       constraintLayout = findViewById(R.id.saveButton);
        settingsTitle = findViewById(R.id.settingsTitle);
        musicVolumeText = findViewById(R.id.musicVolumeText);
        soundFXVolumeText = findViewById(R.id.soundFXVolumeText);

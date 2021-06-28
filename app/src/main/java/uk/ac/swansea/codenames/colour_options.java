@@ -1,14 +1,11 @@
 package uk.ac.swansea.codenames;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -144,7 +141,7 @@ public class colour_options extends AppCompatActivity {
         backButton = findViewById(R.id.backButton);
         resetColoursButton = findViewById(R.id.resetColoursButton);
         colourTitle = findViewById(R.id.colourTitle);
-        constraintLayout = findViewById(R.id.constraintLayout);
+        constraintLayout = findViewById(R.id.saveButton);
 
         if (userSettings.getInstance().getPreference(userSettings.getInstance().YOUR_TEAM).equals("")) {
             defaultColour = userSettings.getInstance().YOUR_TEAM_DEFAULT;

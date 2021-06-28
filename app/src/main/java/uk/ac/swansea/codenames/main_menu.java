@@ -53,7 +53,7 @@ public class main_menu extends AppCompatActivity {
     }
 
     public void updateColours() {
-        constraintLayout = findViewById(R.id.constraintLayout);
+        constraintLayout = findViewById(R.id.saveButton);
         mainMenuTitle = findViewById(R.id.mainMenuTitle);
         backButton = findViewById(R.id.backButton);
         playOnline = findViewById(R.id.playOnline);

@@ -52,7 +52,7 @@ public class local_setup extends AppCompatActivity {
     }
 
     public void updateColours() {
-        constraintLayout = findViewById(R.id.constraintLayout);
+        constraintLayout = findViewById(R.id.saveButton);
         localSetupTitle = findViewById(R.id.localSetupTitle);
         localSetupSubtitle = findViewById(R.id.localSetupSubtitle);
         backButton = findViewById(R.id.backButton);

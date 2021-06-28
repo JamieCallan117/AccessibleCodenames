@@ -83,7 +83,7 @@ public class start_screen extends AppCompatActivity {
 
     public void updateColours() {
         quitBox = findViewById(R.id.quitBox);
-        constraintLayout = findViewById(R.id.constraintLayout);
+        constraintLayout = findViewById(R.id.saveButton);
         playButton = findViewById(R.id.playButton);
         settingsButton = findViewById(R.id.settingsButton);
         yesButton = findViewById(R.id.yesButton);
