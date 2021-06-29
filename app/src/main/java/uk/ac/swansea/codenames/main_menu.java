@@ -52,6 +52,11 @@ public class main_menu extends AppCompatActivity {
         startActivity(i);
     }
 
+    public void playOnline(View view) {
+        Intent i = new Intent(view.getContext(), online_setup.class);
+        startActivity(i);
+    }
+
     public void updateColours() {
         constraintLayout = findViewById(R.id.saveButton);
         mainMenuTitle = findViewById(R.id.mainMenuTitle);

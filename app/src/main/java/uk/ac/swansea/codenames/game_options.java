@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -20,12 +21,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class game_options extends AppCompatActivity {
 
     //TODO: Improve sortWords to work better, may need to do away with efficiency.
     //TODO: Make it so any interaction runs sortWords. (Unsure which case yet, will see after re-write)
-    //TODO: Get saving the options working, also make sure that they are restored if you click save then go back to the game options screen, so they don't revert back to default.
+    //TODO: Add confirmation box to back button. (Are you sure you want to exit without saving options)
+    //TODO: Add box to show reason for failed save. (Could repurpose the back button one)
 
     private ConstraintLayout constraintLayout;
     private TextView gameOptionsTitle;
@@ -68,13 +71,12 @@ public class game_options extends AppCompatActivity {
     private ToggleButton startingTeamButton;
     private int defaultColour;
     private int bombSquares = 1;
-    private int neutralSquares = 6;
+    private int neutralSquares = 7;
     private int teamOneSquares = 9;
-    private int teamTwoSquares = 9;
+    private int teamTwoSquares = 8;
     private int startingTeam = 1;
     private int totalSquaresInUse = 25;
     private ArrayList<String> customWords = new ArrayList<>();
-    public boolean hasCustomSettings = false;
     private final int MAX_SQUARES = 25;
 
     @Override
@@ -82,46 +84,6 @@ public class game_options extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.game_options);
-
-        gameOptionsSubtitle = findViewById(R.id.gameOptionsSubtitle);
-
-        if (getIntent().getStringExtra("from").equals("local_setup")) {
-            gameOptionsSubtitle.setText("Local");
-        } else if (getIntent().getStringExtra("from").equals("online_setup")) {
-            gameOptionsSubtitle.setText("Online");
-        }
-
-        saveButton = findViewById(R.id.saveButton);
-
-        if (getIntent().getBooleanExtra("hasCustomSettings", false)) {
-            saveButton.setVisibility(View.VISIBLE);
-            hasCustomSettings = true;
-        }
-
-        //Reads words from the text file to store in the defaultWords array
-        String wordsFromFile = "";
-
-        try {
-            InputStream input = getAssets().open("gameWords");
-
-            int size = input.available();
-
-            byte[] buffer = new byte[size];
-
-            input.read(buffer);
-            input.close();
-
-            wordsFromFile = new String(buffer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String[] defaultWords = wordsFromFile.split("\n");
-
-        //Logs the words in the array
-        for (String s : defaultWords) {
-            Log.i("Word", s);
-        }
 
         customWordText1 = findViewById(R.id.customWordText1);
         customWordText2 = findViewById(R.id.customWordText2);
@@ -163,11 +125,48 @@ public class game_options extends AppCompatActivity {
 
         squaresInUse = findViewById(R.id.squaresInUse);
 
+        gameOptionsSubtitle = findViewById(R.id.gameOptionsSubtitle);
+
+        if (getIntent().getStringExtra("from").equals("local_setup")) {
+            gameOptionsSubtitle.setText("Local");
+        } else if (getIntent().getStringExtra("from").equals("online_setup")) {
+            gameOptionsSubtitle.setText("Online");
+        }
+
+        saveButton = findViewById(R.id.saveButton);
+
+        if (getIntent().getBooleanExtra("hasCustomSettings", false)) {
+            saveButton.setVisibility(View.VISIBLE);
+
+            bombSquares = getIntent().getIntExtra("bombSquares", 1);
+            bombSquareCount.setText(String.valueOf(bombSquares));
+            neutralSquares = getIntent().getIntExtra("neutralSquares", 7);
+            neutralSquareCount.setText(String.valueOf(neutralSquares));
+            teamOneSquares = getIntent().getIntExtra("teamOneSquares", 9);
+            team1SquaresCount.setText(String.valueOf(teamOneSquares));
+            teamTwoSquares = getIntent().getIntExtra("teamTwoSquares", 8);
+            team2SquaresCount.setText(String.valueOf(teamTwoSquares));
+
+            startingTeamButton.setChecked(getIntent().getIntExtra("startingTeam", 1) == 1);
+
+            EditText[] customWordTexts = {customWordText1, customWordText2, customWordText3,
+                   customWordText4, customWordText5, customWordText6, customWordText7,
+                   customWordText8, customWordText9, customWordText10};
+
+            int counter = 0;
+
+            while(counter < getIntent().getStringArrayListExtra("customWords").size()) {
+                customWordTexts[counter].setText(getIntent().getStringArrayListExtra("customWords").get(counter));
+
+                counter++;
+            }
+        }
+
         teamOneSqrInc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (totalSquaresInUse != MAX_SQUARES) {
-                    hasCustomSettings = true;
+                    saveButton.setVisibility(View.VISIBLE);
                     totalSquaresInUse++;
                     teamOneSquares++;
 
@@ -182,7 +181,7 @@ public class game_options extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (totalSquaresInUse >= 1 && teamOneSquares >= 2) {
-                    hasCustomSettings = true;
+                    saveButton.setVisibility(View.VISIBLE);
                     totalSquaresInUse--;
                     teamOneSquares--;
 
@@ -197,7 +196,7 @@ public class game_options extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (totalSquaresInUse != MAX_SQUARES) {
-                    hasCustomSettings = true;
+                    saveButton.setVisibility(View.VISIBLE);
                     totalSquaresInUse++;
                     teamTwoSquares++;
 
@@ -212,7 +211,7 @@ public class game_options extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (totalSquaresInUse >= 1 && teamTwoSquares >= 2) {
-                    hasCustomSettings = true;
+                    saveButton.setVisibility(View.VISIBLE);
                     totalSquaresInUse--;
                     teamTwoSquares--;
 
@@ -227,7 +226,7 @@ public class game_options extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (totalSquaresInUse != MAX_SQUARES) {
-                    hasCustomSettings = true;
+                    saveButton.setVisibility(View.VISIBLE);
                     totalSquaresInUse++;
                     bombSquares++;
 
@@ -242,7 +241,7 @@ public class game_options extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (totalSquaresInUse >= 1 && bombSquares >= 1) {
-                    hasCustomSettings = true;
+                    saveButton.setVisibility(View.VISIBLE);
                     totalSquaresInUse--;
                     bombSquares--;
 
@@ -257,7 +256,7 @@ public class game_options extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (totalSquaresInUse != MAX_SQUARES) {
-                    hasCustomSettings = true;
+                    saveButton.setVisibility(View.VISIBLE);
                     totalSquaresInUse++;
                     neutralSquares++;
 
@@ -272,7 +271,7 @@ public class game_options extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (totalSquaresInUse >= 1 && neutralSquares >= 1) {
-                    hasCustomSettings = true;
+                    saveButton.setVisibility(View.VISIBLE);
                     totalSquaresInUse--;
                     neutralSquares--;
 
@@ -283,14 +282,18 @@ public class game_options extends AppCompatActivity {
             }
         });
 
+        startingTeamButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                saveButton.setVisibility(View.VISIBLE);
+            }
+        });
 
-
-        //Don't think this is needed.
         customWordText1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    hasCustomSettings = true;
+                    saveButton.setVisibility(View.VISIBLE);
                 }
 
                 return false;
@@ -301,7 +304,7 @@ public class game_options extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE && !customWordText2.getText().toString().equals("")) {
-                    hasCustomSettings = true;
+                    saveButton.setVisibility(View.VISIBLE);
                     sortWords(2);
                 }
 
@@ -313,7 +316,7 @@ public class game_options extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE && !customWordText3.getText().toString().equals("")) {
-                    hasCustomSettings = true;
+                    saveButton.setVisibility(View.VISIBLE);
                     sortWords(3);
                 }
 
@@ -325,7 +328,7 @@ public class game_options extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE && !customWordText4.getText().toString().equals("")) {
-                    hasCustomSettings = true;
+                    saveButton.setVisibility(View.VISIBLE);
                     sortWords(4);
                 }
 
@@ -337,7 +340,7 @@ public class game_options extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE && !customWordText5.getText().toString().equals("")) {
-                    hasCustomSettings = true;
+                    saveButton.setVisibility(View.VISIBLE);
                     sortWords(5);
                 }
 
@@ -349,7 +352,7 @@ public class game_options extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE && !customWordText6.getText().toString().equals("")) {
-                    hasCustomSettings = true;
+                    saveButton.setVisibility(View.VISIBLE);
                     sortWords(6);
                 }
 
@@ -361,7 +364,7 @@ public class game_options extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE && !customWordText7.getText().toString().equals("")) {
-                    hasCustomSettings = true;
+                    saveButton.setVisibility(View.VISIBLE);
                     sortWords(7);
                 }
 
@@ -373,7 +376,7 @@ public class game_options extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE && !customWordText8.getText().toString().equals("")) {
-                    hasCustomSettings = true;
+                    saveButton.setVisibility(View.VISIBLE);
                     sortWords(8);
                 }
 
@@ -385,7 +388,7 @@ public class game_options extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE && !customWordText9.getText().toString().equals("")) {
-                    hasCustomSettings = true;
+                    saveButton.setVisibility(View.VISIBLE);
                     sortWords(9);
                 }
 
@@ -397,7 +400,7 @@ public class game_options extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE && !customWordText10.getText().toString().equals("")) {
-                    hasCustomSettings = true;
+                    saveButton.setVisibility(View.VISIBLE);
                     sortWords(10);
                 }
 
@@ -408,7 +411,7 @@ public class game_options extends AppCompatActivity {
         deleteCustomWord1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hasCustomSettings = true;
+                saveButton.setVisibility(View.VISIBLE);
                 clearWords(1);
             }
         });
@@ -416,7 +419,7 @@ public class game_options extends AppCompatActivity {
         deleteCustomWord2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hasCustomSettings = true;
+                saveButton.setVisibility(View.VISIBLE);
                 clearWords(2);
             }
         });
@@ -424,7 +427,7 @@ public class game_options extends AppCompatActivity {
         deleteCustomWord3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hasCustomSettings = true;
+                saveButton.setVisibility(View.VISIBLE);
                 clearWords(3);
             }
         });
@@ -432,7 +435,7 @@ public class game_options extends AppCompatActivity {
         deleteCustomWord4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hasCustomSettings = true;
+                saveButton.setVisibility(View.VISIBLE);
                 clearWords(4);
             }
         });
@@ -440,7 +443,7 @@ public class game_options extends AppCompatActivity {
         deleteCustomWord5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hasCustomSettings = true;
+                saveButton.setVisibility(View.VISIBLE);
                 clearWords(5);
             }
         });
@@ -448,7 +451,7 @@ public class game_options extends AppCompatActivity {
         deleteCustomWord6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hasCustomSettings = true;
+                saveButton.setVisibility(View.VISIBLE);
                 clearWords(6);
             }
         });
@@ -456,7 +459,7 @@ public class game_options extends AppCompatActivity {
         deleteCustomWord7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hasCustomSettings = true;
+                saveButton.setVisibility(View.VISIBLE);
                 clearWords(7);
             }
         });
@@ -464,7 +467,7 @@ public class game_options extends AppCompatActivity {
         deleteCustomWord8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hasCustomSettings = true;
+                saveButton.setVisibility(View.VISIBLE);
                 clearWords(8);
             }
         });
@@ -472,7 +475,7 @@ public class game_options extends AppCompatActivity {
         deleteCustomWord9.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hasCustomSettings = true;
+                saveButton.setVisibility(View.VISIBLE);
                 clearWords(9);
             }
         });
@@ -480,7 +483,7 @@ public class game_options extends AppCompatActivity {
         deleteCustomWord10.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hasCustomSettings = true;
+                saveButton.setVisibility(View.VISIBLE);
                 clearWords(10);
             }
         });
@@ -509,8 +512,145 @@ public class game_options extends AppCompatActivity {
 
     public void saveButton(View view) {
         Intent i;
+        boolean validSave = true;
 
-        //Same as backButton but use putExtra for the custom settings
+        //Reads words from the text file to store in the defaultWords array
+        String wordsFromFile = "";
+
+        try {
+            InputStream input = getAssets().open("gameWords");
+
+            int size = input.available();
+
+            byte[] buffer = new byte[size];
+
+            input.read(buffer);
+            input.close();
+
+            wordsFromFile = new String(buffer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String[] temp = wordsFromFile.split(",");
+
+        ArrayList<String> defaultWords = new ArrayList<>(Arrays.asList(temp));
+
+        ArrayList<String> customWordsTemp = new ArrayList<>();
+
+        EditText[] customWordTextsTemp = {customWordText1, customWordText2, customWordText3,
+                customWordText4, customWordText5, customWordText6, customWordText7,
+                customWordText8, customWordText9, customWordText10};
+
+        int counterTemp = 0;
+
+        String wordTemp = customWordTextsTemp[counterTemp].getText().toString();
+
+        while(!wordTemp.equals("")) {
+            customWordsTemp.add(wordTemp);
+
+            counterTemp++;
+
+            if (counterTemp <= 10) {
+                wordTemp = customWordTextsTemp[counterTemp].getText().toString();
+            }
+        }
+
+        for (String s : customWordsTemp) {
+            System.out.println("Entered for loop with: " + s);
+            if (defaultWords.contains(s)) {
+                System.out.println("Entered if statement with: " + s);
+                validSave = false;
+            }
+        }
+
+        if (totalSquaresInUse != MAX_SQUARES) {
+            validSave = false;
+        }
+
+        if (validSave) {
+            if (getIntent().getStringExtra("from").equals("local_setup")) {
+                i = new Intent(view.getContext(), local_setup.class);
+
+                //Run sortWords
+
+                if (startingTeamButton.isChecked()) {
+                    startingTeam = 1;
+                } else {
+                    startingTeam = 2;
+                }
+
+                i.putExtra("hasCustomSettings", true);
+                i.putExtra("bombSquares", bombSquares);
+                i.putExtra("neutralSquares", neutralSquares);
+                i.putExtra("teamOneSquares", teamOneSquares);
+                i.putExtra("teamTwoSquares", teamTwoSquares);
+                i.putExtra("startingTeam", startingTeam);
+
+                EditText[] customWordTexts = {customWordText1, customWordText2, customWordText3,
+                        customWordText4, customWordText5, customWordText6, customWordText7,
+                        customWordText8, customWordText9, customWordText10};
+
+                int counter = 0;
+
+                String word = customWordTexts[counter].getText().toString();
+
+                while(!word.equals("")) {
+                    customWords.add(word);
+
+                    counter++;
+
+                    if (counter <= 10) {
+                        word = customWordTexts[counter].getText().toString();
+                    }
+                }
+
+                i.putExtra("customWords", customWords);
+
+                startActivity(i);
+            } else if (getIntent().getStringExtra("from").equals("online_setup")) {
+                i = new Intent(view.getContext(), online_setup.class);
+
+                //Run sortWords
+
+                if (startingTeamButton.isChecked()) {
+                    startingTeam = 1;
+                } else {
+                    startingTeam = 2;
+                }
+
+                i.putExtra("hasCustomSettings", true);
+                i.putExtra("bombSquares", bombSquares);
+                i.putExtra("neutralSquares", neutralSquares);
+                i.putExtra("teamOneSquares", teamOneSquares);
+                i.putExtra("teamTwoSquares", teamTwoSquares);
+                i.putExtra("startingTeam", startingTeam);
+
+                EditText[] customWordTexts = {customWordText1, customWordText2, customWordText3,
+                        customWordText4, customWordText5, customWordText6, customWordText7,
+                        customWordText8, customWordText9, customWordText10};
+
+                int counter = 0;
+
+                String word = customWordTexts[counter].getText().toString();
+
+                while(!word.equals("")) {
+                    customWords.add(word);
+
+                    counter++;
+
+                    if (counter <= 10) {
+                        word = customWordTexts[counter].getText().toString();
+                    }
+                }
+
+                i.putExtra("customWords", customWords);
+
+                startActivity(i);
+            }
+        } else {
+            //Popup thingy here to say oi fix ur shit bruv
+        }
     }
 
     public void updateTotalSquares() {

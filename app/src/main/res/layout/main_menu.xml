@@ -38,6 +38,7 @@
         android:layout_marginRight="322dp"
         android:layout_marginBottom="182dp"
         android:gravity="center"
+        android:onClick="playOnline"
         android:text="@string/online"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
