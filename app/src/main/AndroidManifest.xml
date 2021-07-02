@@ -42,6 +42,10 @@
             android:name=".game_options"
             android:screenOrientation="sensorLandscape">
         </activity>
+        <activity
+            android:name=".local_game"
+            android:screenOrientation="sensorLandscape">
+        </activity>
     </application>
 
 </manifest>

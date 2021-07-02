@@ -14,8 +14,6 @@ import java.util.ArrayList;
 
 public class local_setup extends AppCompatActivity {
 
-    // TODO: Add functionality to both buttons.
-
     private ConstraintLayout constraintLayout;
     private TextView localSetupTitle;
     private TextView localSetupSubtitle;
@@ -44,7 +42,19 @@ public class local_setup extends AppCompatActivity {
     }
 
     public void playGame(View view) {
+        Intent i = new Intent(view.getContext(), local_game.class);
 
+        if (getIntent().getBooleanExtra("hasCustomSettings", false)) {
+            i.putExtra("hasCustomSettings", true);
+            i.putExtra("bombSquares", getIntent().getIntExtra("bombSquares", 1));
+            i.putExtra("neutralSquares", getIntent().getIntExtra("neutralSquares", 7));
+            i.putExtra("teamOneSquares", getIntent().getIntExtra("teamOneSquares", 9));
+            i.putExtra("teamTwoSquares", getIntent().getIntExtra("teamTwoSquares", 8));
+            i.putExtra("startingTeam", getIntent().getIntExtra("startingTeam", 1));
+            i.putStringArrayListExtra("customWords", getIntent().getStringArrayListExtra("customWords"));
+        }
+
+        startActivity(i);
     }
 
     public void gameOptions(View view) {
