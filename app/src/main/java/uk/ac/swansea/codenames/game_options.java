@@ -26,6 +26,8 @@ import java.util.Arrays;
 
 public class game_options extends AppCompatActivity {
 
+    //TODO: Check for duplicate custom words
+
     private ConstraintLayout constraintLayout;
     private androidx.gridlayout.widget.GridLayout messageBox;
     private TextView gameOptionsTitle;
@@ -33,8 +35,8 @@ public class game_options extends AppCompatActivity {
     private TextView squaresInUse;
     private TextView bombSquareCount;
     private TextView neutralSquareCount;
-    private TextView team1SquaresCount;
-    private TextView team2SquaresCount;
+    private TextView teamASquaresCount;
+    private TextView teamBSquaresCount;
     private TextView messageBoxText;
     private EditText customWordText1;
     private EditText customWordText2;
@@ -65,16 +67,16 @@ public class game_options extends AppCompatActivity {
     private ImageView subtractBombsButton;
     private ImageView addNeutralsButton;
     private ImageView subtractNeutralsButton;
-    private ImageView teamOneSqrInc;
-    private ImageView teamOneSqrDec;
-    private ImageView teamTwoSqrInc;
-    private ImageView teamTwoSqrDec;
+    private ImageView teamASqrInc;
+    private ImageView teamASqrDec;
+    private ImageView teamBSqrInc;
+    private ImageView teamBSqrDec;
     private ToggleButton startingTeamButton;
     private int defaultColour;
     private int bombSquares = 1;
     private int neutralSquares = 7;
-    private int teamOneSquares = 9;
-    private int teamTwoSquares = 8;
+    private int teamASquares = 9;
+    private int teamBSquares = 8;
     private int startingTeam = 1;
     private int totalSquaresInUse = 25;
     private ArrayList<String> customWords = new ArrayList<>();
@@ -121,15 +123,15 @@ public class game_options extends AppCompatActivity {
         addNeutralsButton = findViewById(R.id.addNeutralsButton);
         subtractBombsButton = findViewById(R.id.subtractBombsButton);
         subtractNeutralsButton = findViewById(R.id.subtractNeutralsButton);
-        teamOneSqrInc = findViewById(R.id.teamOneSqrInc);
-        teamTwoSqrInc = findViewById(R.id.teamTwoSqrInc);
-        teamOneSqrDec = findViewById(R.id.teamOneSqrDec);
-        teamTwoSqrDec = findViewById(R.id.teamTwoSqrDec);
+        teamASqrInc = findViewById(R.id.teamASqrInc);
+        teamBSqrInc = findViewById(R.id.teamBSqrInc);
+        teamASqrDec = findViewById(R.id.teamASqrDec);
+        teamBSqrDec = findViewById(R.id.teamBSqrDec);
 
         bombSquareCount = findViewById(R.id.bombSquareCount);
         neutralSquareCount = findViewById(R.id.neutralSquareCount);
-        team1SquaresCount = findViewById(R.id.team1SquaresCount);
-        team2SquaresCount = findViewById(R.id.team2SquaresCount);
+        teamASquaresCount = findViewById(R.id.teamASquaresCount);
+        teamBSquaresCount = findViewById(R.id.teamBSquaresCount);
 
         startingTeamButton = findViewById(R.id.startingTeamButton);
 
@@ -152,10 +154,10 @@ public class game_options extends AppCompatActivity {
             bombSquareCount.setText(String.valueOf(bombSquares));
             neutralSquares = getIntent().getIntExtra("neutralSquares", 7);
             neutralSquareCount.setText(String.valueOf(neutralSquares));
-            teamOneSquares = getIntent().getIntExtra("teamOneSquares", 9);
-            team1SquaresCount.setText(String.valueOf(teamOneSquares));
-            teamTwoSquares = getIntent().getIntExtra("teamTwoSquares", 8);
-            team2SquaresCount.setText(String.valueOf(teamTwoSquares));
+            teamASquares = getIntent().getIntExtra("teamASquares", 9);
+            teamASquaresCount.setText(String.valueOf(teamASquares));
+            teamBSquares = getIntent().getIntExtra("teamBSquares", 8);
+            teamBSquaresCount.setText(String.valueOf(teamBSquares));
 
             startingTeamButton.setChecked(getIntent().getIntExtra("startingTeam", 1) == 1);
 
@@ -172,64 +174,64 @@ public class game_options extends AppCompatActivity {
             }
         }
 
-        teamOneSqrInc.setOnClickListener(new View.OnClickListener() {
+        teamASqrInc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (totalSquaresInUse != MAX_SQUARES) {
                     saveButton.setVisibility(View.VISIBLE);
                     hasCustomSettings = true;
                     totalSquaresInUse++;
-                    teamOneSquares++;
+                    teamASquares++;
 
-                    team1SquaresCount.setText(String.valueOf(teamOneSquares));
+                    teamASquaresCount.setText(String.valueOf(teamASquares));
 
                     updateTotalSquares();
                 }
             }
         });
 
-        teamOneSqrDec.setOnClickListener(new View.OnClickListener() {
+        teamASqrDec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (totalSquaresInUse >= 1 && teamOneSquares >= 2) {
+                if (totalSquaresInUse >= 1 && teamASquares >= 2) {
                     saveButton.setVisibility(View.VISIBLE);
                     hasCustomSettings = true;
                     totalSquaresInUse--;
-                    teamOneSquares--;
+                    teamASquares--;
 
-                    team1SquaresCount.setText(String.valueOf(teamOneSquares));
+                    teamASquaresCount.setText(String.valueOf(teamASquares));
 
                     updateTotalSquares();
                 }
             }
         });
 
-        teamTwoSqrInc.setOnClickListener(new View.OnClickListener() {
+        teamBSqrInc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (totalSquaresInUse != MAX_SQUARES) {
                     saveButton.setVisibility(View.VISIBLE);
                     hasCustomSettings = true;
                     totalSquaresInUse++;
-                    teamTwoSquares++;
+                    teamBSquares++;
 
-                    team2SquaresCount.setText(String.valueOf(teamTwoSquares));
+                    teamBSquaresCount.setText(String.valueOf(teamBSquares));
 
                     updateTotalSquares();
                 }
             }
         });
 
-        teamTwoSqrDec.setOnClickListener(new View.OnClickListener() {
+        teamBSqrDec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (totalSquaresInUse >= 1 && teamTwoSquares >= 2) {
+                if (totalSquaresInUse >= 1 && teamBSquares >= 2) {
                     saveButton.setVisibility(View.VISIBLE);
                     hasCustomSettings = true;
                     totalSquaresInUse--;
-                    teamTwoSquares--;
+                    teamBSquares--;
 
-                    team2SquaresCount.setText(String.valueOf(teamTwoSquares));
+                    teamBSquaresCount.setText(String.valueOf(teamBSquares));
 
                     updateTotalSquares();
                 }
@@ -608,8 +610,8 @@ public class game_options extends AppCompatActivity {
                 i.putExtra("hasCustomSettings", true);
                 i.putExtra("bombSquares", bombSquares);
                 i.putExtra("neutralSquares", neutralSquares);
-                i.putExtra("teamOneSquares", teamOneSquares);
-                i.putExtra("teamTwoSquares", teamTwoSquares);
+                i.putExtra("teamASquares", teamASquares);
+                i.putExtra("teamBSquares", teamBSquares);
                 i.putExtra("startingTeam", startingTeam);
 
                 EditText[] customWordTexts = {customWordText1, customWordText2, customWordText3,
@@ -637,8 +639,8 @@ public class game_options extends AppCompatActivity {
                 i.putExtra("hasCustomSettings", true);
                 i.putExtra("bombSquares", bombSquares);
                 i.putExtra("neutralSquares", neutralSquares);
-                i.putExtra("teamOneSquares", teamOneSquares);
-                i.putExtra("teamTwoSquares", teamTwoSquares);
+                i.putExtra("teamASquares", teamASquares);
+                i.putExtra("teamBSquares", teamBSquares);
                 i.putExtra("startingTeam", startingTeam);
 
                 EditText[] customWordTexts = {customWordText1, customWordText2, customWordText3,
@@ -678,10 +680,10 @@ public class game_options extends AppCompatActivity {
         subtractBombsButton.setEnabled(disabled);
         addNeutralsButton.setEnabled(disabled);
         subtractNeutralsButton.setEnabled(disabled);
-        teamOneSqrInc.setEnabled(disabled);
-        teamOneSqrDec.setEnabled(disabled);
-        teamTwoSqrInc.setEnabled(disabled);
-        teamTwoSqrDec.setEnabled(disabled);
+        teamASqrInc.setEnabled(disabled);
+        teamASqrDec.setEnabled(disabled);
+        teamBSqrInc.setEnabled(disabled);
+        teamBSqrDec.setEnabled(disabled);
         startingTeamButton.setEnabled(disabled);
         customWordText1.setEnabled(disabled);
         customWordText2.setEnabled(disabled);
@@ -744,10 +746,10 @@ public class game_options extends AppCompatActivity {
         subtractBombsButton.setColorFilter(defaultColour);
         addNeutralsButton.setColorFilter(defaultColour);
         subtractNeutralsButton.setColorFilter(defaultColour);
-        teamOneSqrInc.setColorFilter(defaultColour);
-        teamOneSqrDec.setColorFilter(defaultColour);
-        teamTwoSqrInc.setColorFilter(defaultColour);
-        teamTwoSqrDec.setColorFilter(defaultColour);
+        teamASqrInc.setColorFilter(defaultColour);
+        teamASqrDec.setColorFilter(defaultColour);
+        teamBSqrInc.setColorFilter(defaultColour);
+        teamBSqrDec.setColorFilter(defaultColour);
         deleteCustomWord1.setBackgroundColor(defaultColour);
         deleteCustomWord2.setBackgroundColor(defaultColour);
         deleteCustomWord3.setBackgroundColor(defaultColour);

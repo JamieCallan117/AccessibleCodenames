@@ -48,8 +48,8 @@ public class local_setup extends AppCompatActivity {
             i.putExtra("hasCustomSettings", true);
             i.putExtra("bombSquares", getIntent().getIntExtra("bombSquares", 1));
             i.putExtra("neutralSquares", getIntent().getIntExtra("neutralSquares", 7));
-            i.putExtra("teamOneSquares", getIntent().getIntExtra("teamOneSquares", 9));
-            i.putExtra("teamTwoSquares", getIntent().getIntExtra("teamTwoSquares", 8));
+            i.putExtra("teamASquares", getIntent().getIntExtra("teamASquares", 9));
+            i.putExtra("teamBSquares", getIntent().getIntExtra("teamBSquares", 8));
             i.putExtra("startingTeam", getIntent().getIntExtra("startingTeam", 1));
             i.putStringArrayListExtra("customWords", getIntent().getStringArrayListExtra("customWords"));
         }
@@ -65,8 +65,8 @@ public class local_setup extends AppCompatActivity {
             i.putExtra("hasCustomSettings", true);
             i.putExtra("bombSquares", getIntent().getIntExtra("bombSquares", 1));
             i.putExtra("neutralSquares", getIntent().getIntExtra("neutralSquares", 7));
-            i.putExtra("teamOneSquares", getIntent().getIntExtra("teamOneSquares", 9));
-            i.putExtra("teamTwoSquares", getIntent().getIntExtra("teamTwoSquares", 8));
+            i.putExtra("teamASquares", getIntent().getIntExtra("teamASquares", 9));
+            i.putExtra("teamBSquares", getIntent().getIntExtra("teamBSquares", 8));
             i.putExtra("startingTeam", getIntent().getIntExtra("startingTeam", 1));
             i.putStringArrayListExtra("customWords", getIntent().getStringArrayListExtra("customWords"));
         }

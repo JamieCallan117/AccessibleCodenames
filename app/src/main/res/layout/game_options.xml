@@ -490,7 +490,7 @@
         app:layout_constraintVertical_bias="0.533">
 
         <TextView
-            android:id="@+id/team1SquaresText"
+            android:id="@+id/teamASquaresText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Team 1 Squares" />
@@ -501,14 +501,14 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/teamOneSqrDec"
+                android:id="@+id/teamASqrDec"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/subtract" />
 
             <TextView
-                android:id="@+id/team1SquaresCount"
+                android:id="@+id/teamASquaresCount"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_weight="1"
@@ -516,7 +516,7 @@
                 android:text="9" />
 
             <ImageView
-                android:id="@+id/teamOneSqrInc"
+                android:id="@+id/teamASqrInc"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
@@ -524,7 +524,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/team2SquaresText"
+            android:id="@+id/teamBSquaresText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Team 2 Squares" />
@@ -535,14 +535,14 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/teamTwoSqrDec"
+                android:id="@+id/teamBSqrDec"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/subtract" />
 
             <TextView
-                android:id="@+id/team2SquaresCount"
+                android:id="@+id/teamBSquaresCount"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_weight="1"
@@ -550,7 +550,7 @@
                 android:text="8" />
 
             <ImageView
-                android:id="@+id/teamTwoSqrInc"
+                android:id="@+id/teamBSqrInc"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"

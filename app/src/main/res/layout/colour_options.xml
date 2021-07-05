@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/saveButton"
+    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".colour_options">
@@ -66,7 +66,7 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <Button
-        android:id="@+id/yourTeamButton"
+        android:id="@+id/teamAButton"
         android:layout_width="137dp"
         android:layout_height="95dp"
         android:layout_marginStart="102dp"
@@ -75,9 +75,9 @@
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
-        android:text="Your team"
+        android:text="Team A"
         app:layout_constraintBottom_toTopOf="@+id/unmodifiedSquareButton"
-        app:layout_constraintEnd_toStartOf="@+id/otherTeamButton"
+        app:layout_constraintEnd_toStartOf="@+id/teamBButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/colourTitle" />
 
@@ -110,11 +110,11 @@
         android:text="Bomb Square"
         app:layout_constraintBottom_toTopOf="@+id/menuButtonsButton"
         app:layout_constraintEnd_toStartOf="@+id/neutralSquareButton"
-        app:layout_constraintStart_toEndOf="@+id/otherTeamButton"
+        app:layout_constraintStart_toEndOf="@+id/teamBButton"
         app:layout_constraintTop_toBottomOf="@+id/colourTitle" />
 
     <Button
-        android:id="@+id/otherTeamButton"
+        android:id="@+id/teamBButton"
         android:layout_width="137dp"
         android:layout_height="95dp"
         android:layout_marginStart="20dp"
@@ -123,10 +123,10 @@
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
-        android:text="Other team"
+        android:text="Team B"
         app:layout_constraintBottom_toTopOf="@+id/applicationBackgroundButton"
         app:layout_constraintEnd_toStartOf="@+id/bombSquareButton"
-        app:layout_constraintStart_toEndOf="@+id/yourTeamButton"
+        app:layout_constraintStart_toEndOf="@+id/teamAButton"
         app:layout_constraintTop_toBottomOf="@+id/colourTitle" />
 
     <Button
@@ -143,7 +143,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/applicationBackgroundButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/yourTeamButton" />
+        app:layout_constraintTop_toBottomOf="@+id/teamAButton" />
 
     <Button
         android:id="@+id/applicationBackgroundButton"
@@ -159,7 +159,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/menuButtonsButton"
         app:layout_constraintStart_toEndOf="@+id/unmodifiedSquareButton"
-        app:layout_constraintTop_toBottomOf="@+id/otherTeamButton" />
+        app:layout_constraintTop_toBottomOf="@+id/teamBButton" />
 
     <Button
         android:id="@+id/menuButtonsButton"

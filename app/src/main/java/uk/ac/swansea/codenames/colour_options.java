@@ -18,8 +18,8 @@ public class colour_options extends AppCompatActivity {
     // TODO: Figure out how to get inverse colours. And then make the button text inverse of the button.
     // TODO: Add confirmation box to the reset button.
 
-    private Button yourTeamButton;
-    private Button otherTeamButton;
+    private Button teamAButton;
+    private Button teamBButton;
     private Button bombSquareButton;
     private Button neutralSquareButton;
     private Button unmodifiedSquareButton;
@@ -41,17 +41,17 @@ public class colour_options extends AppCompatActivity {
 
         updateColours();
 
-        yourTeamButton.setOnClickListener(new View.OnClickListener() {
+        teamAButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openColourPicker(userSettings.getInstance().YOUR_TEAM);
+                openColourPicker(userSettings.getInstance().TEAM_A);
             }
         });
 
-        otherTeamButton.setOnClickListener(new View.OnClickListener() {
+        teamBButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openColourPicker(userSettings.getInstance().OTHER_TEAM);
+                openColourPicker(userSettings.getInstance().TEAM_B);
             }
         });
 
@@ -117,8 +117,8 @@ public class colour_options extends AppCompatActivity {
     }
 
     public void resetColours(View view) {
-        userSettings.getInstance().writePreference(userSettings.getInstance().YOUR_TEAM, String.valueOf(userSettings.getInstance().YOUR_TEAM_DEFAULT));
-        userSettings.getInstance().writePreference(userSettings.getInstance().OTHER_TEAM, String.valueOf(userSettings.getInstance().OTHER_TEAM_DEFAULT));
+        userSettings.getInstance().writePreference(userSettings.getInstance().TEAM_A, String.valueOf(userSettings.getInstance().TEAM_A_DEFAULT));
+        userSettings.getInstance().writePreference(userSettings.getInstance().TEAM_B, String.valueOf(userSettings.getInstance().TEAM_B_DEFAULT));
         userSettings.getInstance().writePreference(userSettings.getInstance().BOMB_SQUARE, String.valueOf(userSettings.getInstance().BOMB_SQUARE_DEFAULT));
         userSettings.getInstance().writePreference(userSettings.getInstance().NEUTRAL_SQUARE, String.valueOf(userSettings.getInstance().NEUTRAL_SQUARE_DEFAULT));
         userSettings.getInstance().writePreference(userSettings.getInstance().UNMODIFIED_SQUARE, String.valueOf(userSettings.getInstance().UNMODIFIED_SQUARE_DEFAULT));
@@ -130,8 +130,8 @@ public class colour_options extends AppCompatActivity {
     }
 
     public void updateColours() {
-        yourTeamButton = findViewById(R.id.yourTeamButton);
-        otherTeamButton = findViewById(R.id.otherTeamButton);
+        teamAButton = findViewById(R.id.teamAButton);
+        teamBButton = findViewById(R.id.teamBButton);
         bombSquareButton = findViewById(R.id.bombSquareButton);
         neutralSquareButton = findViewById(R.id.neutralSquareButton);
         unmodifiedSquareButton = findViewById(R.id.unmodifiedSquareButton);
@@ -141,23 +141,23 @@ public class colour_options extends AppCompatActivity {
         backButton = findViewById(R.id.backButton);
         resetColoursButton = findViewById(R.id.resetColoursButton);
         colourTitle = findViewById(R.id.colourTitle);
-        constraintLayout = findViewById(R.id.saveButton);
+        constraintLayout = findViewById(R.id.constraintLayout);
 
-        if (userSettings.getInstance().getPreference(userSettings.getInstance().YOUR_TEAM).equals("")) {
-            defaultColour = userSettings.getInstance().YOUR_TEAM_DEFAULT;
+        if (userSettings.getInstance().getPreference(userSettings.getInstance().TEAM_A).equals("")) {
+            defaultColour = userSettings.getInstance().TEAM_A_DEFAULT;
         } else {
-            defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().YOUR_TEAM));
+            defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().TEAM_A));
         }
 
-        yourTeamButton.setBackgroundColor(defaultColour);
+        teamAButton.setBackgroundColor(defaultColour);
 
-        if (userSettings.getInstance().getPreference(userSettings.getInstance().OTHER_TEAM).equals("")) {
-            defaultColour = userSettings.getInstance().OTHER_TEAM_DEFAULT;
+        if (userSettings.getInstance().getPreference(userSettings.getInstance().TEAM_B).equals("")) {
+            defaultColour = userSettings.getInstance().TEAM_B_DEFAULT;
         } else {
-            defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().OTHER_TEAM));
+            defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().TEAM_B));
         }
 
-        otherTeamButton.setBackgroundColor(defaultColour);
+        teamBButton.setBackgroundColor(defaultColour);
 
         if (userSettings.getInstance().getPreference(userSettings.getInstance().BOMB_SQUARE).equals("")) {
             defaultColour = userSettings.getInstance().BOMB_SQUARE_DEFAULT;

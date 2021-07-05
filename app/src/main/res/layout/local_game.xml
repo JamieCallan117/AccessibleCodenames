@@ -6,4 +6,291 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareOne"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="One"
+        app:layout_constraintEnd_toStartOf="@+id/squareTwo"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareTwo"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Two"
+        app:layout_constraintEnd_toStartOf="@+id/squareThree"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareThree"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Three"
+        app:layout_constraintEnd_toStartOf="@+id/squareFour"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareFour"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Four"
+        app:layout_constraintEnd_toStartOf="@+id/squareFive"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareFive"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Five"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareSix"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Six"
+        app:layout_constraintEnd_toStartOf="@+id/squareSeven"
+        app:layout_constraintTop_toBottomOf="@+id/squareOne" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareSeven"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Seven"
+        app:layout_constraintEnd_toStartOf="@+id/squareEight"
+        app:layout_constraintTop_toBottomOf="@+id/squareTwo" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareEight"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Eight"
+        app:layout_constraintEnd_toStartOf="@+id/squareNine"
+        app:layout_constraintTop_toBottomOf="@+id/squareThree" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareNine"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Nine"
+        app:layout_constraintEnd_toStartOf="@+id/squareTen"
+        app:layout_constraintTop_toBottomOf="@+id/squareFour" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareTen"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Ten"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/squareFive" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareEleven"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Eleven"
+        app:layout_constraintEnd_toStartOf="@+id/squareTwelve"
+        app:layout_constraintTop_toBottomOf="@+id/squareSix" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareTwelve"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Twelve"
+        app:layout_constraintEnd_toStartOf="@+id/squareThirteen"
+        app:layout_constraintTop_toBottomOf="@+id/squareSeven" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareThirteen"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Thirteen"
+        app:layout_constraintEnd_toStartOf="@+id/squareFourteen"
+        app:layout_constraintTop_toBottomOf="@+id/squareEight" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareFourteen"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Fourteen"
+        app:layout_constraintEnd_toStartOf="@+id/squareFifteen"
+        app:layout_constraintTop_toBottomOf="@+id/squareNine" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareFifteen"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Fifteen"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/squareTen" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareSixteen"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Sixteen"
+        app:layout_constraintEnd_toStartOf="@+id/squareSeventeen"
+        app:layout_constraintTop_toBottomOf="@+id/squareEleven" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareSeventeen"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Seventeen"
+        app:layout_constraintEnd_toStartOf="@+id/squareEighteen"
+        app:layout_constraintTop_toBottomOf="@+id/squareTwelve" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareEighteen"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Eighteen"
+        app:layout_constraintEnd_toStartOf="@+id/squareNineteen"
+        app:layout_constraintTop_toBottomOf="@+id/squareThirteen" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareNineteen"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Nineteen"
+        app:layout_constraintEnd_toStartOf="@+id/squareTwenty"
+        app:layout_constraintTop_toBottomOf="@+id/squareFourteen" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareTwenty"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Twenty"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/squareFifteen" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareTwentyOne"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Twenty One"
+        app:layout_constraintEnd_toStartOf="@+id/squareTwentyTwo"
+        app:layout_constraintTop_toBottomOf="@+id/squareSixteen" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareTwentyTwo"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Twenty Two"
+        app:layout_constraintEnd_toStartOf="@+id/squareTwentyThree"
+        app:layout_constraintTop_toBottomOf="@+id/squareSeventeen" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareTwentyThree"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Twenty Three"
+        app:layout_constraintEnd_toStartOf="@+id/squareTwentyFour"
+        app:layout_constraintTop_toBottomOf="@+id/squareEighteen" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareTwentyFour"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Twenty Four"
+        app:layout_constraintEnd_toStartOf="@+id/squareTwentyFive"
+        app:layout_constraintTop_toBottomOf="@+id/squareNineteen" />
+
+    <uk.ac.swansea.codenames.WordButton
+        android:id="@+id/squareTwentyFive"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Twenty Five"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/squareTwenty" />
+
+    <Button
+        android:id="@+id/exitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:onClick="exitButton"
+        android:text="Exit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

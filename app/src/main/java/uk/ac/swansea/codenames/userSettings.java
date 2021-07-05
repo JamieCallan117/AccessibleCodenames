@@ -10,16 +10,16 @@ public class userSettings {
 
     private SharedPreferences myPreferences;
 
-    public final int YOUR_TEAM_DEFAULT = -16773377;
-    public final int OTHER_TEAM_DEFAULT = -65536;
+    public final int TEAM_A_DEFAULT = -16773377;
+    public final int TEAM_B_DEFAULT = -65536;
     public final int BOMB_SQUARE_DEFAULT = -14342875;
     public final int NEUTRAL_SQUARE_DEFAULT = -908;
     public final int UNMODIFIED_SQUARE_DEFAULT = -3684409;
     public final int APPLICATION_BACKGROUND_DEFAULT = -10921639;
     public final int MENU_BUTTONS_DEFAULT = -8164501;
     public final int MENU_TEXT_DEFAULT = -1;
-    public final String YOUR_TEAM = "yourTeamColour";
-    public final String OTHER_TEAM = "otherTeamColour";
+    public final String TEAM_A = "teamAColour";
+    public final String TEAM_B = "teamBColour";
     public final String BOMB_SQUARE = "bombSquareColour";
     public final String NEUTRAL_SQUARE = "neutralSquareColour";
     public final String UNMODIFIED_SQUARE = "unmodifiedSquareColour";
