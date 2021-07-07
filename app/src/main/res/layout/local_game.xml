@@ -293,4 +293,45 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <LinearLayout
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="28dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exitButton">
+
+        <TextView
+            android:id="@+id/teamACount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="9"
+            android:textSize="28sp"
+            app:lineHeight="60dp" />
+
+        <TextView
+            android:id="@+id/teamCounterLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="|"
+            android:textSize="28sp"
+            app:lineHeight="60dp" />
+
+        <TextView
+            android:id="@+id/teamBCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="8"
+            android:textSize="28sp"
+            app:lineHeight="60dp" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

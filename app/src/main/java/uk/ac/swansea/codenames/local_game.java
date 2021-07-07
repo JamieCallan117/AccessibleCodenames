@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -20,6 +21,8 @@ import static uk.ac.swansea.codenames.localPhase.START;
 import static uk.ac.swansea.codenames.localPhase.TEAM_A;
 import static uk.ac.swansea.codenames.localPhase.TEAM_A_SPY;
 import static uk.ac.swansea.codenames.localPhase.TEAM_A_WIN;
+import static uk.ac.swansea.codenames.localPhase.TEAM_B;
+import static uk.ac.swansea.codenames.localPhase.TEAM_B_SPY;
 import static uk.ac.swansea.codenames.localPhase.TEAM_B_WIN;
 
 public class local_game extends AppCompatActivity {
@@ -28,6 +31,7 @@ public class local_game extends AppCompatActivity {
     private int neutralSquaresCount = 7;
     private int teamASquaresCount = 9;
     private int teamBSquaresCount = 8;
+    private int startingTeam = 1;
     private int defaultColour;
     private final int MAX_WORDS = 25;
     private ArrayList<String> customWords;
@@ -38,9 +42,13 @@ public class local_game extends AppCompatActivity {
     private String[] words = new String[25];
     private WordButton[] wordButtons;
     private Button exitButton;
+    private TextView teamACount;
+    private TextView teamBCount;
+    private TextView teamCounterLine;
     private ConstraintLayout constraintLayout;
 
     //TODO: Add confirmation to quit game
+    //TODO: Add confirmation of spymaster before showing the colours at start of game
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,14 +59,18 @@ public class local_game extends AppCompatActivity {
         constraintLayout = findViewById(R.id.constraintLayout);
         exitButton = findViewById(R.id.exitButton);
 
+        teamACount = findViewById(R.id.teamACount);
+        teamBCount = findViewById(R.id.teamBCount);
+        teamCounterLine = findViewById(R.id.teamCounterLine);
+
         gamePhase = START;
-        //gamePhase = TEAM_A_SPY;
 
         if (getIntent().getBooleanExtra("hasCustomSettings", false)) {
             bombSquaresCount = getIntent().getIntExtra("bombSquares", 1);
             neutralSquaresCount = getIntent().getIntExtra("neutralSquares", 7);
             teamASquaresCount = getIntent().getIntExtra("teamASquares", 9);
             teamBSquaresCount = getIntent().getIntExtra("teamBSquares", 8);
+            startingTeam = getIntent().getIntExtra("startingTeam", 1);
             customWords = getIntent().getStringArrayListExtra("customWords");
         }
 
@@ -66,6 +78,17 @@ public class local_game extends AppCompatActivity {
         neutralWords = new String[neutralSquaresCount];
         teamAWords = new String[teamASquaresCount];
         teamBWords = new String[teamBSquaresCount];
+
+        if (startingTeam == 1) {
+            gamePhase = TEAM_A_SPY;
+            teamACount.setPaintFlags(teamACount.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+        } else {
+            gamePhase = TEAM_B_SPY;
+            teamBCount.setPaintFlags(teamBCount.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+        }
+
+        teamACount.setText(String.valueOf(teamASquaresCount));
+        teamBCount.setText(String.valueOf(teamBSquaresCount));
 
         WordButton squareOne = findViewById(R.id.squareOne);
         WordButton squareTwo = findViewById(R.id.squareTwo);
@@ -178,10 +201,17 @@ public class local_game extends AppCompatActivity {
             counter++;
         }
 
+        constraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("Current phase: " + gamePhase.toString());
+            }
+        });
+
         squareOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!squareOne.hasBeenClicked()) {
+                if (!squareOne.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
                     squareOne.setHasBeenClicked(true);
 
                     String buttonType = "";
@@ -214,6 +244,8 @@ public class local_game extends AppCompatActivity {
                         }
                     }
 
+                    System.out.println(buttonType);
+
                     switch (buttonType) {
                         case "bomb":
                             if (gamePhase == TEAM_A) {
@@ -223,7 +255,29 @@ public class local_game extends AppCompatActivity {
                             }
 
                             break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
                     }
+
+                    updateColours();
                 }
             }
         });
@@ -231,168 +285,1824 @@ public class local_game extends AppCompatActivity {
         squareTwo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareTwo.setHasBeenClicked(true);
+                if (!squareTwo.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareTwo.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareTwo.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareTwo.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareTwo.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareTwo.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareThree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareThree.setHasBeenClicked(true);
+                if (!squareThree.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareThree.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareThree.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareThree.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareThree.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareThree.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareFour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareFour.setHasBeenClicked(true);
+                if (!squareFour.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareFour.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareFour.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareFour.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareFour.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareFour.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareFive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareFive.setHasBeenClicked(true);
+                if (!squareFive.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareFive.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareFive.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareFive.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareFive.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareFive.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareSix.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareSix.setHasBeenClicked(true);
+                if (!squareSix.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareSix.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareSix.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareSix.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareSix.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareSix.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareSeven.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareSeven.setHasBeenClicked(true);
+                if (!squareSeven.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareSeven.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareSeven.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareSeven.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareSeven.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareSeven.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareEight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareEight.setHasBeenClicked(true);
+                if (!squareEight.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareEight.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareEight.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareEight.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareEight.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareEight.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareNine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareNine.setHasBeenClicked(true);
+                if (!squareNine.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareNine.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareNine.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareNine.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareNine.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareNine.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareTen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareTen.setHasBeenClicked(true);
+                if (!squareTen.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareTen.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareTen.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareTen.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareTen.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareTen.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareEleven.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareEleven.setHasBeenClicked(true);
+                if (!squareEleven.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareEleven.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareEleven.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareEleven.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareEleven.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareEleven.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareTwelve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareTwelve.setHasBeenClicked(true);
+                if (!squareTwelve.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareTwelve.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareTwelve.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareTwelve.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareTwelve.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareTwelve.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareThirteen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareThirteen.setHasBeenClicked(true);
+                if (!squareThirteen.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareThirteen.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareThirteen.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareThirteen.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareThirteen.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareThirteen.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareFourteen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareFourteen.setHasBeenClicked(true);
+                if (!squareFourteen.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareFourteen.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareFourteen.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareFourteen.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareFourteen.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareFourteen.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareFifteen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareFifteen.setHasBeenClicked(true);
+                if (!squareFifteen.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareFifteen.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareFifteen.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareFifteen.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareFifteen.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareFifteen.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareSixteen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareSixteen.setHasBeenClicked(true);
+                if (!squareSixteen.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareSixteen.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareSixteen.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareSixteen.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareSixteen.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareSixteen.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareSeventeen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareSeventeen.setHasBeenClicked(true);
+                if (!squareSeventeen.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareSeventeen.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareSeventeen.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareSeventeen.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareSeventeen.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareSeventeen.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareEighteen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareEighteen.setHasBeenClicked(true);
+                if (!squareEighteen.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareEighteen.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareEighteen.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareEighteen.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareEighteen.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareEighteen.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareNineteen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareNineteen.setHasBeenClicked(true);
+                if (!squareNineteen.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareNineteen.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareNineteen.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareNineteen.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareNineteen.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareNineteen.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareTwenty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareTwenty.setHasBeenClicked(true);
+                if (!squareTwenty.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareTwenty.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareTwenty.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareTwenty.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareTwenty.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareTwenty.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareTwentyOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareTwentyOne.setHasBeenClicked(true);
+                if (!squareTwentyOne.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareTwentyOne.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareTwentyOne.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareTwentyOne.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareTwentyOne.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareTwentyOne.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareTwentyTwo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareTwentyTwo.setHasBeenClicked(true);
+                if (!squareTwentyTwo.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareTwentyTwo.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareTwentyTwo.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareTwentyTwo.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareTwentyTwo.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareTwentyTwo.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareTwentyThree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareTwentyThree.setHasBeenClicked(true);
+                if (!squareTwentyThree.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareTwentyThree.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareTwentyThree.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareTwentyThree.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareTwentyThree.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareTwentyThree.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareTwentyFour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareTwentyFour.setHasBeenClicked(true);
+                if (!squareTwentyFour.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareTwentyFour.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareTwentyFour.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareTwentyFour.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareTwentyFour.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareTwentyFour.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
         squareTwentyFive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                squareTwentyFive.setHasBeenClicked(true);
+                if (!squareTwentyFive.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY) {
+                    squareTwentyFive.setHasBeenClicked(true);
+
+                    String buttonType = "";
+
+                    for (String s : bombWords) {
+                        if (squareTwentyFive.getText().toString().equals(s)) {
+                            buttonType = "bomb";
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : neutralWords) {
+                            if (squareTwentyFive.getText().toString().equals(s)) {
+                                buttonType = "neutral";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamAWords) {
+                            if (squareTwentyFive.getText().toString().equals(s)) {
+                                buttonType = "teamA";
+                            }
+                        }
+                    }
+
+                    if (buttonType.equals("")) {
+                        for (String s : teamBWords) {
+                            if (squareTwentyFive.getText().toString().equals(s)) {
+                                buttonType = "teamB";
+                            }
+                        }
+                    }
+
+                    System.out.println(buttonType);
+
+                    switch (buttonType) {
+                        case "bomb":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B_WIN;
+                            } else {
+                                gamePhase = TEAM_A_WIN;
+                            }
+
+                            break;
+                        case "neutral":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            } else {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamA":
+                            if (gamePhase == TEAM_B) {
+                                gamePhase = TEAM_A;
+                            }
+
+                            break;
+                        case "teamB":
+                            if (gamePhase == TEAM_A) {
+                                gamePhase = TEAM_B;
+                            }
+
+                            break;
+                    }
+
+                    updateColours();
+                }
             }
         });
 
@@ -410,6 +2120,22 @@ public class local_game extends AppCompatActivity {
     }
 
     public void updateColours() {
+        if (userSettings.getInstance().getPreference(userSettings.getInstance().TEAM_A).equals("")) {
+            defaultColour = userSettings.getInstance().TEAM_A_DEFAULT;
+        } else {
+            defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().TEAM_A));
+        }
+
+        teamACount.setTextColor(defaultColour);
+
+        if (userSettings.getInstance().getPreference(userSettings.getInstance().TEAM_B).equals("")) {
+            defaultColour = userSettings.getInstance().TEAM_B_DEFAULT;
+        } else {
+            defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().TEAM_B));
+        }
+
+        teamBCount.setTextColor(defaultColour);
+
         if (userSettings.getInstance().getPreference(userSettings.getInstance().APPLICATION_BACKGROUND).equals("")) {
             defaultColour = userSettings.getInstance().APPLICATION_BACKGROUND_DEFAULT;
         } else {
@@ -433,14 +2159,7 @@ public class local_game extends AppCompatActivity {
         }
 
         exitButton.setTextColor(defaultColour);
-
-        if (userSettings.getInstance().getPreference(userSettings.getInstance().MENU_TEXT).equals("")) {
-            defaultColour = userSettings.getInstance().MENU_TEXT_DEFAULT;
-        } else {
-            defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().MENU_TEXT));
-        }
-
-        exitButton.setTextColor(defaultColour);
+        teamCounterLine.setTextColor(defaultColour);
 
         switch(gamePhase) {
             case START:
@@ -457,7 +2176,6 @@ public class local_game extends AppCompatActivity {
                 break;
             case TEAM_A:
             case TEAM_B:
-                System.out.println("HIIII");
                 for (WordButton wb : wordButtons) {
                     if (wb.hasBeenClicked()) {
                         String buttonType = "";
@@ -517,7 +2235,6 @@ public class local_game extends AppCompatActivity {
                                 break;
                         }
                     } else {
-                        System.out.println("HELLOOOOO");
                         if (userSettings.getInstance().getPreference(userSettings.getInstance().MENU_BUTTONS).equals("")) {
                             defaultColour = userSettings.getInstance().MENU_BUTTONS_DEFAULT;
                         } else {
@@ -530,6 +2247,8 @@ public class local_game extends AppCompatActivity {
                 break;
             case TEAM_A_SPY:
             case TEAM_B_SPY:
+            case TEAM_A_WIN:
+            case TEAM_B_WIN:
                 if (userSettings.getInstance().getPreference(userSettings.getInstance().BOMB_SQUARE).equals("")) {
                     defaultColour = userSettings.getInstance().BOMB_SQUARE_DEFAULT;
                 } else {
