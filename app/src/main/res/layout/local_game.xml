@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".local_game">
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareOne"
@@ -294,11 +295,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="110dp"
         android:layout_height="60dp"
         android:layout_marginStart="12dp"
         android:layout_marginLeft="12dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="14dp"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/exitButton">
@@ -333,5 +335,97 @@
             android:textSize="28sp"
             app:lineHeight="60dp" />
     </LinearLayout>
+
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/messageBox"
+        android:layout_width="330dp"
+        android:layout_height="159dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="28dp"
+        android:background="#FFFFFF"
+        android:elevation="2dp"
+        app:layout_constraintBottom_toTopOf="@+id/squareTwentyOne"
+        app:layout_constraintEnd_toStartOf="@+id/squareNineteen"
+        app:layout_constraintStart_toEndOf="@+id/squareSixteen"
+        app:layout_constraintTop_toBottomOf="@+id/squareSix">
+
+        <TextView
+            android:id="@+id/messageText"
+            android:layout_width="match_parent"
+            android:layout_height="87dp"
+            android:fontFamily="@font/general_font"
+            android:gravity="center|top"
+            android:text="Ensure that only the spymasters can see the screen before proceeding."
+            android:textSize="20sp"
+            app:layout_column="0"
+            app:layout_row="0" />
+
+        <Button
+            android:id="@+id/messageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirm"
+            app:layout_column="0"
+            app:layout_gravity="center_horizontal|center_vertical"
+            app:layout_row="1" />
+    </androidx.gridlayout.widget.GridLayout>
+
+    <TextView
+        android:id="@+id/hintText"
+        android:layout_width="110dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="1dp"
+        android:text="TextView"
+        android:textSize="28sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
+    <EditText
+        android:id="@+id/editHint"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Hint"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hintText" />
+
+    <Spinner
+        android:id="@+id/hintNumber"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:spinnerMode="dropdown"
+        app:layout_constraintStart_toEndOf="@+id/editHint"
+        app:layout_constraintTop_toBottomOf="@+id/hintText" />
+
+    <Button
+        android:id="@+id/turnAction"
+        android:layout_width="110dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="8dp"
+        android:text="Give Hint"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editHint" />
+
+    <Button
+        android:id="@+id/textToSpeechButton"
+        android:layout_width="110dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="8dp"
+        android:text="Text-to-speech"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/turnAction" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
