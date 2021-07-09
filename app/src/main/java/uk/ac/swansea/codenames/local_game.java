@@ -3,12 +3,15 @@ package uk.ac.swansea.codenames;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -54,6 +57,7 @@ public class local_game extends AppCompatActivity {
     private Button turnAction;
     private Button textToSpeechButton;
     private Button viewPreviousHints;
+    private Button hidePreviousHints;
     private TextView teamACount;
     private TextView teamBCount;
     private TextView teamCounterLine;
@@ -62,6 +66,7 @@ public class local_game extends AppCompatActivity {
     private EditText editHint;
     private androidx.gridlayout.widget.GridLayout messageBox;
     private ConstraintLayout constraintLayout;
+    private LinearLayout previousHints;
     private WordButton squareOne;
     private WordButton squareTwo;
     private WordButton squareThree;
@@ -88,10 +93,11 @@ public class local_game extends AppCompatActivity {
     private WordButton squareTwentyFour;
     private WordButton squareTwentyFive;
     private Spinner hintNumber;
+    private ScrollView previousHintsScroll;
+    private ScrollView gameOperations;
 
     //TODO: Add confirmation to quit game.
     //TODO: Add win screen.
-    //TODO: Implement previous hints.
     //TODO: Clean up and other small features
 
     @Override
@@ -117,6 +123,11 @@ public class local_game extends AppCompatActivity {
         turnAction = findViewById(R.id.turnAction);
         textToSpeechButton = findViewById(R.id.textToSpeechButton);
         viewPreviousHints = findViewById(R.id.viewPreviousHints);
+        gameOperations = findViewById(R.id.gameOperations);
+
+        previousHintsScroll = findViewById(R.id.previousHintsScroll);
+        previousHints = findViewById(R.id.previousHints);
+        hidePreviousHints = findViewById(R.id.hidePreviousHints);
 
         gamePhase = START;
 
@@ -476,7 +487,10 @@ public class local_game extends AppCompatActivity {
 
                 switch (gamePhase) {
                     case TEAM_A:
-                        gamePhase = TEAM_A_INTERMISSION;
+                        gamePhase = TEAM_B_INTERMISSION;
+
+                        teamBCount.setPaintFlags(teamBCount.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+                        teamACount.setPaintFlags(teamACount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
 
                         messageText.setText("Ensure that only the spymasters can see the screen before proceeding.");
                         messageButton.setText("Confirm");
@@ -484,7 +498,10 @@ public class local_game extends AppCompatActivity {
 
                         break;
                     case TEAM_B:
-                        gamePhase = TEAM_B_INTERMISSION;
+                        gamePhase = TEAM_A_INTERMISSION;
+
+                        teamACount.setPaintFlags(teamACount.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+                        teamBCount.setPaintFlags(teamBCount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
 
                         messageText.setText("Ensure that only the spymasters can see the screen before proceeding.");
                         messageButton.setText("Confirm");
@@ -507,10 +524,13 @@ public class local_game extends AppCompatActivity {
                         if (validHint) {
                             turnAction.setText("End turn");
                             gamePhase = TEAM_A;
-                            hintText.setText(editHint.getText().toString() + ": " + hintNumber.getSelectedItem().toString());
+                            String hint = editHint.getText().toString() + ": " + hintNumber.getSelectedItem().toString();
+                            hintText.setText(hint);
 
                             editHint.setVisibility(View.INVISIBLE);
                             hintNumber.setVisibility(View.INVISIBLE);
+
+                            addHint(hint);
                         } else {
                             messageText.setText("Invalid hint. Ensure no spaces or words that are present on the board.");
                             messageButton.setText("Ok");
@@ -534,10 +554,13 @@ public class local_game extends AppCompatActivity {
                         if (validHint) {
                             turnAction.setText("End turn");
                             gamePhase = TEAM_B;
-                            hintText.setText(editHint.getText().toString() + ": " + hintNumber.getSelectedItem().toString());
+                            String hint = editHint.getText().toString() + ": " + hintNumber.getSelectedItem().toString();
+                            hintText.setText(hint);
 
                             editHint.setVisibility(View.INVISIBLE);
                             hintNumber.setVisibility(View.INVISIBLE);
+
+                            addHint(hint);
                         } else {
                             messageText.setText("Invalid hint. Ensure no spaces or words that are present on the board.");
                             messageButton.setText("Ok");
@@ -561,7 +584,16 @@ public class local_game extends AppCompatActivity {
         viewPreviousHints.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                previousHintsScroll.setVisibility(View.VISIBLE);
+                gameOperations.setVisibility(View.INVISIBLE);
+            }
+        });
 
+        hidePreviousHints.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                previousHintsScroll.setVisibility(View.INVISIBLE);
+                gameOperations.setVisibility(View.VISIBLE);
             }
         });
 
@@ -617,19 +649,16 @@ public class local_game extends AppCompatActivity {
 
             updateColours();
 
-            System.out.println(buttonType);
-
             switch (buttonType) {
                 case "bomb":
                     if (gamePhase == TEAM_A) {
                         gamePhase = TEAM_B_WIN;
-                        teamACount.setPaintFlags(teamACount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
-                        teamBCount.setPaintFlags(teamACount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
                     } else {
                         gamePhase = TEAM_A_WIN;
-                        teamACount.setPaintFlags(teamACount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
-                        teamBCount.setPaintFlags(teamACount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
                     }
+
+                    teamACount.setPaintFlags(teamACount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
+                    teamBCount.setPaintFlags(teamBCount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
 
                     gameWin();
 
@@ -637,12 +666,12 @@ public class local_game extends AppCompatActivity {
                 case "neutral":
                     if (gamePhase == TEAM_A) {
                         gamePhase = TEAM_B_INTERMISSION;
-                        teamBCount.setPaintFlags(teamACount.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+                        teamBCount.setPaintFlags(teamBCount.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
                         teamACount.setPaintFlags(teamACount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
                     } else {
                         gamePhase = TEAM_A_INTERMISSION;
                         teamACount.setPaintFlags(teamACount.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
-                        teamBCount.setPaintFlags(teamACount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
+                        teamBCount.setPaintFlags(teamBCount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
                     }
 
                     messageText.setText("Ensure that only the spymasters can see the screen before proceeding.");
@@ -655,7 +684,7 @@ public class local_game extends AppCompatActivity {
                     if (gamePhase == TEAM_B) {
                         gamePhase = TEAM_A_INTERMISSION;
                         teamACount.setPaintFlags(teamACount.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
-                        teamBCount.setPaintFlags(teamACount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
+                        teamBCount.setPaintFlags(teamBCount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
 
                         messageText.setText("Ensure that only the spymasters can see the screen before proceeding.");
                         messageButton.setText("Confirm");
@@ -675,7 +704,7 @@ public class local_game extends AppCompatActivity {
                 case "teamB":
                     if (gamePhase == TEAM_A) {
                         gamePhase = TEAM_B_INTERMISSION;
-                        teamBCount.setPaintFlags(teamACount.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+                        teamBCount.setPaintFlags(teamBCount.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
                         teamACount.setPaintFlags(teamACount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
 
                         messageText.setText("Ensure that only the spymasters can see the screen before proceeding.");
@@ -718,6 +747,30 @@ public class local_game extends AppCompatActivity {
         turnAction.setEnabled(!enabled);
         textToSpeechButton.setEnabled(!enabled);
         viewPreviousHints.setEnabled(!enabled);
+    }
+
+    public void addHint(String hint) {
+        TextView newHint = new TextView(this);
+        newHint.setText(hint);
+        previousHints.addView(newHint);
+
+        if (gamePhase == TEAM_A) {
+            if (userSettings.getInstance().getPreference(userSettings.getInstance().TEAM_A).equals("")) {
+                defaultColour = userSettings.getInstance().TEAM_A_DEFAULT;
+            } else {
+                defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().TEAM_A));
+            }
+        } else {
+            if (userSettings.getInstance().getPreference(userSettings.getInstance().TEAM_B).equals("")) {
+                defaultColour = userSettings.getInstance().TEAM_B_DEFAULT;
+            } else {
+                defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().TEAM_B));
+            }
+        }
+
+        newHint.setTextColor(defaultColour);
+        newHint.setGravity(Gravity.CENTER);
+        newHint.setTextSize(16);
     }
 
     public void updateSpinner() {
@@ -779,6 +832,7 @@ public class local_game extends AppCompatActivity {
         turnAction.setBackgroundColor(defaultColour);
         textToSpeechButton.setBackgroundColor(defaultColour);
         viewPreviousHints.setBackgroundColor(defaultColour);
+        hidePreviousHints.setBackgroundColor(defaultColour);
 
         if (userSettings.getInstance().getPreference(userSettings.getInstance().MENU_TEXT).equals("")) {
             defaultColour = userSettings.getInstance().MENU_TEXT_DEFAULT;
@@ -793,6 +847,7 @@ public class local_game extends AppCompatActivity {
         turnAction.setTextColor(defaultColour);
         textToSpeechButton.setTextColor(defaultColour);
         viewPreviousHints.setTextColor(defaultColour);
+        hidePreviousHints.setTextColor(defaultColour);
 
         switch(gamePhase) {
             case START:

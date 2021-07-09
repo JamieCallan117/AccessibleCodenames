@@ -13,8 +13,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="One"
         app:layout_constraintEnd_toStartOf="@+id/squareTwo"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,8 +22,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Two"
         app:layout_constraintEnd_toStartOf="@+id/squareThree"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,8 +31,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Three"
         app:layout_constraintEnd_toStartOf="@+id/squareFour"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -46,8 +40,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Four"
         app:layout_constraintEnd_toStartOf="@+id/squareFive"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -57,8 +49,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:text="Five"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -68,8 +58,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Six"
         app:layout_constraintEnd_toStartOf="@+id/squareSeven"
         app:layout_constraintTop_toBottomOf="@+id/squareOne" />
 
@@ -79,8 +67,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Seven"
         app:layout_constraintEnd_toStartOf="@+id/squareEight"
         app:layout_constraintTop_toBottomOf="@+id/squareTwo" />
 
@@ -90,8 +76,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Eight"
         app:layout_constraintEnd_toStartOf="@+id/squareNine"
         app:layout_constraintTop_toBottomOf="@+id/squareThree" />
 
@@ -101,8 +85,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Nine"
         app:layout_constraintEnd_toStartOf="@+id/squareTen"
         app:layout_constraintTop_toBottomOf="@+id/squareFour" />
 
@@ -112,8 +94,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:text="Ten"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/squareFive" />
 
@@ -123,8 +103,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Eleven"
         app:layout_constraintEnd_toStartOf="@+id/squareTwelve"
         app:layout_constraintTop_toBottomOf="@+id/squareSix" />
 
@@ -134,8 +112,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Twelve"
         app:layout_constraintEnd_toStartOf="@+id/squareThirteen"
         app:layout_constraintTop_toBottomOf="@+id/squareSeven" />
 
@@ -145,8 +121,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Thirteen"
         app:layout_constraintEnd_toStartOf="@+id/squareFourteen"
         app:layout_constraintTop_toBottomOf="@+id/squareEight" />
 
@@ -156,8 +130,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Fourteen"
         app:layout_constraintEnd_toStartOf="@+id/squareFifteen"
         app:layout_constraintTop_toBottomOf="@+id/squareNine" />
 
@@ -167,8 +139,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:text="Fifteen"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/squareTen" />
 
@@ -178,8 +148,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Sixteen"
         app:layout_constraintEnd_toStartOf="@+id/squareSeventeen"
         app:layout_constraintTop_toBottomOf="@+id/squareEleven" />
 
@@ -189,8 +157,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Seventeen"
         app:layout_constraintEnd_toStartOf="@+id/squareEighteen"
         app:layout_constraintTop_toBottomOf="@+id/squareTwelve" />
 
@@ -200,8 +166,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Eighteen"
         app:layout_constraintEnd_toStartOf="@+id/squareNineteen"
         app:layout_constraintTop_toBottomOf="@+id/squareThirteen" />
 
@@ -211,8 +175,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Nineteen"
         app:layout_constraintEnd_toStartOf="@+id/squareTwenty"
         app:layout_constraintTop_toBottomOf="@+id/squareFourteen" />
 
@@ -222,8 +184,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:text="Twenty"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/squareFifteen" />
 
@@ -233,8 +193,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Twenty One"
         app:layout_constraintEnd_toStartOf="@+id/squareTwentyTwo"
         app:layout_constraintTop_toBottomOf="@+id/squareSixteen" />
 
@@ -244,8 +202,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Twenty Two"
         app:layout_constraintEnd_toStartOf="@+id/squareTwentyThree"
         app:layout_constraintTop_toBottomOf="@+id/squareSeventeen" />
 
@@ -255,8 +211,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Twenty Three"
         app:layout_constraintEnd_toStartOf="@+id/squareTwentyFour"
         app:layout_constraintTop_toBottomOf="@+id/squareEighteen" />
 
@@ -266,8 +220,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Twenty Four"
         app:layout_constraintEnd_toStartOf="@+id/squareTwentyFive"
         app:layout_constraintTop_toBottomOf="@+id/squareNineteen" />
 
@@ -277,8 +229,6 @@
         android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:text="Twenty Five"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/squareTwenty" />
 
@@ -287,10 +237,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:onClick="exitButton"
-        android:text="Exit"
+        android:text="@string/exit"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -317,8 +266,8 @@
             android:layout_width="match_parent"
             android:layout_height="87dp"
             android:fontFamily="@font/general_font"
-            android:gravity="center|top"
-            android:text="Ensure that only the spymasters can see the screen before proceeding."
+            android:gravity="center"
+            android:text="@string/spymaster_confirmation"
             android:textSize="20sp"
             app:layout_column="0"
             app:layout_row="0" />
@@ -327,7 +276,7 @@
             android:id="@+id/messageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Confirm"
+            android:text="@string/confirm"
             app:layout_column="0"
             app:layout_gravity="center_horizontal|center_vertical"
             app:layout_row="1" />
@@ -337,6 +286,7 @@
         android:layout_width="122dp"
         android:layout_height="353dp"
         android:layout_marginTop="1dp"
+        android:id="@+id/gameOperations"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/exitButton">
 
@@ -350,7 +300,6 @@
                 android:layout_width="110dp"
                 android:layout_height="60dp"
                 android:layout_marginStart="6dp"
-                android:layout_marginLeft="6dp"
                 android:layout_marginTop="14dp"
                 android:orientation="horizontal">
 
@@ -360,7 +309,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="9"
                     android:textSize="28sp"
                     app:lineHeight="60dp" />
 
@@ -370,7 +318,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="|"
+                    android:text="@string/scoreBorder"
                     android:textSize="28sp"
                     app:lineHeight="60dp" />
 
@@ -380,7 +328,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="8"
                     android:textSize="28sp"
                     app:lineHeight="60dp" />
             </LinearLayout>
@@ -390,7 +337,6 @@
                 android:layout_width="110dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="6dp"
-                android:layout_marginLeft="6dp"
                 android:layout_marginTop="1dp"
                 android:gravity="center"
                 android:textSize="16sp" />
@@ -400,9 +346,9 @@
                 android:layout_width="110dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="6dp"
-                android:layout_marginLeft="6dp"
                 android:ems="10"
-                android:hint="Enter hint"
+                android:hint="@string/enter_hint"
+                android:importantForAutofill="no"
                 android:inputType="textPersonName" />
 
             <Spinner
@@ -410,7 +356,6 @@
                 android:layout_width="110dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="6dp"
-                android:layout_marginLeft="6dp"
                 android:spinnerMode="dropdown" />
 
             <Button
@@ -418,28 +363,53 @@
                 android:layout_width="110dp"
                 android:layout_height="55dp"
                 android:layout_marginStart="6dp"
-                android:layout_marginLeft="6dp"
                 android:layout_marginTop="8dp"
-                android:text="Give Hint" />
+                android:text="@string/give_hint" />
 
             <Button
                 android:id="@+id/textToSpeechButton"
                 android:layout_width="110dp"
                 android:layout_height="55dp"
                 android:layout_marginStart="6dp"
-                android:layout_marginLeft="6dp"
                 android:layout_marginTop="8dp"
-                android:text="Text-to-speech" />
+                android:text="@string/text_to_speech" />
 
             <Button
                 android:id="@+id/viewPreviousHints"
                 android:layout_width="110dp"
                 android:layout_height="55dp"
                 android:layout_marginStart="6dp"
-                android:layout_marginLeft="6dp"
                 android:layout_marginTop="8dp"
-                android:text="Previous Hints" />
+                android:text="@string/previous_hints" />
         </LinearLayout>
     </ScrollView>
+
+    <ScrollView
+        android:layout_width="122dp"
+        android:layout_height="353dp"
+        android:layout_marginTop="1dp"
+        android:elevation="2dp"
+        android:visibility="invisible"
+        android:id="@+id/previousHintsScroll"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exitButton">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/previousHints">
+
+            <Button
+                android:id="@+id/hidePreviousHints"
+                android:layout_width="110dp"
+                android:layout_height="55dp"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/hide_hints" />
+        </LinearLayout>
+
+    </ScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
