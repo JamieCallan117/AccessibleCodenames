@@ -294,48 +294,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="110dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="14dp"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/exitButton">
-
-        <TextView
-            android:id="@+id/teamACount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="9"
-            android:textSize="28sp"
-            app:lineHeight="60dp" />
-
-        <TextView
-            android:id="@+id/teamCounterLine"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="|"
-            android:textSize="28sp"
-            app:lineHeight="60dp" />
-
-        <TextView
-            android:id="@+id/teamBCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="8"
-            android:textSize="28sp"
-            app:lineHeight="60dp" />
-    </LinearLayout>
-
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/messageBox"
         android:layout_width="330dp"
@@ -348,6 +306,7 @@
         android:layout_marginBottom="28dp"
         android:background="#FFFFFF"
         android:elevation="2dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/squareTwentyOne"
         app:layout_constraintEnd_toStartOf="@+id/squareNineteen"
         app:layout_constraintStart_toEndOf="@+id/squareSixteen"
@@ -374,58 +333,113 @@
             app:layout_row="1" />
     </androidx.gridlayout.widget.GridLayout>
 
-    <TextView
-        android:id="@+id/hintText"
-        android:layout_width="110dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
+    <ScrollView
+        android:layout_width="122dp"
+        android:layout_height="353dp"
         android:layout_marginTop="1dp"
-        android:text="TextView"
-        android:textSize="28sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+        app:layout_constraintTop_toBottomOf="@+id/exitButton">
 
-    <EditText
-        android:id="@+id/editHint"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Hint"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/hintText" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <Spinner
-        android:id="@+id/hintNumber"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:spinnerMode="dropdown"
-        app:layout_constraintStart_toEndOf="@+id/editHint"
-        app:layout_constraintTop_toBottomOf="@+id/hintText" />
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="110dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="6dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="14dp"
+                android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/turnAction"
-        android:layout_width="110dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="8dp"
-        android:text="Give Hint"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editHint" />
+                <TextView
+                    android:id="@+id/teamACount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="9"
+                    android:textSize="28sp"
+                    app:lineHeight="60dp" />
 
-    <Button
-        android:id="@+id/textToSpeechButton"
-        android:layout_width="110dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="8dp"
-        android:text="Text-to-speech"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/turnAction" />
+                <TextView
+                    android:id="@+id/teamCounterLine"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="|"
+                    android:textSize="28sp"
+                    app:lineHeight="60dp" />
+
+                <TextView
+                    android:id="@+id/teamBCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="8"
+                    android:textSize="28sp"
+                    app:lineHeight="60dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/hintText"
+                android:layout_width="110dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="6dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="1dp"
+                android:gravity="center"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/editHint"
+                android:layout_width="110dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="6dp"
+                android:layout_marginLeft="6dp"
+                android:ems="10"
+                android:hint="Enter hint"
+                android:inputType="textPersonName" />
+
+            <Spinner
+                android:id="@+id/hintNumber"
+                android:layout_width="110dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="6dp"
+                android:layout_marginLeft="6dp"
+                android:spinnerMode="dropdown" />
+
+            <Button
+                android:id="@+id/turnAction"
+                android:layout_width="110dp"
+                android:layout_height="55dp"
+                android:layout_marginStart="6dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="8dp"
+                android:text="Give Hint" />
+
+            <Button
+                android:id="@+id/textToSpeechButton"
+                android:layout_width="110dp"
+                android:layout_height="55dp"
+                android:layout_marginStart="6dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="8dp"
+                android:text="Text-to-speech" />
+
+            <Button
+                android:id="@+id/viewPreviousHints"
+                android:layout_width="110dp"
+                android:layout_height="55dp"
+                android:layout_marginStart="6dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="8dp"
+                android:text="Previous Hints" />
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

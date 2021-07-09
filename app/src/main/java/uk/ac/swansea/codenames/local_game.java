@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -51,6 +52,8 @@ public class local_game extends AppCompatActivity {
     private Button exitButton;
     private Button messageButton;
     private Button turnAction;
+    private Button textToSpeechButton;
+    private Button viewPreviousHints;
     private TextView teamACount;
     private TextView teamBCount;
     private TextView teamCounterLine;
@@ -86,8 +89,10 @@ public class local_game extends AppCompatActivity {
     private WordButton squareTwentyFive;
     private Spinner hintNumber;
 
-    //TODO: Add confirmation to quit game
-    //TODO: Add confirmation of spymaster before showing the colours at start of game
+    //TODO: Add confirmation to quit game.
+    //TODO: Add win screen.
+    //TODO: Implement previous hints.
+    //TODO: Clean up and other small features
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +115,8 @@ public class local_game extends AppCompatActivity {
         hintNumber = findViewById(R.id.hintNumber);
 
         turnAction = findViewById(R.id.turnAction);
+        textToSpeechButton = findViewById(R.id.textToSpeechButton);
+        viewPreviousHints = findViewById(R.id.viewPreviousHints);
 
         gamePhase = START;
 
@@ -169,6 +176,8 @@ public class local_game extends AppCompatActivity {
                 squareTwelve, squareThirteen, squareFourteen, squareFifteen, squareSixteen,
                 squareSeventeen, squareEighteen, squareNineteen, squareTwenty, squareTwentyOne,
                 squareTwentyTwo, squareTwentyThree, squareTwentyFour, squareTwentyFive};
+
+        toggleMessageBox(true);
 
         //Reads words from the text file to store in the defaultWords array
         String wordsFromFile = "";
@@ -443,7 +452,16 @@ public class local_game extends AppCompatActivity {
                         break;
                 }
 
-                messageBox.setVisibility(View.INVISIBLE);
+                hintText.setText("");
+
+                turnAction.setText("Give Hint");
+
+                editHint.setVisibility(View.VISIBLE);
+                hintNumber.setVisibility(View.VISIBLE);
+
+                editHint.setText("");
+
+                toggleMessageBox(false);
 
                 updateSpinner();
 
@@ -452,6 +470,95 @@ public class local_game extends AppCompatActivity {
         });
 
         turnAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean validHint = true;
+
+                switch (gamePhase) {
+                    case TEAM_A:
+                        gamePhase = TEAM_A_INTERMISSION;
+
+                        messageText.setText("Ensure that only the spymasters can see the screen before proceeding.");
+                        messageButton.setText("Confirm");
+                        toggleMessageBox(true);
+
+                        break;
+                    case TEAM_B:
+                        gamePhase = TEAM_B_INTERMISSION;
+
+                        messageText.setText("Ensure that only the spymasters can see the screen before proceeding.");
+                        messageButton.setText("Confirm");
+                        toggleMessageBox(true);
+
+                        break;
+                    case TEAM_A_SPY:
+                        if (editHint.getText().toString().equals("")) {
+                            validHint = false;
+                        } else if (editHint.getText().toString().contains(" ")) {
+                            validHint = false;
+                        }
+
+                        for (WordButton wb : wordButtons) {
+                            if (editHint.getText().toString().toUpperCase().contains(wb.getText().toString().toUpperCase())) {
+                                validHint = false;
+                            }
+                        }
+
+                        if (validHint) {
+                            turnAction.setText("End turn");
+                            gamePhase = TEAM_A;
+                            hintText.setText(editHint.getText().toString() + ": " + hintNumber.getSelectedItem().toString());
+
+                            editHint.setVisibility(View.INVISIBLE);
+                            hintNumber.setVisibility(View.INVISIBLE);
+                        } else {
+                            messageText.setText("Invalid hint. Ensure no spaces or words that are present on the board.");
+                            messageButton.setText("Ok");
+                            toggleMessageBox(true);
+                        }
+
+                        break;
+                    case TEAM_B_SPY:
+                        if (editHint.getText().toString().equals("")) {
+                            validHint = false;
+                        } else if (editHint.getText().toString().contains(" ")) {
+                            validHint = false;
+                        }
+
+                        for (WordButton wb : wordButtons) {
+                            if (editHint.getText().toString().toUpperCase().contains(wb.getText().toString().toUpperCase())) {
+                                validHint = false;
+                            }
+                        }
+
+                        if (validHint) {
+                            turnAction.setText("End turn");
+                            gamePhase = TEAM_B;
+                            hintText.setText(editHint.getText().toString() + ": " + hintNumber.getSelectedItem().toString());
+
+                            editHint.setVisibility(View.INVISIBLE);
+                            hintNumber.setVisibility(View.INVISIBLE);
+                        } else {
+                            messageText.setText("Invalid hint. Ensure no spaces or words that are present on the board.");
+                            messageButton.setText("Ok");
+                            toggleMessageBox(true);
+                            }
+
+                        break;
+                }
+
+                updateColours();
+            }
+        });
+
+        textToSpeechButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        viewPreviousHints.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -508,41 +615,109 @@ public class local_game extends AppCompatActivity {
                 }
             }
 
+            updateColours();
+
             System.out.println(buttonType);
 
             switch (buttonType) {
                 case "bomb":
                     if (gamePhase == TEAM_A) {
                         gamePhase = TEAM_B_WIN;
+                        teamACount.setPaintFlags(teamACount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
+                        teamBCount.setPaintFlags(teamACount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
                     } else {
                         gamePhase = TEAM_A_WIN;
+                        teamACount.setPaintFlags(teamACount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
+                        teamBCount.setPaintFlags(teamACount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
                     }
+
+                    gameWin();
 
                     break;
                 case "neutral":
                     if (gamePhase == TEAM_A) {
-                        gamePhase = TEAM_B;
+                        gamePhase = TEAM_B_INTERMISSION;
+                        teamBCount.setPaintFlags(teamACount.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+                        teamACount.setPaintFlags(teamACount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
                     } else {
-                        gamePhase = TEAM_A;
+                        gamePhase = TEAM_A_INTERMISSION;
+                        teamACount.setPaintFlags(teamACount.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+                        teamBCount.setPaintFlags(teamACount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
                     }
+
+                    messageText.setText("Ensure that only the spymasters can see the screen before proceeding.");
+                    messageButton.setText("Confirm");
+
+                    toggleMessageBox(true);
 
                     break;
                 case "teamA":
                     if (gamePhase == TEAM_B) {
-                        gamePhase = TEAM_A;
+                        gamePhase = TEAM_A_INTERMISSION;
+                        teamACount.setPaintFlags(teamACount.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+                        teamBCount.setPaintFlags(teamACount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
+
+                        messageText.setText("Ensure that only the spymasters can see the screen before proceeding.");
+                        messageButton.setText("Confirm");
+
+                        toggleMessageBox(true);
+                    }
+
+                    teamASquaresCount--;
+                    teamACount.setText(String.valueOf(teamASquaresCount));
+
+                    if (teamASquaresCount == 0) {
+                        gamePhase = TEAM_A_WIN;
+                        gameWin();
                     }
 
                     break;
                 case "teamB":
                     if (gamePhase == TEAM_A) {
-                        gamePhase = TEAM_B;
+                        gamePhase = TEAM_B_INTERMISSION;
+                        teamBCount.setPaintFlags(teamACount.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+                        teamACount.setPaintFlags(teamACount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
+
+                        messageText.setText("Ensure that only the spymasters can see the screen before proceeding.");
+                        messageButton.setText("Confirm");
+
+                        toggleMessageBox(true);
+                    }
+
+                    teamBSquaresCount--;
+                    teamBCount.setText(String.valueOf(teamBSquaresCount));
+
+                    if (teamBSquaresCount == 0) {
+                        gamePhase = TEAM_B_WIN;
+                        gameWin();
                     }
 
                     break;
             }
-
-            updateColours();
         }
+    }
+
+    public void gameWin() {
+        toggleMessageBox(true);
+    }
+    
+    public void toggleMessageBox(boolean enabled) {
+        if (enabled) {
+            messageBox.setVisibility(View.VISIBLE);
+        } else {
+            messageBox.setVisibility(View.INVISIBLE);
+        }
+
+        for (WordButton wb : wordButtons) {
+            wb.setEnabled(!enabled);
+        }
+
+        exitButton.setEnabled(!enabled);
+        editHint.setEnabled(!enabled);
+        hintNumber.setEnabled(!enabled);
+        turnAction.setEnabled(!enabled);
+        textToSpeechButton.setEnabled(!enabled);
+        viewPreviousHints.setEnabled(!enabled);
     }
 
     public void updateSpinner() {
@@ -601,6 +776,9 @@ public class local_game extends AppCompatActivity {
 
         exitButton.setBackgroundColor(defaultColour);
         messageButton.setBackgroundColor(defaultColour);
+        turnAction.setBackgroundColor(defaultColour);
+        textToSpeechButton.setBackgroundColor(defaultColour);
+        viewPreviousHints.setBackgroundColor(defaultColour);
 
         if (userSettings.getInstance().getPreference(userSettings.getInstance().MENU_TEXT).equals("")) {
             defaultColour = userSettings.getInstance().MENU_TEXT_DEFAULT;
@@ -612,6 +790,9 @@ public class local_game extends AppCompatActivity {
         messageButton.setTextColor(defaultColour);
         teamCounterLine.setTextColor(defaultColour);
         messageText.setTextColor(defaultColour);
+        turnAction.setTextColor(defaultColour);
+        textToSpeechButton.setTextColor(defaultColour);
+        viewPreviousHints.setTextColor(defaultColour);
 
         switch(gamePhase) {
             case START:
