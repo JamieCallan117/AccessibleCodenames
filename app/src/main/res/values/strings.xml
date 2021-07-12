@@ -23,4 +23,12 @@
     <string name="enter_hint">Enter hint</string>
     <string name="give_hint">Give Hint</string>
     <string name="spymaster_confirmation">Ensure that only the spymasters can see the screen before proceeding.</string>
+    <string name="ok">OK</string>
+    <string name="team_a_win">Congratulations Team A! You won!</string>
+    <string name="team_b_win">Congratulations Team B! You won!</string>
+    <string name="team_a_loss">Sorry Team A. You lost this game.</string>
+    <string name="team_b_loss">Sorry Team B. You lost this game.</string>
+    <string name="invalid_hint">Invalid hint. Ensure no spaces or words that are present on the board.</string>
+    <string name="end_turn">End turn</string>
+    <string name="exit_confirm">Are you sure you want to exit the game?</string>
 </resources>

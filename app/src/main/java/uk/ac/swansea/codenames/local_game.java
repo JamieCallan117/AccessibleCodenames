@@ -9,12 +9,10 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -44,20 +42,22 @@ public class local_game extends AppCompatActivity {
     private int teamBSquaresCount = 8;
     private int startingTeam = 1;
     private int defaultColour;
-    private final int MAX_WORDS = 25;
+    private boolean messageBoxOpen = false;
     private ArrayList<String> customWords;
     private String[] bombWords;
     private String[] neutralWords;
     private String[] teamAWords;
     private String[] teamBWords;
-    private String[] words = new String[25];
+    private final String[] words = new String[25];
     private WordButton[] wordButtons;
     private Button exitButton;
-    private Button messageButton;
+    private Button confirmButton;
     private Button turnAction;
     private Button textToSpeechButton;
     private Button viewPreviousHints;
     private Button hidePreviousHints;
+    private Button yesMessage;
+    private Button noMessage;
     private TextView teamACount;
     private TextView teamBCount;
     private TextView teamCounterLine;
@@ -66,6 +66,7 @@ public class local_game extends AppCompatActivity {
     private EditText editHint;
     private androidx.gridlayout.widget.GridLayout messageBox;
     private ConstraintLayout constraintLayout;
+    private LinearLayout gameOperationsLinear;
     private LinearLayout previousHints;
     private WordButton squareOne;
     private WordButton squareTwo;
@@ -96,9 +97,7 @@ public class local_game extends AppCompatActivity {
     private ScrollView previousHintsScroll;
     private ScrollView gameOperations;
 
-    //TODO: Add confirmation to quit game.
-    //TODO: Add win screen.
-    //TODO: Clean up and other small features
+    //TODO: Implement TTS
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +109,9 @@ public class local_game extends AppCompatActivity {
         exitButton = findViewById(R.id.exitButton);
         messageBox = findViewById(R.id.messageBox);
         messageText = findViewById(R.id.messageText);
-        messageButton = findViewById(R.id.messageButton);
+        confirmButton = findViewById(R.id.confirmButton);
+        yesMessage = findViewById(R.id.yesMessage);
+        noMessage = findViewById(R.id.noMessage);
 
         teamACount = findViewById(R.id.teamACount);
         teamBCount = findViewById(R.id.teamBCount);
@@ -124,6 +125,7 @@ public class local_game extends AppCompatActivity {
         textToSpeechButton = findViewById(R.id.textToSpeechButton);
         viewPreviousHints = findViewById(R.id.viewPreviousHints);
         gameOperations = findViewById(R.id.gameOperations);
+        gameOperationsLinear = findViewById(R.id.gameOperationsLinear);
 
         previousHintsScroll = findViewById(R.id.previousHintsScroll);
         previousHints = findViewById(R.id.previousHints);
@@ -188,7 +190,7 @@ public class local_game extends AppCompatActivity {
                 squareSeventeen, squareEighteen, squareNineteen, squareTwenty, squareTwentyOne,
                 squareTwentyTwo, squareTwentyThree, squareTwentyFour, squareTwentyFive};
 
-        toggleMessageBox(true);
+        toggleMessageBox(true, 0);
 
         //Reads words from the text file to store in the defaultWords array
         String wordsFromFile = "";
@@ -212,6 +214,7 @@ public class local_game extends AppCompatActivity {
 
         ArrayList<String> defaultWords = new ArrayList<>(Arrays.asList(temp));
 
+        int MAX_WORDS = 25;
         int defaultWordsNeeded = MAX_WORDS;
 
         if (customWords != null) {
@@ -221,7 +224,7 @@ public class local_game extends AppCompatActivity {
             }
         }
 
-        ArrayList<Integer> list = new ArrayList<Integer>();
+        ArrayList<Integer> list = new ArrayList<>();
 
         for (int i = 0; i < defaultWords.size(); i++) {
             list.add(i);
@@ -269,191 +272,60 @@ public class local_game extends AppCompatActivity {
             counter++;
         }
 
-        constraintLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("Current phase: " + gamePhase.toString());
-            }
-        });
+        constraintLayout.setOnClickListener(v -> System.out.println("Current phase: " + gamePhase.toString()));
 
-        squareOne.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareOne);
-            }
-        });
+        squareOne.setOnClickListener(v -> wordButtonPress(squareOne));
 
-        squareTwo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareTwo);
-            }
-        });
+        squareTwo.setOnClickListener(v -> wordButtonPress(squareTwo));
 
-        squareThree.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareThree);
-            }
-        });
+        squareThree.setOnClickListener(v -> wordButtonPress(squareThree));
 
-        squareFour.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareFour);
-            }
-        });
+        squareFour.setOnClickListener(v -> wordButtonPress(squareFour));
 
-        squareFive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareFive);
-            }
-        });
+        squareFive.setOnClickListener(v -> wordButtonPress(squareFive));
 
-        squareSix.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareSix);
-            }
-        });
+        squareSix.setOnClickListener(v -> wordButtonPress(squareSix));
 
-        squareSeven.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareSeven);
-            }
-        });
+        squareSeven.setOnClickListener(v -> wordButtonPress(squareSeven));
 
-        squareEight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareEight);
-            }
-        });
+        squareEight.setOnClickListener(v -> wordButtonPress(squareEight));
 
-        squareNine.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareNine);
-            }
-        });
+        squareNine.setOnClickListener(v -> wordButtonPress(squareNine));
 
-        squareTen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareTen);
-            }
-        });
+        squareTen.setOnClickListener(v -> wordButtonPress(squareTen));
 
-        squareEleven.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareEleven);
-            }
-        });
+        squareEleven.setOnClickListener(v -> wordButtonPress(squareEleven));
 
-        squareTwelve.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareTwelve);
-            }
-        });
+        squareTwelve.setOnClickListener(v -> wordButtonPress(squareTwelve));
 
-        squareThirteen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareThirteen);
-            }
-        });
+        squareThirteen.setOnClickListener(v -> wordButtonPress(squareThirteen));
 
-        squareFourteen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareFourteen);
-            }
-        });
+        squareFourteen.setOnClickListener(v -> wordButtonPress(squareFourteen));
 
-        squareFifteen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareFifteen);
-            }
-        });
+        squareFifteen.setOnClickListener(v -> wordButtonPress(squareFifteen));
 
-        squareSixteen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareSixteen);
-            }
-        });
+        squareSixteen.setOnClickListener(v -> wordButtonPress(squareSixteen));
 
-        squareSeventeen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareSeventeen);
-            }
-        });
+        squareSeventeen.setOnClickListener(v -> wordButtonPress(squareSeventeen));
 
-        squareEighteen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareEighteen);
-            }
-        });
+        squareEighteen.setOnClickListener(v -> wordButtonPress(squareEighteen));
 
-        squareNineteen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareNineteen);
-            }
-        });
+        squareNineteen.setOnClickListener(v -> wordButtonPress(squareNineteen));
 
-        squareTwenty.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareTwenty);
-            }
-        });
+        squareTwenty.setOnClickListener(v -> wordButtonPress(squareTwenty));
 
-        squareTwentyOne.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareTwentyOne);
-            }
-        });
+        squareTwentyOne.setOnClickListener(v -> wordButtonPress(squareTwentyOne));
 
-        squareTwentyTwo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareTwentyTwo);
-            }
-        });
+        squareTwentyTwo.setOnClickListener(v -> wordButtonPress(squareTwentyTwo));
 
-        squareTwentyThree.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareTwentyThree);
-            }
-        });
+        squareTwentyThree.setOnClickListener(v -> wordButtonPress(squareTwentyThree));
 
-        squareTwentyFour.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareTwentyFour);
-            }
-        });
+        squareTwentyFour.setOnClickListener(v -> wordButtonPress(squareTwentyFour));
 
-        squareTwentyFive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wordButtonPress(squareTwentyFive);
-            }
-        });
+        squareTwentyFive.setOnClickListener(v -> wordButtonPress(squareTwentyFive));
 
-        messageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        confirmButton.setOnClickListener(v -> {
+            if (gamePhase != TEAM_A_WIN && gamePhase != TEAM_B_WIN) {
                 switch (gamePhase) {
                     case TEAM_A_INTERMISSION:
                         gamePhase = TEAM_A_SPY;
@@ -465,136 +337,138 @@ public class local_game extends AppCompatActivity {
 
                 hintText.setText("");
 
-                turnAction.setText("Give Hint");
+                turnAction.setText(R.string.give_hint);
 
                 editHint.setVisibility(View.VISIBLE);
                 hintNumber.setVisibility(View.VISIBLE);
 
                 editHint.setText("");
 
-                toggleMessageBox(false);
+                toggleMessageBox(false, 0);
 
                 updateSpinner();
 
-                updateColours();
+            } else {
+                teamACount.setPaintFlags(teamACount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
+                teamBCount.setPaintFlags(teamBCount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
+                hintText.setText("");
+
+                gameOperationsLinear.removeView(editHint);
+                gameOperationsLinear.removeView(hintNumber);
+                gameOperationsLinear.removeView(turnAction);
+
+                toggleMessageBox(false, 0);
+
             }
+
+            updateColours();
         });
 
-        turnAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean validHint = true;
+        turnAction.setOnClickListener(v -> {
+            boolean validHint = true;
 
-                switch (gamePhase) {
-                    case TEAM_A:
-                        gamePhase = TEAM_B_INTERMISSION;
+            switch (gamePhase) {
+                case TEAM_A:
+                    gamePhase = TEAM_B_INTERMISSION;
 
-                        teamBCount.setPaintFlags(teamBCount.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
-                        teamACount.setPaintFlags(teamACount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
+                    teamBCount.setPaintFlags(teamBCount.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+                    teamACount.setPaintFlags(teamACount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
 
-                        messageText.setText("Ensure that only the spymasters can see the screen before proceeding.");
-                        messageButton.setText("Confirm");
-                        toggleMessageBox(true);
+                    messageText.setText(R.string.spymaster_confirmation);
+                    confirmButton.setText(R.string.confirm);
+                    toggleMessageBox(true, 0);
 
-                        break;
-                    case TEAM_B:
-                        gamePhase = TEAM_A_INTERMISSION;
+                    break;
+                case TEAM_B:
+                    gamePhase = TEAM_A_INTERMISSION;
 
-                        teamACount.setPaintFlags(teamACount.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
-                        teamBCount.setPaintFlags(teamBCount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
+                    teamACount.setPaintFlags(teamACount.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+                    teamBCount.setPaintFlags(teamBCount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
 
-                        messageText.setText("Ensure that only the spymasters can see the screen before proceeding.");
-                        messageButton.setText("Confirm");
-                        toggleMessageBox(true);
+                    messageText.setText(R.string.spymaster_confirmation);
+                    confirmButton.setText(R.string.confirm);
+                    toggleMessageBox(true, 0);
 
-                        break;
-                    case TEAM_A_SPY:
-                        if (editHint.getText().toString().equals("")) {
-                            validHint = false;
-                        } else if (editHint.getText().toString().contains(" ")) {
-                            validHint = false;
-                        }
+                    break;
+                case TEAM_A_SPY:
+                    if (editHint.getText().toString().equals("")) {
+                        validHint = false;
+                    } else if (editHint.getText().toString().contains(" ")) {
+                        validHint = false;
+                    }
 
-                        for (WordButton wb : wordButtons) {
-                            if (editHint.getText().toString().toUpperCase().contains(wb.getText().toString().toUpperCase())) {
-                                validHint = false;
-                            }
-                        }
-
-                        if (validHint) {
-                            turnAction.setText("End turn");
-                            gamePhase = TEAM_A;
-                            String hint = editHint.getText().toString() + ": " + hintNumber.getSelectedItem().toString();
-                            hintText.setText(hint);
-
-                            editHint.setVisibility(View.INVISIBLE);
-                            hintNumber.setVisibility(View.INVISIBLE);
-
-                            addHint(hint);
-                        } else {
-                            messageText.setText("Invalid hint. Ensure no spaces or words that are present on the board.");
-                            messageButton.setText("Ok");
-                            toggleMessageBox(true);
-                        }
-
-                        break;
-                    case TEAM_B_SPY:
-                        if (editHint.getText().toString().equals("")) {
-                            validHint = false;
-                        } else if (editHint.getText().toString().contains(" ")) {
+                    for (WordButton wb : wordButtons) {
+                        if (editHint.getText().toString().toUpperCase().contains(wb.getText().toString().toUpperCase())) {
                             validHint = false;
                         }
+                    }
 
-                        for (WordButton wb : wordButtons) {
-                            if (editHint.getText().toString().toUpperCase().contains(wb.getText().toString().toUpperCase())) {
-                                validHint = false;
-                            }
+                    if (validHint) {
+                        turnAction.setText(R.string.end_turn);
+                        gamePhase = TEAM_A;
+                        String hint = editHint.getText().toString() + ": " + hintNumber.getSelectedItem().toString();
+                        hintText.setText(hint);
+
+                        editHint.setVisibility(View.INVISIBLE);
+                        hintNumber.setVisibility(View.INVISIBLE);
+
+                        addHint(hint);
+                    } else {
+                        messageText.setText(R.string.invalid_hint);
+                        confirmButton.setText(R.string.ok);
+                        toggleMessageBox(true, 0);
+                    }
+
+                    break;
+                case TEAM_B_SPY:
+                    if (editHint.getText().toString().equals("")) {
+                        validHint = false;
+                    } else if (editHint.getText().toString().contains(" ")) {
+                        validHint = false;
+                    }
+
+                    for (WordButton wb : wordButtons) {
+                        if (editHint.getText().toString().toUpperCase().contains(wb.getText().toString().toUpperCase())) {
+                            validHint = false;
+                        }
+                    }
+
+                    if (validHint) {
+                        turnAction.setText(R.string.end_turn);
+                        gamePhase = TEAM_B;
+                        String hint = editHint.getText().toString() + ": " + hintNumber.getSelectedItem().toString();
+                        hintText.setText(hint);
+
+                        editHint.setVisibility(View.INVISIBLE);
+                        hintNumber.setVisibility(View.INVISIBLE);
+
+                        addHint(hint);
+                    } else {
+                        messageText.setText(R.string.invalid_hint);
+                        confirmButton.setText(R.string.ok);
+                        toggleMessageBox(true, 0);
                         }
 
-                        if (validHint) {
-                            turnAction.setText("End turn");
-                            gamePhase = TEAM_B;
-                            String hint = editHint.getText().toString() + ": " + hintNumber.getSelectedItem().toString();
-                            hintText.setText(hint);
-
-                            editHint.setVisibility(View.INVISIBLE);
-                            hintNumber.setVisibility(View.INVISIBLE);
-
-                            addHint(hint);
-                        } else {
-                            messageText.setText("Invalid hint. Ensure no spaces or words that are present on the board.");
-                            messageButton.setText("Ok");
-                            toggleMessageBox(true);
-                            }
-
-                        break;
-                }
-
-                updateColours();
+                    break;
             }
+
+            updateColours();
         });
 
-        textToSpeechButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        noMessage.setOnClickListener(v -> toggleMessageBox(false, 1));
 
-            }
+        textToSpeechButton.setOnClickListener(v -> {
+
         });
 
-        viewPreviousHints.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                previousHintsScroll.setVisibility(View.VISIBLE);
-                gameOperations.setVisibility(View.INVISIBLE);
-            }
+        viewPreviousHints.setOnClickListener(v -> {
+            previousHintsScroll.setVisibility(View.VISIBLE);
+            gameOperations.setVisibility(View.INVISIBLE);
         });
 
-        hidePreviousHints.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                previousHintsScroll.setVisibility(View.INVISIBLE);
-                gameOperations.setVisibility(View.VISIBLE);
-            }
+        hidePreviousHints.setOnClickListener(v -> {
+            previousHintsScroll.setVisibility(View.INVISIBLE);
+            gameOperations.setVisibility(View.VISIBLE);
         });
 
         updateColours();
@@ -602,17 +476,30 @@ public class local_game extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        exitButton(getWindow().getDecorView());
+        if (!messageBoxOpen) {
+            exitButton(getWindow().getDecorView());
+        }
     }
 
     public void exitButton(View view) {
+        if (gamePhase == TEAM_A_WIN || gamePhase == TEAM_B_WIN) {
+            Intent i = new Intent(view.getContext(), main_menu.class);
+            startActivity(i);
+        } else {
+            messageText.setText(R.string.exit_confirm);
+            toggleMessageBox(true, 1);
+        }
+    }
+
+    public void yesMessage(View view) {
         Intent i = new Intent(view.getContext(), main_menu.class);
         startActivity(i);
     }
 
     public void wordButtonPress(WordButton buttonPressed) {
         if (!buttonPressed.hasBeenClicked() && gamePhase != TEAM_A_SPY && gamePhase != TEAM_B_SPY &&
-                gamePhase != TEAM_A_INTERMISSION && gamePhase != TEAM_B_INTERMISSION) {
+                gamePhase != TEAM_A_INTERMISSION && gamePhase != TEAM_B_INTERMISSION &&
+                gamePhase != TEAM_A_WIN && gamePhase != TEAM_B_WIN) {
             buttonPressed.setHasBeenClicked(true);
 
             String buttonType = "";
@@ -674,10 +561,10 @@ public class local_game extends AppCompatActivity {
                         teamBCount.setPaintFlags(teamBCount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
                     }
 
-                    messageText.setText("Ensure that only the spymasters can see the screen before proceeding.");
-                    messageButton.setText("Confirm");
+                    messageText.setText(R.string.spymaster_confirmation);
+                    confirmButton.setText(R.string.confirm);
 
-                    toggleMessageBox(true);
+                    toggleMessageBox(true, 0);
 
                     break;
                 case "teamA":
@@ -686,10 +573,10 @@ public class local_game extends AppCompatActivity {
                         teamACount.setPaintFlags(teamACount.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
                         teamBCount.setPaintFlags(teamBCount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
 
-                        messageText.setText("Ensure that only the spymasters can see the screen before proceeding.");
-                        messageButton.setText("Confirm");
+                        messageText.setText(R.string.spymaster_confirmation);
+                        confirmButton.setText(R.string.confirm);
 
-                        toggleMessageBox(true);
+                        toggleMessageBox(true, 0);
                     }
 
                     teamASquaresCount--;
@@ -707,10 +594,10 @@ public class local_game extends AppCompatActivity {
                         teamBCount.setPaintFlags(teamBCount.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
                         teamACount.setPaintFlags(teamACount.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
 
-                        messageText.setText("Ensure that only the spymasters can see the screen before proceeding.");
-                        messageButton.setText("Confirm");
+                        messageText.setText(R.string.spymaster_confirmation);
+                        confirmButton.setText(R.string.confirm);
 
-                        toggleMessageBox(true);
+                        toggleMessageBox(true, 0);
                     }
 
                     teamBSquaresCount--;
@@ -727,10 +614,20 @@ public class local_game extends AppCompatActivity {
     }
 
     public void gameWin() {
-        toggleMessageBox(true);
+        if (gamePhase == TEAM_A_WIN) {
+            messageText.setText(R.string.team_a_win);
+        } else {
+            messageText.setText(R.string.team_b_win);
+        }
+
+        confirmButton.setText(R.string.ok);
+
+        toggleMessageBox(true, 0);
     }
     
-    public void toggleMessageBox(boolean enabled) {
+    public void toggleMessageBox(boolean enabled, int type) {
+        messageBoxOpen = enabled;
+
         if (enabled) {
             messageBox.setVisibility(View.VISIBLE);
         } else {
@@ -747,6 +644,16 @@ public class local_game extends AppCompatActivity {
         turnAction.setEnabled(!enabled);
         textToSpeechButton.setEnabled(!enabled);
         viewPreviousHints.setEnabled(!enabled);
+        
+        if (type == 0) {
+            confirmButton.setVisibility(View.VISIBLE);
+            yesMessage.setVisibility(View.INVISIBLE);
+            noMessage.setVisibility(View.INVISIBLE);
+        } else {
+            confirmButton.setVisibility(View.INVISIBLE);
+            yesMessage.setVisibility(View.VISIBLE);
+            noMessage.setVisibility(View.VISIBLE);
+        }
     }
 
     public void addHint(String hint) {
@@ -771,10 +678,13 @@ public class local_game extends AppCompatActivity {
         newHint.setTextColor(defaultColour);
         newHint.setGravity(Gravity.CENTER);
         newHint.setTextSize(16);
+
+        //Use this for TTS
+        newHint.setOnClickListener(v -> System.out.println(newHint.getText().toString()));
     }
 
     public void updateSpinner() {
-        List<String> spinnerArray = new ArrayList<String>();
+        List<String> spinnerArray = new ArrayList<>();
         spinnerArray.add("∞");
 
         if (gamePhase == TEAM_A_SPY) {
@@ -788,7 +698,7 @@ public class local_game extends AppCompatActivity {
             }
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, spinnerArray);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -828,7 +738,9 @@ public class local_game extends AppCompatActivity {
         }
 
         exitButton.setBackgroundColor(defaultColour);
-        messageButton.setBackgroundColor(defaultColour);
+        confirmButton.setBackgroundColor(defaultColour);
+        yesMessage.setBackgroundColor(defaultColour);
+        noMessage.setBackgroundColor(defaultColour);
         turnAction.setBackgroundColor(defaultColour);
         textToSpeechButton.setBackgroundColor(defaultColour);
         viewPreviousHints.setBackgroundColor(defaultColour);
@@ -841,7 +753,9 @@ public class local_game extends AppCompatActivity {
         }
 
         exitButton.setTextColor(defaultColour);
-        messageButton.setTextColor(defaultColour);
+        confirmButton.setTextColor(defaultColour);
+        yesMessage.setTextColor(defaultColour);
+        noMessage.setTextColor(defaultColour);
         teamCounterLine.setTextColor(defaultColour);
         messageText.setTextColor(defaultColour);
         turnAction.setTextColor(defaultColour);

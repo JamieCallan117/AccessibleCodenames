@@ -14,7 +14,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/squareTwo"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="8dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareTwo"
@@ -23,7 +24,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/squareThree"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="8dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareThree"
@@ -32,7 +34,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/squareFour"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="8dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareFour"
@@ -41,7 +44,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/squareFive"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="8dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareFive"
@@ -50,7 +54,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="16dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareSix"
@@ -59,7 +64,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/squareSeven"
-        app:layout_constraintTop_toBottomOf="@+id/squareOne" />
+        app:layout_constraintTop_toBottomOf="@+id/squareOne"
+        android:layout_marginRight="8dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareSeven"
@@ -68,7 +74,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/squareEight"
-        app:layout_constraintTop_toBottomOf="@+id/squareTwo" />
+        app:layout_constraintTop_toBottomOf="@+id/squareTwo"
+        android:layout_marginRight="8dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareEight"
@@ -77,7 +84,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/squareNine"
-        app:layout_constraintTop_toBottomOf="@+id/squareThree" />
+        app:layout_constraintTop_toBottomOf="@+id/squareThree"
+        android:layout_marginRight="8dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareNine"
@@ -86,7 +94,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/squareTen"
-        app:layout_constraintTop_toBottomOf="@+id/squareFour" />
+        app:layout_constraintTop_toBottomOf="@+id/squareFour"
+        android:layout_marginRight="8dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareTen"
@@ -95,7 +104,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/squareFive" />
+        app:layout_constraintTop_toBottomOf="@+id/squareFive"
+        android:layout_marginRight="16dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareEleven"
@@ -104,7 +114,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/squareTwelve"
-        app:layout_constraintTop_toBottomOf="@+id/squareSix" />
+        app:layout_constraintTop_toBottomOf="@+id/squareSix"
+        android:layout_marginRight="8dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareTwelve"
@@ -113,7 +124,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/squareThirteen"
-        app:layout_constraintTop_toBottomOf="@+id/squareSeven" />
+        app:layout_constraintTop_toBottomOf="@+id/squareSeven"
+        android:layout_marginRight="8dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareThirteen"
@@ -122,7 +134,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/squareFourteen"
-        app:layout_constraintTop_toBottomOf="@+id/squareEight" />
+        app:layout_constraintTop_toBottomOf="@+id/squareEight"
+        android:layout_marginRight="8dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareFourteen"
@@ -131,7 +144,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/squareFifteen"
-        app:layout_constraintTop_toBottomOf="@+id/squareNine" />
+        app:layout_constraintTop_toBottomOf="@+id/squareNine"
+        android:layout_marginRight="8dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareFifteen"
@@ -140,7 +154,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/squareTen" />
+        app:layout_constraintTop_toBottomOf="@+id/squareTen"
+        android:layout_marginRight="16dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareSixteen"
@@ -149,7 +164,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/squareSeventeen"
-        app:layout_constraintTop_toBottomOf="@+id/squareEleven" />
+        app:layout_constraintTop_toBottomOf="@+id/squareEleven"
+        android:layout_marginRight="8dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareSeventeen"
@@ -158,7 +174,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/squareEighteen"
-        app:layout_constraintTop_toBottomOf="@+id/squareTwelve" />
+        app:layout_constraintTop_toBottomOf="@+id/squareTwelve"
+        android:layout_marginRight="8dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareEighteen"
@@ -167,7 +184,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/squareNineteen"
-        app:layout_constraintTop_toBottomOf="@+id/squareThirteen" />
+        app:layout_constraintTop_toBottomOf="@+id/squareThirteen"
+        android:layout_marginRight="8dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareNineteen"
@@ -176,7 +194,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/squareTwenty"
-        app:layout_constraintTop_toBottomOf="@+id/squareFourteen" />
+        app:layout_constraintTop_toBottomOf="@+id/squareFourteen"
+        android:layout_marginRight="8dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareTwenty"
@@ -185,7 +204,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/squareFifteen" />
+        app:layout_constraintTop_toBottomOf="@+id/squareFifteen"
+        android:layout_marginRight="16dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareTwentyOne"
@@ -194,7 +214,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/squareTwentyTwo"
-        app:layout_constraintTop_toBottomOf="@+id/squareSixteen" />
+        app:layout_constraintTop_toBottomOf="@+id/squareSixteen"
+        android:layout_marginRight="8dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareTwentyTwo"
@@ -203,7 +224,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/squareTwentyThree"
-        app:layout_constraintTop_toBottomOf="@+id/squareSeventeen" />
+        app:layout_constraintTop_toBottomOf="@+id/squareSeventeen"
+        android:layout_marginRight="8dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareTwentyThree"
@@ -212,7 +234,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/squareTwentyFour"
-        app:layout_constraintTop_toBottomOf="@+id/squareEighteen" />
+        app:layout_constraintTop_toBottomOf="@+id/squareEighteen"
+        android:layout_marginRight="8dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareTwentyFour"
@@ -221,7 +244,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/squareTwentyFive"
-        app:layout_constraintTop_toBottomOf="@+id/squareNineteen" />
+        app:layout_constraintTop_toBottomOf="@+id/squareNineteen"
+        android:layout_marginRight="8dp" />
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareTwentyFive"
@@ -230,7 +254,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/squareTwenty" />
+        app:layout_constraintTop_toBottomOf="@+id/squareTwenty"
+        android:layout_marginRight="16dp" />
 
     <Button
         android:id="@+id/exitButton"
@@ -241,7 +266,8 @@
         android:onClick="exitButton"
         android:text="@string/exit"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="16dp" />
 
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/messageBox"
@@ -270,14 +296,37 @@
             android:text="@string/spymaster_confirmation"
             android:textSize="20sp"
             app:layout_column="0"
+            app:layout_columnSpan="3"
             app:layout_row="0" />
 
         <Button
-            android:id="@+id/messageButton"
+            android:id="@+id/yesMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="yesMessage"
+            android:text="@string/yes"
+            app:layout_column="0"
+            app:layout_columnWeight="1"
+            app:layout_gravity="center_horizontal|center_vertical"
+            app:layout_row="1" />
+
+        <Button
+            android:id="@+id/confirmButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/confirm"
-            app:layout_column="0"
+            app:layout_column="1"
+            app:layout_columnWeight="1"
+            app:layout_gravity="center_horizontal|center_vertical"
+            app:layout_row="1" />
+
+        <Button
+            android:id="@+id/noMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no"
+            app:layout_column="2"
+            app:layout_columnWeight="1"
             app:layout_gravity="center_horizontal|center_vertical"
             app:layout_row="1" />
     </androidx.gridlayout.widget.GridLayout>
@@ -291,6 +340,7 @@
         app:layout_constraintTop_toBottomOf="@+id/exitButton">
 
         <LinearLayout
+            android:id="@+id/gameOperationsLinear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -301,7 +351,8 @@
                 android:layout_height="60dp"
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="14dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginLeft="6dp">
 
                 <TextView
                     android:id="@+id/teamACount"
@@ -339,7 +390,8 @@
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="1dp"
                 android:gravity="center"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:layout_marginLeft="6dp" />
 
             <EditText
                 android:id="@+id/editHint"
@@ -349,14 +401,16 @@
                 android:ems="10"
                 android:hint="@string/enter_hint"
                 android:importantForAutofill="no"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:layout_marginLeft="6dp" />
 
             <Spinner
                 android:id="@+id/hintNumber"
                 android:layout_width="110dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="6dp"
-                android:spinnerMode="dropdown" />
+                android:spinnerMode="dropdown"
+                android:layout_marginLeft="6dp" />
 
             <Button
                 android:id="@+id/turnAction"
@@ -364,7 +418,8 @@
                 android:layout_height="55dp"
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/give_hint" />
+                android:text="@string/give_hint"
+                android:layout_marginLeft="6dp" />
 
             <Button
                 android:id="@+id/textToSpeechButton"
@@ -372,7 +427,8 @@
                 android:layout_height="55dp"
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/text_to_speech" />
+                android:text="@string/text_to_speech"
+                android:layout_marginLeft="6dp" />
 
             <Button
                 android:id="@+id/viewPreviousHints"
@@ -380,7 +436,8 @@
                 android:layout_height="55dp"
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/previous_hints" />
+                android:text="@string/previous_hints"
+                android:layout_marginLeft="6dp" />
         </LinearLayout>
     </ScrollView>
 
@@ -406,7 +463,8 @@
                 android:layout_height="55dp"
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/hide_hints" />
+                android:text="@string/hide_hints"
+                android:layout_marginLeft="6dp" />
         </LinearLayout>
 
     </ScrollView>
