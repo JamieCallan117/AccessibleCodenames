@@ -48,12 +48,14 @@ public class main_menu extends AppCompatActivity {
     }
 
     public void playLocal(View view) {
-        Intent i = new Intent(view.getContext(), local_setup.class);
+        Intent i = new Intent(view.getContext(), game_setup.class);
+        i.putExtra("type", "local");
         startActivity(i);
     }
 
     public void playOnline(View view) {
-        Intent i = new Intent(view.getContext(), online_setup.class);
+        Intent i = new Intent(view.getContext(), game_setup.class);
+        i.putExtra("type", "online");
         startActivity(i);
     }
 

@@ -2,7 +2,6 @@ package uk.ac.swansea.codenames;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -10,7 +9,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -139,9 +137,9 @@ public class game_options extends AppCompatActivity {
 
         gameOptionsSubtitle = findViewById(R.id.gameOptionsSubtitle);
 
-        if (getIntent().getStringExtra("from").equals("local_setup")) {
+        if (getIntent().getStringExtra("type").equals("local")) {
             gameOptionsSubtitle.setText("Local");
-        } else if (getIntent().getStringExtra("from").equals("online_setup")) {
+        } else if (getIntent().getStringExtra("type").equals("online")) {
             gameOptionsSubtitle.setText("Online");
         }
 
@@ -529,11 +527,14 @@ public class game_options extends AppCompatActivity {
     public void backYes(View view) {
         Intent i;
 
-        if (getIntent().getStringExtra("from").equals("local_setup")) {
-            i = new Intent(view.getContext(), local_setup.class);
+        if (getIntent().getStringExtra("type").equals("local")) {
+            i = new Intent(view.getContext(), game_setup.class);
+            i.putExtra("type", "local");
             startActivity(i);
-        } else if (getIntent().getStringExtra("from").equals("online_setup")) {
-            i = new Intent(view.getContext(), online_setup.class);
+        } else if (getIntent().getStringExtra("type").equals("online")) {
+            i = new Intent(view.getContext(), game_setup.class);
+            i.putExtra("type", "online");
+            i.putExtra("creatingGame", true);
             startActivity(i);
         }
     }
@@ -598,8 +599,9 @@ public class game_options extends AppCompatActivity {
         }
 
         if (validSave) {
-            if (getIntent().getStringExtra("from").equals("local_setup")) {
-                i = new Intent(view.getContext(), local_setup.class);
+            if (getIntent().getStringExtra("type").equals("local")) {
+                i = new Intent(view.getContext(), game_setup.class);
+                i.putExtra("type","local");
 
                 if (startingTeamButton.isChecked()) {
                     startingTeam = 1;
@@ -627,8 +629,9 @@ public class game_options extends AppCompatActivity {
                 i.putExtra("customWords", customWords);
 
                 startActivity(i);
-            } else if (getIntent().getStringExtra("from").equals("online_setup")) {
-                i = new Intent(view.getContext(), online_setup.class);
+            } else if (getIntent().getStringExtra("type").equals("online")) {
+                i = new Intent(view.getContext(), game_setup.class);
+                i.putExtra("type", "online");
 
                 if (startingTeamButton.isChecked()) {
                     startingTeam = 1;
@@ -654,6 +657,8 @@ public class game_options extends AppCompatActivity {
                 }
 
                 i.putExtra("customWords", customWords);
+
+                i.putExtra("creatingGame", true);
 
                 startActivity(i);
             }
