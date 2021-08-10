@@ -34,7 +34,19 @@
             android:screenOrientation="sensorLandscape">
         </activity>
         <activity
-            android:name=".game_setup"
+            android:name=".local_setup"
+            android:screenOrientation="sensorLandscape">
+        </activity>
+        <activity
+            android:name=".online_setup"
+            android:screenOrientation="sensorLandscape">
+        </activity>
+        <activity
+            android:name=".create_game"
+            android:screenOrientation="sensorLandscape">
+        </activity>
+        <activity
+            android:name=".join_game"
             android:screenOrientation="sensorLandscape">
         </activity>
         <activity
@@ -43,6 +55,10 @@
         </activity>
         <activity
             android:name=".local_game"
+            android:screenOrientation="sensorLandscape">
+        </activity>
+        <activity
+            android:name=".online_game"
             android:screenOrientation="sensorLandscape">
         </activity>
     </application>

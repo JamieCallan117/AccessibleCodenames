@@ -528,11 +528,11 @@ public class game_options extends AppCompatActivity {
         Intent i;
 
         if (getIntent().getStringExtra("type").equals("local")) {
-            i = new Intent(view.getContext(), game_setup.class);
+            i = new Intent(view.getContext(), local_setup.class);
             i.putExtra("type", "local");
             startActivity(i);
         } else if (getIntent().getStringExtra("type").equals("online")) {
-            i = new Intent(view.getContext(), game_setup.class);
+            i = new Intent(view.getContext(), local_setup.class);
             i.putExtra("type", "online");
             i.putExtra("creatingGame", true);
             startActivity(i);
@@ -600,7 +600,7 @@ public class game_options extends AppCompatActivity {
 
         if (validSave) {
             if (getIntent().getStringExtra("type").equals("local")) {
-                i = new Intent(view.getContext(), game_setup.class);
+                i = new Intent(view.getContext(), local_setup.class);
                 i.putExtra("type","local");
 
                 if (startingTeamButton.isChecked()) {
@@ -630,7 +630,7 @@ public class game_options extends AppCompatActivity {
 
                 startActivity(i);
             } else if (getIntent().getStringExtra("type").equals("online")) {
-                i = new Intent(view.getContext(), game_setup.class);
+                i = new Intent(view.getContext(), local_setup.class);
                 i.putExtra("type", "online");
 
                 if (startingTeamButton.isChecked()) {

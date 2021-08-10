@@ -1,4 +1,20 @@
 package uk.ac.swansea.codenames;
 
-public class online_game {
+import android.os.Bundle;
+import android.view.WindowManager;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class online_game extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.online_game);
+
+        updateColours();
+    }
+    private void updateColours() {
+
+    }
 }

@@ -494,7 +494,7 @@
             android:id="@+id/teamASquaresText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Team 1 Squares" />
+            android:text="Team A Squares" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -528,7 +528,7 @@
             android:id="@+id/teamBSquaresText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Team 2 Squares" />
+            android:text="Team B Squares" />
 
         <LinearLayout
             android:layout_width="match_parent"

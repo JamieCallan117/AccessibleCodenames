@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".online_setup">
+
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/messageBox"
+        android:layout_width="330dp"
+        android:layout_height="159dp"
+        android:background="#FFFFFF"
+        android:elevation="2dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/messageText"
+            android:layout_width="match_parent"
+            android:layout_height="87dp"
+            android:fontFamily="@font/general_font"
+            android:gravity="center"
+            android:text=""
+            android:textSize="20sp"
+            app:layout_column="0"
+            app:layout_columnSpan="3"
+            app:layout_row="0" />
+
+        <Button
+            android:id="@+id/okButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ok"
+            app:layout_column="1"
+            app:layout_columnWeight="1"
+            app:layout_gravity="center_horizontal|center_vertical"
+            app:layout_row="1" />
+
+    </androidx.gridlayout.widget.GridLayout>
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="627dp"
+        android:layout_marginRight="627dp"
+        android:layout_marginBottom="353dp"
+        android:onClick="backButton"
+        android:text="@string/back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/gameSetupTitle"
+        android:layout_width="607dp"
+        android:layout_height="95dp"
+        android:layout_marginStart="62dp"
+        android:layout_marginLeft="62dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="62dp"
+        android:layout_marginRight="62dp"
+        android:layout_marginBottom="268dp"
+        android:ems="10"
+        android:fontFamily="@font/title_font"
+        android:gravity="center_horizontal"
+        android:text="@string/app_name"
+        android:textSize="74sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/gameSetupSubtitle"
+        android:layout_width="175dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="241dp"
+        android:ems="10"
+        android:fontFamily="@font/title_font"
+        android:gravity="center_horizontal"
+        android:text="@string/online"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.951"
+        app:layout_constraintStart_toEndOf="@+id/gameSetupTitle"
+        app:layout_constraintTop_toBottomOf="@+id/gameSetupTitle"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/joinGameButton"
+        android:layout_width="144dp"
+        android:layout_height="144dp"
+        android:layout_marginStart="104dp"
+        android:layout_marginTop="27dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginBottom="97dp"
+        android:onClick="joinGame"
+        android:text="@string/join_game"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/createGameButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gameSetupTitle" />
+
+    <Button
+        android:id="@+id/createGameButton"
+        android:layout_width="144dp"
+        android:layout_height="144dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginEnd="104dp"
+        android:layout_marginBottom="97dp"
+        android:onClick="createGame"
+        android:text="@string/create_game"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/joinGameButton"
+        app:layout_constraintTop_toBottomOf="@+id/gameSetupSubtitle" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

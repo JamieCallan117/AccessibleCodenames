@@ -31,4 +31,12 @@
     <string name="invalid_hint">Invalid hint. Ensure no spaces or words that are present on the board.</string>
     <string name="end_turn">End turn</string>
     <string name="exit_confirm">Are you sure you want to exit the game?</string>
+    <string name="game_options">Game Options</string>
+    <string name="create_game">Create Game</string>
+    <string name="join_game">Join Game</string>
+    <string name="server">Server:</string>
+    <string name="nickname">Nickname:</string>
+    <string name="enter_nickname">Enter nickname..</string>
+    <string name="enter_server">Enter server..</string>
+    <string name="unable_server">Unable to connect to server.</string>
 </resources>

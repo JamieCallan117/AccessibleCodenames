@@ -2,10 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/saveButton"
+    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".game_setup">
+    tools:context=".local_setup">
 
     <Button
         android:id="@+id/backButton"
@@ -27,7 +27,7 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
-        android:id="@+id/gameSetupTitle"
+        android:id="@+id/localSetupTitle"
         android:layout_width="607dp"
         android:layout_height="95dp"
         android:layout_marginStart="62dp"
@@ -47,29 +47,27 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/gameSetupSubtitle"
+        android:id="@+id/localSetupSubtitle"
         android:layout_width="175dp"
         android:layout_height="44dp"
         android:layout_marginStart="17dp"
-        android:layout_marginLeft="17dp"
         android:layout_marginTop="17dp"
         android:layout_marginEnd="36dp"
-        android:layout_marginRight="36dp"
         android:layout_marginBottom="241dp"
         android:ems="10"
         android:fontFamily="@font/title_font"
         android:gravity="center_horizontal"
-        android:text=""
+        android:text="@string/local"
         android:textSize="36sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.951"
-        app:layout_constraintStart_toEndOf="@+id/gameSetupTitle"
-        app:layout_constraintTop_toBottomOf="@+id/gameSetupTitle"
+        app:layout_constraintStart_toEndOf="@+id/localSetupTitle"
+        app:layout_constraintTop_toBottomOf="@+id/localSetupTitle"
         app:layout_constraintVertical_bias="1.0" />
 
     <Button
-        android:id="@+id/gameOptionsButton"
+        android:id="@+id/joinGameButton"
         android:layout_width="144dp"
         android:layout_height="144dp"
         android:layout_marginStart="104dp"
@@ -81,12 +79,12 @@
         android:onClick="gameOptions"
         android:text="Game Options"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/playGameButton"
+        app:layout_constraintEnd_toStartOf="@+id/createGameButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gameSetupTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/localSetupTitle" />
 
     <Button
-        android:id="@+id/playGameButton"
+        android:id="@+id/createGameButton"
         android:layout_width="144dp"
         android:layout_height="144dp"
         android:layout_marginStart="80dp"
@@ -98,7 +96,7 @@
         android:text="Play"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/gameOptionsButton"
-        app:layout_constraintTop_toBottomOf="@+id/gameSetupSubtitle" />
+        app:layout_constraintStart_toEndOf="@+id/joinGameButton"
+        app:layout_constraintTop_toBottomOf="@+id/localSetupSubtitle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
