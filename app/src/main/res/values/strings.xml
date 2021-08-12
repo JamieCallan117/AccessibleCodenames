@@ -39,4 +39,11 @@
     <string name="enter_nickname">Enter nickname..</string>
     <string name="enter_server">Enter server..</string>
     <string name="unable_server">Unable to connect to server.</string>
+    <string name="connecting_server">Connecting to server...</string>
+    <string name="bomb_squares">Bomb Squares:</string>
+    <string name="neutral_squares">Neutral Squares:</string>
+    <string name="team_a_squares">Team A Squares:</string>
+    <string name="team_b_squares">Team B Squares:</string>
+    <string name="starting_team">Starting Team:</string>
+    <string name="custom_words">Custom Words:</string>
 </resources>

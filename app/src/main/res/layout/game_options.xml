@@ -571,8 +571,8 @@
             android:layout_gravity="center_horizontal"
             android:checked="true"
             android:text="ToggleButton"
-            android:textOff="2"
-            android:textOn="1" />
+            android:textOff="B"
+            android:textOn="A" />
     </LinearLayout>
 
     <androidx.gridlayout.widget.GridLayout

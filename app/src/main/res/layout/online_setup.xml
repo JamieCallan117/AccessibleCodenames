@@ -12,7 +12,7 @@
         android:layout_width="330dp"
         android:layout_height="159dp"
         android:background="#FFFFFF"
-        android:elevation="2dp"
+        android:elevation="3dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,7 +25,7 @@
             android:layout_height="87dp"
             android:fontFamily="@font/general_font"
             android:gravity="center"
-            android:text=""
+            android:text="@string/unable_server"
             android:textSize="20sp"
             app:layout_column="0"
             app:layout_columnSpan="3"
@@ -130,5 +130,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/joinGameButton"
         app:layout_constraintTop_toBottomOf="@+id/gameSetupSubtitle" />
+
+    <TextView
+        android:id="@+id/usernameText"
+        android:layout_width="175dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="210dp"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="@font/general_font"
+        android:gravity="center"
+        android:text="Username:"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/usernameEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:layout_marginBottom="16dp"
+        android:ems="10"
+        android:hint="Enter username.."
+        android:inputType="textPersonName"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/usernameText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

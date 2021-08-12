@@ -163,13 +163,17 @@ public class game_options extends AppCompatActivity {
                    customWordText4, customWordText5, customWordText6, customWordText7,
                    customWordText8, customWordText9, customWordText10};
 
-            int counter = 0;
+            if (getIntent().getStringArrayListExtra("customWords") != null) {
+                int counter = 0;
 
-            while(counter < getIntent().getStringArrayListExtra("customWords").size()) {
-                customWordTexts[counter].setText(getIntent().getStringArrayListExtra("customWords").get(counter));
+                while(counter < getIntent().getStringArrayListExtra("customWords").size()) {
+                    customWordTexts[counter].setText(getIntent().getStringArrayListExtra("customWords").get(counter));
 
-                counter++;
+                    counter++;
+                }
             }
+
+            hasCustomSettings = true;
         }
 
         teamASqrInc.setOnClickListener(new View.OnClickListener() {
@@ -529,12 +533,55 @@ public class game_options extends AppCompatActivity {
 
         if (getIntent().getStringExtra("type").equals("local")) {
             i = new Intent(view.getContext(), local_setup.class);
+            i.putExtra("hasCustomSettings", hasCustomSettings);
             i.putExtra("type", "local");
+
+            i.putExtra("bombSquares", getIntent().getIntExtra("bombSquares", 1));
+            i.putExtra("neutralSquares", getIntent().getIntExtra("neutralSquares", 7));
+            i.putExtra("teamASquares", getIntent().getIntExtra("teamASquares", 9));
+            i.putExtra("teamBSquares", getIntent().getIntExtra("teamBSquares", 8));
+            i.putExtra("startingTeam", getIntent().getIntExtra("startingTeam", 1));
+
+            ArrayList<String> tempCustomWords = new ArrayList<>();
+
+            if (getIntent().getStringArrayListExtra("customWords") != null) {
+                int counter = 0;
+
+                while(counter < getIntent().getStringArrayListExtra("customWords").size()) {
+                    tempCustomWords.add(getIntent().getStringArrayListExtra("customWords").get(counter));
+
+                    counter++;
+                }
+            }
+
+            i.putExtra("customWords", tempCustomWords);
+
             startActivity(i);
         } else if (getIntent().getStringExtra("type").equals("online")) {
-            i = new Intent(view.getContext(), local_setup.class);
+            i = new Intent(view.getContext(), create_game.class);
+            i.putExtra("hasCustomSettings", hasCustomSettings);
             i.putExtra("type", "online");
-            i.putExtra("creatingGame", true);
+
+            i.putExtra("bombSquares", getIntent().getIntExtra("bombSquares", 1));
+            i.putExtra("neutralSquares", getIntent().getIntExtra("neutralSquares", 7));
+            i.putExtra("teamASquares", getIntent().getIntExtra("teamASquares", 9));
+            i.putExtra("teamBSquares", getIntent().getIntExtra("teamBSquares", 8));
+            i.putExtra("startingTeam", getIntent().getIntExtra("startingTeam", 1));
+
+            ArrayList<String> tempCustomWords = new ArrayList<>();
+
+            if (getIntent().getStringArrayListExtra("customWords") != null) {
+                int counter = 0;
+
+                while(counter < getIntent().getStringArrayListExtra("customWords").size()) {
+                    tempCustomWords.add(getIntent().getStringArrayListExtra("customWords").get(counter));
+
+                    counter++;
+                }
+            }
+
+            i.putExtra("customWords", tempCustomWords);
+
             startActivity(i);
         }
     }
@@ -630,7 +677,7 @@ public class game_options extends AppCompatActivity {
 
                 startActivity(i);
             } else if (getIntent().getStringExtra("type").equals("online")) {
-                i = new Intent(view.getContext(), local_setup.class);
+                i = new Intent(view.getContext(), create_game.class);
                 i.putExtra("type", "online");
 
                 if (startingTeamButton.isChecked()) {
