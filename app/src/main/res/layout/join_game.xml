@@ -7,6 +7,31 @@
     android:id="@id/constraintLayout">
 
     <TextView
+        android:id="@+id/publicRoomText"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:ems="10"
+        android:fontFamily="@font/title_font"
+        android:gravity="center_horizontal"
+        android:text="Public Room"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/privateRoomText"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:layout_marginBottom="45dp"
+        android:ems="10"
+        android:fontFamily="@font/title_font"
+        android:gravity="center_horizontal"
+        android:text="Private Room"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toTopOf="@+id/roomNameEdit"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
         android:id="@+id/joinGameTitle"
         android:layout_width="607dp"
         android:layout_height="95dp"
@@ -32,13 +57,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="365dp"
-        android:layout_height="293dp"
-        android:layout_marginStart="183dp"
-        android:layout_marginEnd="183dp"
+        android:layout_height="263dp"
+        android:layout_marginStart="1dp"
         android:layout_marginBottom="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
@@ -47,4 +71,44 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" />
     </ScrollView>
+
+    <Button
+        android:id="@+id/joinPrivateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="136dp"
+        android:layout_marginBottom="16dp"
+        android:text="Join"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/roomNameEdit"
+        android:layout_width="333dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="27dp"
+        android:ems="10"
+        android:hint="Room Name.."
+        android:inputType="textPersonName"
+        android:imeOptions="actionDone"
+        app:layout_constraintBottom_toTopOf="@+id/passwordEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/scrollView2" />
+
+    <EditText
+        android:id="@+id/passwordEdit"
+        android:layout_width="333dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="38dp"
+        android:ems="10"
+        android:hint="Password.."
+        android:inputType="textPassword"
+        android:imeOptions="actionDone"
+        app:layout_constraintBottom_toTopOf="@+id/joinPrivateButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/scrollView2" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -153,6 +153,7 @@
         android:hint="Enter username.."
         android:inputType="textPersonName"
         android:textSize="18sp"
+        android:imeOptions="actionDone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/usernameText" />
 

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Space;
 import android.widget.TextView;
@@ -30,7 +31,12 @@ public class join_game extends AppCompatActivity {
     private ConstraintLayout constraintLayout;
     private LinearLayout scrollLinear;
     private Button backButton;
+    private Button joinPrivateButton;
     private TextView joinGameTitle;
+    private TextView publicRoomText;
+    private TextView privateRoomText;
+    private EditText roomNameEdit;
+    private EditText passwordEdit;
 
     private int defaultColour;
 
@@ -44,6 +50,11 @@ public class join_game extends AppCompatActivity {
         scrollLinear = findViewById(R.id.scrollLinear);
         backButton = findViewById(R.id.backButton);
         joinGameTitle = findViewById(R.id.joinGameTitle);
+        joinPrivateButton = findViewById(R.id.joinPrivateButton);
+        publicRoomText = findViewById(R.id.publicRoomText);
+        privateRoomText = findViewById(R.id.privateRoomText);
+        roomNameEdit = findViewById(R.id.roomNameEdit);
+        passwordEdit = findViewById(R.id.passwordEdit);
 
         socketConnection.socket.emit("getAllRooms");
 
@@ -174,6 +185,7 @@ public class join_game extends AppCompatActivity {
         }
 
         backButton.setBackgroundColor(defaultColour);
+        joinPrivateButton.setBackgroundColor(defaultColour);
 
         if (userSettings.getInstance().getPreference(userSettings.getInstance().MENU_TEXT).equals("")) {
             defaultColour = userSettings.getInstance().MENU_TEXT_DEFAULT;
@@ -182,6 +194,11 @@ public class join_game extends AppCompatActivity {
         }
 
         joinGameTitle.setTextColor(defaultColour);
+        publicRoomText.setTextColor(defaultColour);
+        privateRoomText.setTextColor(defaultColour);
+        roomNameEdit.setTextColor(defaultColour);
+        passwordEdit.setTextColor(defaultColour);
         backButton.setTextColor(defaultColour);
+        joinPrivateButton.setTextColor(defaultColour);
     }
 }
