@@ -17,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 
+import io.socket.emitter.Emitter;
+
 public class create_game extends AppCompatActivity {
     private ConstraintLayout constraintLayout;
     private LinearLayout customWordsLinear;
@@ -36,6 +38,7 @@ public class create_game extends AppCompatActivity {
     private Button createButton;
 
     private int defaultColour;
+    private boolean validGame = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +102,56 @@ public class create_game extends AppCompatActivity {
             }
         }
 
+        //Potentially change checks for room name and password to simply be alphabetical/alphanumerical, might be a way to check for that
+        createButton.setOnClickListener(v -> {
+            validGame = true;
+
+            String nickname = userSettings.getInstance().getPreference("username");
+
+            if (nickname.equals("")) {
+                toggleNicknameBox();
+                validGame = false;
+            }
+
+            String roomName = roomNameEdit.getText().toString();
+
+            if (roomName.equals("")) {
+                toggleMessageBox("Room name cannot be empty.");
+                validGame = false;
+            } else if (roomName.contains(",")) {
+                toggleMessageBox("Room name cannot contain a \",\"");
+                validGame = false;
+            } else if (roomName.contains(" ")) {
+                toggleMessageBox("Room name cannot contain a \" \"");
+                validGame = false;
+            }
+
+            String password = passwordEdit.getText().toString();
+
+            //To see if it's "" when public
+            System.out.println("Password: " + "\"" + password + "\"");
+
+            if (privateSwitch.isChecked()) {
+                if (password.equals("")) {
+                    toggleMessageBox("Please enter a password.");
+                    validGame = false;
+                } else if (password.contains(",")) {
+                    toggleMessageBox("Password cannot contain a \",\"");
+                    validGame = false;
+                } else if (password.contains(" ")) {
+                    toggleMessageBox("Password cannot contain a \" \"");
+                    validGame = false;
+                }
+            }
+
+
+
+            //socketConnection.socket.emit("createRoom", );
+            Intent i = new Intent(getApplicationContext(), online_game.class);
+            i.putExtra("username", userSettings.getInstance().getPreference("username"));
+            startActivity(i);
+        });
+
         privateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -109,6 +162,14 @@ public class create_game extends AppCompatActivity {
                 }
 
                 passwordEdit.setText("");
+            }
+        });
+
+        socketConnection.socket.on("createFail", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                toggleMessageBox((String) args[0]);
+                validGame = false;
             }
         });
 
@@ -141,6 +202,14 @@ public class create_game extends AppCompatActivity {
         }
 
         startActivity(i);
+    }
+
+    private void toggleMessageBox(String message) {
+
+    }
+
+    private void toggleNicknameBox() {
+
     }
 
     private void updateColours() {

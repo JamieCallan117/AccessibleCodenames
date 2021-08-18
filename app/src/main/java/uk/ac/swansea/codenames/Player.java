@@ -5,10 +5,8 @@ public class Player {
     private boolean isHost;
     private boolean isSpymaster;
 
-    public Player(String nickname, boolean isHost, boolean isSpymaster) {
+    public Player(String nickname) {
         this.nickname = nickname;
-        this.isHost = isHost;
-        this.isSpymaster = isSpymaster;
     }
 
     public String getNickname() {
