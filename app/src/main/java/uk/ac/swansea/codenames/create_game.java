@@ -17,6 +17,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 
+import org.json.JSONArray;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 import io.socket.emitter.Emitter;
 
 public class create_game extends AppCompatActivity {
@@ -102,13 +110,16 @@ public class create_game extends AppCompatActivity {
             }
         }
 
-        //Potentially change checks for room name and password to simply be alphabetical/alphanumerical, might be a way to check for that
+        //Need to add listener for createFail if room name exists.
         createButton.setOnClickListener(v -> {
             validGame = true;
 
             String nickname = userSettings.getInstance().getPreference("username");
 
             if (nickname.equals("")) {
+                toggleNicknameBox();
+                validGame = false;
+            } else if (!nickname.matches("[A-Za-z0-9]+")) {
                 toggleNicknameBox();
                 validGame = false;
             }
@@ -118,37 +129,124 @@ public class create_game extends AppCompatActivity {
             if (roomName.equals("")) {
                 toggleMessageBox("Room name cannot be empty.");
                 validGame = false;
-            } else if (roomName.contains(",")) {
-                toggleMessageBox("Room name cannot contain a \",\"");
-                validGame = false;
-            } else if (roomName.contains(" ")) {
-                toggleMessageBox("Room name cannot contain a \" \"");
+            } else if (!roomName.matches("[A-Za-z0-9]+")) {
+                toggleMessageBox("Room name must be alphanumerical.");
                 validGame = false;
             }
 
             String password = passwordEdit.getText().toString();
 
-            //To see if it's "" when public
-            System.out.println("Password: " + "\"" + password + "\"");
-
             if (privateSwitch.isChecked()) {
                 if (password.equals("")) {
                     toggleMessageBox("Please enter a password.");
                     validGame = false;
-                } else if (password.contains(",")) {
-                    toggleMessageBox("Password cannot contain a \",\"");
-                    validGame = false;
-                } else if (password.contains(" ")) {
-                    toggleMessageBox("Password cannot contain a \" \"");
+                } else if (!password.matches("[A-Za-z0-9]+")) {
+                    toggleMessageBox("Password must be alphanumerical.");
                     validGame = false;
                 }
             }
 
+            String wordsFromFile = "";
 
+            try {
+                InputStream input = getAssets().open("gameWords");
 
-            //socketConnection.socket.emit("createRoom", );
+                int size = input.available();
+
+                byte[] buffer = new byte[size];
+
+                input.read(buffer);
+                input.close();
+
+                wordsFromFile = new String(buffer);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            String[] temp = wordsFromFile.split(",");
+
+            ArrayList<String> defaultWords = new ArrayList<>(Arrays.asList(temp));
+
+            int MAX_WORDS = 25;
+            int defaultWordsNeeded = MAX_WORDS;
+
+            String[] gameWords = new String[MAX_WORDS];
+
+            ArrayList<String> customWords = getIntent().getStringArrayListExtra("customWords");
+
+            if (customWords != null) {
+                for (int i = 0; i < customWords.size(); i++) {
+                    gameWords[i] = customWords.get(i);
+                    defaultWordsNeeded--;
+                }
+            }
+
+            ArrayList<Integer> list = new ArrayList<>();
+
+            for (int i = 0; i < defaultWords.size(); i++) {
+                list.add(i);
+            }
+
+            Collections.shuffle(list);
+
+            for (int i = 0; i < defaultWordsNeeded; i++) {
+                gameWords[i + (MAX_WORDS - defaultWordsNeeded)] = defaultWords.get(list.get(i));
+            }
+
+            Collections.shuffle(Arrays.asList(gameWords));
+
+            list.clear();
+
+            for (int i = 0; i < MAX_WORDS; i++) {
+                list.add(i);
+            }
+
+            Collections.shuffle(list);
+
+            int counter = 0;
+            int bombSquaresCount = getIntent().getIntExtra("bombSquares", 1);
+            int neutralSquaresCount = getIntent().getIntExtra("neutralSquares", 7);
+            int teamASquaresCount = getIntent().getIntExtra("teamASquares", 9);
+            int teamBSquaresCount = getIntent().getIntExtra("teamBSquares", 8);
+
+            String[] bombWords = new String[bombSquaresCount];
+            String[] neutralWords = new String[neutralSquaresCount];
+            String[] teamAWords = new String[teamASquaresCount];
+            String[] teamBWords = new String[teamBSquaresCount];
+
+            for (int i = 0; i < bombSquaresCount; i++) {
+                bombWords[i] = gameWords[list.get(counter)];
+                counter++;
+            }
+
+            for (int i = 0; i < neutralSquaresCount; i++) {
+                neutralWords[i] = gameWords[list.get(counter)];
+                counter++;
+            }
+
+            for (int i = 0; i < teamASquaresCount; i++) {
+                teamAWords[i] = gameWords[list.get(counter)];
+                counter++;
+            }
+
+            for (int i = 0; i < teamBSquaresCount; i++) {
+                teamBWords[i] = gameWords[list.get(counter)];
+                counter++;
+            }
+
+            int startingTeam = getIntent().getIntExtra("startingTeam", 1);
+
+            JSONArray jsonGameWords = new JSONArray(Arrays.asList(gameWords));
+            JSONArray jsonBombWords = new JSONArray(Arrays.asList(bombWords));
+            JSONArray jsonNeutralWords = new JSONArray(Arrays.asList(neutralWords));
+            JSONArray jsonTeamAWords = new JSONArray(Arrays.asList(teamAWords));
+            JSONArray jsonTeamBWords = new JSONArray(Arrays.asList(teamBWords));
+
+            socketConnection.socket.emit("createRoom", nickname, roomName, password, jsonGameWords,
+                    jsonBombWords, jsonNeutralWords, jsonTeamAWords, jsonTeamBWords, startingTeam);
             Intent i = new Intent(getApplicationContext(), online_game.class);
             i.putExtra("username", userSettings.getInstance().getPreference("username"));
+            i.putExtra("roomName", roomName);
             startActivity(i);
         });
 

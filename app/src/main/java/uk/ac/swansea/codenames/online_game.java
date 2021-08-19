@@ -40,7 +40,7 @@ public class online_game extends AppCompatActivity {
 
         roomName = getIntent().getStringExtra("roomName");
 
-        socketConnection.socket.emit("getGameDetails", "RoomName");
+        socketConnection.socket.emit("getGameDetails", roomName);
 
         socketConnection.socket.on("gameDetails", new Emitter.Listener() {
             @Override
@@ -100,6 +100,17 @@ public class online_game extends AppCompatActivity {
                 }
 
                 startingTeam =  (int) args[9];
+
+                System.out.println("All words: " + allWords);
+                System.out.println("Bomb words: " + bombWords);
+                System.out.println("Neutral words: " + neutralWords);
+                System.out.println("Team A words: " + teamAWords);
+                System.out.println("Team B words: " + teamBWords);
+                System.out.println("Team A Spymaster: " + teamASpymaster);
+                System.out.println("Team B Spymaster: " + teamBSpymaster);
+                System.out.println("Team A Users: " + teamAUsers);
+                System.out.println("Team B Users: " + teamBUsers);
+                System.out.println("Starting Team: " + startingTeam);
             }
         });
 
