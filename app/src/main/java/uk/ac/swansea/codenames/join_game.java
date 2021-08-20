@@ -39,7 +39,10 @@ public class join_game extends AppCompatActivity {
     private EditText passwordEdit;
 
     private int defaultColour;
+    private String username;
+    private boolean validJoin;
 
+    //Add refresh button which clears the scrollLinear of all views then emites getAllRooms again
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +59,29 @@ public class join_game extends AppCompatActivity {
         roomNameEdit = findViewById(R.id.roomNameEdit);
         passwordEdit = findViewById(R.id.passwordEdit);
 
+        username = userSettings.getInstance().getPreference("username");
+
         socketConnection.socket.emit("getAllRooms");
+
+        joinPrivateButton.setOnClickListener(v -> {
+            validJoin = true;
+        });
+
+        socketConnection.socket.on("joinFail", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                toggleMessageBox((String) args[0]);
+                validJoin = false;
+            }
+        });
+
+        socketConnection.socket.on("joinFailNick", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                toggleNicknameBox((String) args[0]);
+                validJoin = false;
+            }
+        });
 
         socketConnection.socket.on("allRooms", new Emitter.Listener() {
             @Override
@@ -134,7 +159,6 @@ public class join_game extends AppCompatActivity {
 
                             joinButton.setLayoutParams(params);
 
-
                             if (userSettings.getInstance().getPreference(userSettings.getInstance().MENU_BUTTONS).equals("")) {
                                 defaultColour = userSettings.getInstance().MENU_BUTTONS_DEFAULT;
                             } else {
@@ -144,7 +168,7 @@ public class join_game extends AppCompatActivity {
                             joinButton.setBackgroundColor(defaultColour);
 
                             joinButton.setOnClickListener(v -> {
-                                System.out.println(newRoom.getText().toString());
+                                socketConnection.socket.emit("joinGame", username, name);
                             });
 
                             scrollLinear.addView(roomLinear);
@@ -167,6 +191,14 @@ public class join_game extends AppCompatActivity {
     public void backButton(View view) {
         Intent i = new Intent(view.getContext(), online_setup.class);
         startActivity(i);
+    }
+
+    private void toggleMessageBox(String message) {
+
+    }
+
+    private void toggleNicknameBox(String message) {
+
     }
 
     private void updateColours() {

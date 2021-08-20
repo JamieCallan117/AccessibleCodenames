@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -110,7 +111,6 @@ public class create_game extends AppCompatActivity {
             }
         }
 
-        //Need to add listener for createFail if room name exists.
         createButton.setOnClickListener(v -> {
             validGame = true;
 
@@ -127,10 +127,10 @@ public class create_game extends AppCompatActivity {
             String roomName = roomNameEdit.getText().toString();
 
             if (roomName.equals("")) {
-                toggleMessageBox("Room name cannot be empty.");
+                toggleMessageBox("Room name cannot be empty.", true);
                 validGame = false;
             } else if (!roomName.matches("[A-Za-z0-9]+")) {
-                toggleMessageBox("Room name must be alphanumerical.");
+                toggleMessageBox("Room name must be alphanumerical.", true);
                 validGame = false;
             }
 
@@ -138,10 +138,10 @@ public class create_game extends AppCompatActivity {
 
             if (privateSwitch.isChecked()) {
                 if (password.equals("")) {
-                    toggleMessageBox("Please enter a password.");
+                    toggleMessageBox("Please enter a password.", true);
                     validGame = false;
                 } else if (!password.matches("[A-Za-z0-9]+")) {
-                    toggleMessageBox("Password must be alphanumerical.");
+                    toggleMessageBox("Password must be alphanumerical.", true);
                     validGame = false;
                 }
             }
@@ -244,10 +244,30 @@ public class create_game extends AppCompatActivity {
 
             socketConnection.socket.emit("createRoom", nickname, roomName, password, jsonGameWords,
                     jsonBombWords, jsonNeutralWords, jsonTeamAWords, jsonTeamBWords, startingTeam);
-            Intent i = new Intent(getApplicationContext(), online_game.class);
-            i.putExtra("username", userSettings.getInstance().getPreference("username"));
-            i.putExtra("roomName", roomName);
-            startActivity(i);
+
+            backButton.setEnabled(false);
+            gameOptionsButton.setEnabled(false);
+            createButton.setEnabled(false);
+            roomNameEdit.setEnabled(false);
+            passwordEdit.setEnabled(false);
+            privateSwitch.setEnabled(false);
+
+            Handler handler = new Handler();
+
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (validGame) {
+                        Intent i = new Intent(getApplicationContext(), online_game.class);
+                        i.putExtra("username", userSettings.getInstance().getPreference("username"));
+                        i.putExtra("roomName", roomName);
+                        i.putExtra("isHost", true);
+                        startActivity(i);
+                    }
+                }
+            }, 3000);
+
+
         });
 
         privateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -266,7 +286,7 @@ public class create_game extends AppCompatActivity {
         socketConnection.socket.on("createFail", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                toggleMessageBox((String) args[0]);
+                toggleMessageBox((String) args[0], false);
                 validGame = false;
             }
         });
@@ -302,7 +322,7 @@ public class create_game extends AppCompatActivity {
         startActivity(i);
     }
 
-    private void toggleMessageBox(String message) {
+    private void toggleMessageBox(String message, boolean visibleButton) {
 
     }
 

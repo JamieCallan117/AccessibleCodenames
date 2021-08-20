@@ -2,7 +2,9 @@ package uk.ac.swansea.codenames;
 
 import static uk.ac.swansea.codenames.onlinePhase.START;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +29,32 @@ public class online_game extends AppCompatActivity {
     private ArrayList<String> teamAWords = new ArrayList<>();
     private ArrayList<String> teamBWords = new ArrayList<>();
     private int startingTeam;
+    private WordButton[] wordButtons;
+    private WordButton squareOne;
+    private WordButton squareTwo;
+    private WordButton squareThree;
+    private WordButton squareFour;
+    private WordButton squareFive;
+    private WordButton squareSix;
+    private WordButton squareSeven;
+    private WordButton squareEight;
+    private WordButton squareNine;
+    private WordButton squareTen;
+    private WordButton squareEleven;
+    private WordButton squareTwelve;
+    private WordButton squareThirteen;
+    private WordButton squareFourteen;
+    private WordButton squareFifteen;
+    private WordButton squareSixteen;
+    private WordButton squareSeventeen;
+    private WordButton squareEighteen;
+    private WordButton squareNineteen;
+    private WordButton squareTwenty;
+    private WordButton squareTwentyOne;
+    private WordButton squareTwentyTwo;
+    private WordButton squareTwentyThree;
+    private WordButton squareTwentyFour;
+    private WordButton squareTwentyFive;
 
     private onlinePhase gamePhase = START;
 
@@ -36,7 +64,35 @@ public class online_game extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.online_game);
 
+        squareOne = findViewById(R.id.squareOne);
+        squareTwo = findViewById(R.id.squareTwo);
+        squareThree = findViewById(R.id.squareThree);
+        squareFour = findViewById(R.id.squareFour);
+        squareFive = findViewById(R.id.squareFive);
+        squareSix = findViewById(R.id.squareSix);
+        squareSeven = findViewById(R.id.squareSeven);
+        squareEight = findViewById(R.id.squareEight);
+        squareNine = findViewById(R.id.squareNine);
+        squareTen = findViewById(R.id.squareTen);
+        squareEleven = findViewById(R.id.squareEleven);
+        squareTwelve = findViewById(R.id.squareTwelve);
+        squareThirteen = findViewById(R.id.squareThirteen);
+        squareFourteen = findViewById(R.id.squareFourteen);
+        squareFifteen = findViewById(R.id.squareFifteen);
+        squareSixteen = findViewById(R.id.squareSixteen);
+        squareSeventeen = findViewById(R.id.squareSeventeen);
+        squareEighteen = findViewById(R.id.squareEighteen);
+        squareNineteen = findViewById(R.id.squareNineteen);
+        squareTwenty = findViewById(R.id.squareTwenty);
+        squareTwentyOne = findViewById(R.id.squareTwentyOne);
+        squareTwentyTwo = findViewById(R.id.squareTwentyTwo);
+        squareTwentyThree = findViewById(R.id.squareTwentyThree);
+        squareTwentyFour = findViewById(R.id.squareTwentyFour);
+        squareTwentyFive = findViewById(R.id.squareTwentyFive);
+
         player = new Player(userSettings.getInstance().getPreference("username"));
+
+        player.setHost(getIntent().getBooleanExtra("isHost", false));
 
         roomName = getIntent().getStringExtra("roomName");
 
@@ -111,10 +167,30 @@ public class online_game extends AppCompatActivity {
                 System.out.println("Team A Users: " + teamAUsers);
                 System.out.println("Team B Users: " + teamBUsers);
                 System.out.println("Starting Team: " + startingTeam);
+
+                wordButtons = new WordButton[]{squareOne, squareTwo, squareThree, squareFour, squareFive,
+                        squareSix, squareSeven, squareEight, squareNine, squareTen, squareEleven,
+                        squareTwelve, squareThirteen, squareFourteen, squareFifteen, squareSixteen,
+                        squareSeventeen, squareEighteen, squareNineteen, squareTwenty, squareTwentyOne,
+                        squareTwentyTwo, squareTwentyThree, squareTwentyFour, squareTwentyFive};
+
+                for (int i = 0; i < wordButtons.length; i++) {
+                    wordButtons[i].setText(allWords.get(i));
+                }
             }
         });
 
         updateColours();
+    }
+
+    @Override
+    public void onBackPressed() {
+        exitButton(getWindow().getDecorView());
+    }
+
+    public void exitButton(View view) {
+        Intent i = new Intent(view.getContext(), main_menu.class);
+        startActivity(i);
     }
 
     private ArrayList<Player> jsonArrayToPlayers(JSONArray jsonArray) throws JSONException {
