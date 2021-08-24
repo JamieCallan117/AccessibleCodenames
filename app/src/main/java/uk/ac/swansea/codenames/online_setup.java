@@ -50,34 +50,36 @@ public class online_setup extends AppCompatActivity {
 
         socketConnection.socket.connect();
 
-        messageBox.setVisibility(View.VISIBLE);
-        messageText.setText(R.string.connecting_server);
-        okButton.setVisibility(View.INVISIBLE);
+        if (!socketConnection.socket.connected()) {
+            messageBox.setVisibility(View.VISIBLE);
+            messageText.setText(R.string.connecting_server);
+            okButton.setVisibility(View.INVISIBLE);
 
-        backButton.setEnabled(false);
-        joinGameButton.setEnabled(false);
-        createGameButton.setEnabled(false);
-        usernameEdit.setEnabled(false);
+            backButton.setEnabled(false);
+            joinGameButton.setEnabled(false);
+            createGameButton.setEnabled(false);
+            usernameEdit.setEnabled(false);
 
-        Handler handler = new Handler();
+            Handler handler = new Handler();
 
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                messageBox.setVisibility(View.INVISIBLE);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    messageBox.setVisibility(View.INVISIBLE);
 
-                if (!socketConnection.socket.connected()) {
-                    messageText.setText(R.string.unable_server);
-                    messageBox.setVisibility(View.VISIBLE);
-                    okButton.setVisibility(View.VISIBLE);
-                } else {
-                    backButton.setEnabled(true);
-                    joinGameButton.setEnabled(true);
-                    createGameButton.setEnabled(true);
-                    usernameEdit.setEnabled(true);
+                    if (!socketConnection.socket.connected()) {
+                        messageText.setText(R.string.unable_server);
+                        messageBox.setVisibility(View.VISIBLE);
+                        okButton.setVisibility(View.VISIBLE);
+                    } else {
+                        backButton.setEnabled(true);
+                        joinGameButton.setEnabled(true);
+                        createGameButton.setEnabled(true);
+                        usernameEdit.setEnabled(true);
+                    }
                 }
-            }
-        }, 3000);
+            }, 3000);
+        }
 
         okButton.setOnClickListener(v -> {
             Intent i = new Intent(getBaseContext(), main_menu.class);

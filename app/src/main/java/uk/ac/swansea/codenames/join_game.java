@@ -31,6 +31,7 @@ public class join_game extends AppCompatActivity {
     private ConstraintLayout constraintLayout;
     private LinearLayout scrollLinear;
     private Button backButton;
+    private Button refreshButton;
     private Button joinPrivateButton;
     private TextView joinGameTitle;
     private TextView publicRoomText;
@@ -42,7 +43,6 @@ public class join_game extends AppCompatActivity {
     private String username;
     private boolean validJoin;
 
-    //Add refresh button which clears the scrollLinear of all views then emites getAllRooms again
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +52,7 @@ public class join_game extends AppCompatActivity {
         constraintLayout = findViewById(R.id.constraintLayout);
         scrollLinear = findViewById(R.id.scrollLinear);
         backButton = findViewById(R.id.backButton);
+        refreshButton = findViewById(R.id.refreshButton);
         joinGameTitle = findViewById(R.id.joinGameTitle);
         joinPrivateButton = findViewById(R.id.joinPrivateButton);
         publicRoomText = findViewById(R.id.publicRoomText);
@@ -65,6 +66,12 @@ public class join_game extends AppCompatActivity {
 
         joinPrivateButton.setOnClickListener(v -> {
             validJoin = true;
+        });
+
+        refreshButton.setOnClickListener(v -> {
+            scrollLinear.removeAllViews();
+
+            socketConnection.socket.emit("getAllRooms");
         });
 
         socketConnection.socket.on("joinFail", new Emitter.Listener() {
@@ -217,6 +224,7 @@ public class join_game extends AppCompatActivity {
         }
 
         backButton.setBackgroundColor(defaultColour);
+        refreshButton.setBackgroundColor(defaultColour);
         joinPrivateButton.setBackgroundColor(defaultColour);
 
         if (userSettings.getInstance().getPreference(userSettings.getInstance().MENU_TEXT).equals("")) {
@@ -231,6 +239,7 @@ public class join_game extends AppCompatActivity {
         roomNameEdit.setTextColor(defaultColour);
         passwordEdit.setTextColor(defaultColour);
         backButton.setTextColor(defaultColour);
+        refreshButton.setTextColor(defaultColour);
         joinPrivateButton.setTextColor(defaultColour);
     }
 }
