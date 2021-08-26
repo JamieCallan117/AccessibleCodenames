@@ -5,9 +5,18 @@ import static uk.ac.swansea.codenames.onlinePhase.START;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,6 +38,7 @@ public class online_game extends AppCompatActivity {
     private ArrayList<String> teamAWords = new ArrayList<>();
     private ArrayList<String> teamBWords = new ArrayList<>();
     private int startingTeam;
+    private ConstraintLayout constraintLayout;
     private WordButton[] wordButtons;
     private WordButton squareOne;
     private WordButton squareTwo;
@@ -55,6 +65,24 @@ public class online_game extends AppCompatActivity {
     private WordButton squareTwentyThree;
     private WordButton squareTwentyFour;
     private WordButton squareTwentyFive;
+    private Button startGame;
+    private Button requestSpymaster;
+    private Button changeTeamButton;
+    private Button turnAction;
+    private Button textToSpeechButton;
+    private Button viewTeams;
+    private Button teamAButton;
+    private Button teamBButton;
+    private Button chatButton;
+    private ScrollView gameOperationsScroll;
+    private LinearLayout gameOperationsLinear;
+    private TextView teamACount;
+    private TextView teamBCount;
+    private TextView teamCounterLine;
+    private TextView hintText;
+    private EditText editHint;
+    private Spinner hintNumber;
+    private androidx.gridlayout.widget.GridLayout chooseTeamBox;
 
     private onlinePhase gamePhase = START;
 
@@ -64,6 +92,7 @@ public class online_game extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.online_game);
 
+        constraintLayout = findViewById(R.id.constraintLayout);
         squareOne = findViewById(R.id.squareOne);
         squareTwo = findViewById(R.id.squareTwo);
         squareThree = findViewById(R.id.squareThree);
@@ -89,6 +118,24 @@ public class online_game extends AppCompatActivity {
         squareTwentyThree = findViewById(R.id.squareTwentyThree);
         squareTwentyFour = findViewById(R.id.squareTwentyFour);
         squareTwentyFive = findViewById(R.id.squareTwentyFive);
+        startGame = findViewById(R.id.startGame);
+        requestSpymaster = findViewById(R.id.requestSpymaster);
+        changeTeamButton = findViewById(R.id.changeTeamButton);
+        turnAction = findViewById(R.id.turnAction);
+        textToSpeechButton = findViewById(R.id.textToSpeechButton);
+        teamAButton = findViewById(R.id.teamAButton);
+        teamBButton = findViewById(R.id.teamBButton);
+        viewTeams = findViewById(R.id.viewTeams);
+        chatButton = findViewById(R.id.chatButton);
+        gameOperationsScroll = findViewById(R.id.gameOperationsScroll);
+        gameOperationsLinear = findViewById(R.id.gameOperationsLinear);
+        hintText = findViewById(R.id.hintText);
+        editHint = findViewById(R.id.editHint);
+        hintNumber = findViewById(R.id.hintNumber);
+        teamACount = findViewById(R.id.teamACount);
+        teamBCount = findViewById(R.id.teamBCount);
+        teamCounterLine = findViewById(R.id.teamCounterLine);
+        chooseTeamBox = findViewById(R.id.chooseTeamBox);
 
         player = new Player(userSettings.getInstance().getPreference("username"));
 
@@ -97,6 +144,38 @@ public class online_game extends AppCompatActivity {
         roomName = getIntent().getStringExtra("roomName");
 
         socketConnection.socket.emit("getGameDetails", roomName);
+
+        startGame.setEnabled(false);
+        requestSpymaster.setEnabled(false);
+        changeTeamButton.setEnabled(false);
+
+        hintText.setVisibility(View.GONE);
+        editHint.setVisibility(View.GONE);
+        hintNumber.setVisibility(View.GONE);
+        turnAction.setVisibility(View.GONE);
+        textToSpeechButton.setVisibility(View.GONE);
+        viewTeams.setVisibility(View.GONE);
+        chatButton.setVisibility(View.GONE);
+
+        if (!player.isHost()) {
+            gameOperationsLinear.removeView(startGame);
+        }
+
+        teamAButton.setOnClickListener(v -> {
+            socketConnection.socket.emit("chooseTeam", player.getNickname(), "A", roomName);
+            constraintLayout.removeView(chooseTeamBox);
+            startGame.setEnabled(true);
+            requestSpymaster.setEnabled(true);
+            changeTeamButton.setEnabled(true);
+        });
+
+        teamBButton.setOnClickListener(v -> {
+            socketConnection.socket.emit("chooseTeam", player.getNickname(),"B", roomName);
+            constraintLayout.removeView(chooseTeamBox);
+            startGame.setEnabled(true);
+            requestSpymaster.setEnabled(true);
+            changeTeamButton.setEnabled(true);
+        });
 
         socketConnection.socket.on("gameDetails", new Emitter.Listener() {
             @Override
@@ -177,6 +256,14 @@ public class online_game extends AppCompatActivity {
                 for (int i = 0; i < wordButtons.length; i++) {
                     wordButtons[i].setText(allWords.get(i));
                 }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        teamACount.setText(String.valueOf(teamAWords.size()));
+                        teamBCount.setText(String.valueOf(teamBWords.size()));
+                    }
+                });
             }
         });
 
@@ -189,6 +276,7 @@ public class online_game extends AppCompatActivity {
     }
 
     public void exitButton(View view) {
+        socketConnection.socket.emit("leaveRoom");
         Intent i = new Intent(view.getContext(), main_menu.class);
         startActivity(i);
     }

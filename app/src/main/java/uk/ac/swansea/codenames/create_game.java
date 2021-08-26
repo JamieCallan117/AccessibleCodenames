@@ -242,8 +242,10 @@ public class create_game extends AppCompatActivity {
             JSONArray jsonTeamAWords = new JSONArray(Arrays.asList(teamAWords));
             JSONArray jsonTeamBWords = new JSONArray(Arrays.asList(teamBWords));
 
-            socketConnection.socket.emit("createRoom", nickname, roomName, password, jsonGameWords,
-                    jsonBombWords, jsonNeutralWords, jsonTeamAWords, jsonTeamBWords, startingTeam);
+            if (validGame) {
+                socketConnection.socket.emit("createRoom", nickname, roomName, password, jsonGameWords,
+                        jsonBombWords, jsonNeutralWords, jsonTeamAWords, jsonTeamBWords, startingTeam);
+            }
 
             backButton.setEnabled(false);
             gameOptionsButton.setEnabled(false);
@@ -263,11 +265,16 @@ public class create_game extends AppCompatActivity {
                         i.putExtra("roomName", roomName);
                         i.putExtra("isHost", true);
                         startActivity(i);
+                    } else {
+                        backButton.setEnabled(true);
+                        gameOptionsButton.setEnabled(true);
+                        createButton.setEnabled(true);
+                        roomNameEdit.setEnabled(true);
+                        passwordEdit.setEnabled(true);
+                        privateSwitch.setEnabled(true);
                     }
                 }
             }, 3000);
-
-
         });
 
         privateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

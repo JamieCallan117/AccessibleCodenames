@@ -161,11 +161,6 @@ public class join_game extends AppCompatActivity {
                             joinButton.setText("Join");
                             joinButton.setTextColor(defaultColour);
 
-                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                            params.gravity = Gravity.RIGHT;
-
-                            joinButton.setLayoutParams(params);
-
                             if (userSettings.getInstance().getPreference(userSettings.getInstance().MENU_BUTTONS).equals("")) {
                                 defaultColour = userSettings.getInstance().MENU_BUTTONS_DEFAULT;
                             } else {

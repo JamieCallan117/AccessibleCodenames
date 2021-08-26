@@ -48,6 +48,8 @@ public class online_setup extends AppCompatActivity {
 
         usernameEdit.setText(userSettings.getInstance().getPreference("username"));
 
+        socketConnection.socket.disconnect();
+
         socketConnection.socket.connect();
 
         if (!socketConnection.socket.connected()) {
