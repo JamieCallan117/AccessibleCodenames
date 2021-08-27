@@ -148,6 +148,7 @@ public class online_game extends AppCompatActivity {
         startGame.setEnabled(false);
         requestSpymaster.setEnabled(false);
         changeTeamButton.setEnabled(false);
+        chatButton.setEnabled(false);
 
         hintText.setVisibility(View.GONE);
         editHint.setVisibility(View.GONE);
@@ -155,7 +156,6 @@ public class online_game extends AppCompatActivity {
         turnAction.setVisibility(View.GONE);
         textToSpeechButton.setVisibility(View.GONE);
         viewTeams.setVisibility(View.GONE);
-        chatButton.setVisibility(View.GONE);
 
         if (!player.isHost()) {
             gameOperationsLinear.removeView(startGame);
@@ -167,6 +167,7 @@ public class online_game extends AppCompatActivity {
             startGame.setEnabled(true);
             requestSpymaster.setEnabled(true);
             changeTeamButton.setEnabled(true);
+            chatButton.setEnabled(true);
         });
 
         teamBButton.setOnClickListener(v -> {
@@ -175,6 +176,23 @@ public class online_game extends AppCompatActivity {
             startGame.setEnabled(true);
             requestSpymaster.setEnabled(true);
             changeTeamButton.setEnabled(true);
+            chatButton.setEnabled(true);
+        });
+
+        changeTeamButton.setOnClickListener(v -> {
+            for (Player p : teamAUsers) {
+                if (p.getNickname().equals(player.getNickname())) {
+                    socketConnection.socket.emit("chooseTeam", player.getNickname(), "B", roomName);
+                    break;
+                }
+            }
+
+            for (Player p : teamBUsers) {
+                if (p.getNickname().equals(player.getNickname())) {
+                    socketConnection.socket.emit("chooseTeam", player.getNickname(), "A", roomName);
+                    break;
+                }
+            }
         });
 
         socketConnection.socket.on("gameDetails", new Emitter.Listener() {
@@ -264,6 +282,36 @@ public class online_game extends AppCompatActivity {
                         teamBCount.setText(String.valueOf(teamBWords.size()));
                     }
                 });
+            }
+        });
+
+        socketConnection.socket.on("teamChange", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                String playerName = (String) args[0];
+                String team = (String) args[1];
+
+                Player newPlayer = new Player(playerName);
+
+                for (Player p : teamAUsers) {
+                    if (p.getNickname().equals(playerName)) {
+                        teamAUsers.remove(p);
+                        break;
+                    }
+                }
+
+                for (Player p : teamBUsers) {
+                    if (p.getNickname().equals(playerName)) {
+                        teamBUsers.remove(p);
+                        break;
+                    }
+                }
+
+                if (team.equals("A")) {
+                    teamAUsers.add(newPlayer);
+                } else {
+                    teamBUsers.add(newPlayer);
+                }
             }
         });
 
