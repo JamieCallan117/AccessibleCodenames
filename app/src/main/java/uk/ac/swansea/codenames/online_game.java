@@ -38,6 +38,11 @@ public class online_game extends AppCompatActivity {
     private ArrayList<String> teamAWords = new ArrayList<>();
     private ArrayList<String> teamBWords = new ArrayList<>();
     private int startingTeam;
+    private int defaultColour;
+    private boolean teamsBoxOpen = false;
+    private boolean wordButtonsEnabled = false;
+    private onlinePhase gamePhase = START;
+
     private ConstraintLayout constraintLayout;
     private WordButton[] wordButtons;
     private WordButton squareOne;
@@ -65,6 +70,7 @@ public class online_game extends AppCompatActivity {
     private WordButton squareTwentyThree;
     private WordButton squareTwentyFour;
     private WordButton squareTwentyFive;
+    private Button exitButton;
     private Button startGame;
     private Button requestSpymaster;
     private Button changeTeamButton;
@@ -74,17 +80,22 @@ public class online_game extends AppCompatActivity {
     private Button teamAButton;
     private Button teamBButton;
     private Button chatButton;
+    private Button closeTeamsBox;
     private ScrollView gameOperationsScroll;
     private LinearLayout gameOperationsLinear;
+    private LinearLayout teamALinear;
+    private LinearLayout teamBLinear;
     private TextView teamACount;
     private TextView teamBCount;
+    private TextView teamAHeader;
+    private TextView teamBHeader;
     private TextView teamCounterLine;
     private TextView hintText;
     private EditText editHint;
     private Spinner hintNumber;
     private androidx.gridlayout.widget.GridLayout chooseTeamBox;
-
-    private onlinePhase gamePhase = START;
+    private androidx.gridlayout.widget.GridLayout viewTeamsBox;
+    private View teamSeparator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +104,7 @@ public class online_game extends AppCompatActivity {
         setContentView(R.layout.online_game);
 
         constraintLayout = findViewById(R.id.constraintLayout);
+        exitButton = findViewById(R.id.exitButton);
         squareOne = findViewById(R.id.squareOne);
         squareTwo = findViewById(R.id.squareTwo);
         squareThree = findViewById(R.id.squareThree);
@@ -136,6 +148,19 @@ public class online_game extends AppCompatActivity {
         teamBCount = findViewById(R.id.teamBCount);
         teamCounterLine = findViewById(R.id.teamCounterLine);
         chooseTeamBox = findViewById(R.id.chooseTeamBox);
+        viewTeamsBox = findViewById(R.id.viewTeamsBox);
+        teamAHeader = findViewById(R.id.teamAHeader);
+        teamBHeader = findViewById(R.id.teamBHeader);
+        teamALinear = findViewById(R.id.teamALinear);
+        teamBLinear = findViewById(R.id.teamBLinear);
+        closeTeamsBox = findViewById(R.id.closeTeamsBox);
+        teamSeparator = findViewById(R.id.teamSeparator);
+
+        wordButtons = new WordButton[]{squareOne, squareTwo, squareThree, squareFour, squareFive,
+                squareSix, squareSeven, squareEight, squareNine, squareTen, squareEleven,
+                squareTwelve, squareThirteen, squareFourteen, squareFifteen, squareSixteen,
+                squareSeventeen, squareEighteen, squareNineteen, squareTwenty, squareTwentyOne,
+                squareTwentyTwo, squareTwentyThree, squareTwentyFour, squareTwentyFive};
 
         player = new Player(userSettings.getInstance().getPreference("username"));
 
@@ -149,17 +174,24 @@ public class online_game extends AppCompatActivity {
         requestSpymaster.setEnabled(false);
         changeTeamButton.setEnabled(false);
         chatButton.setEnabled(false);
+        viewTeams.setEnabled(false);
 
         hintText.setVisibility(View.GONE);
         editHint.setVisibility(View.GONE);
         hintNumber.setVisibility(View.GONE);
         turnAction.setVisibility(View.GONE);
         textToSpeechButton.setVisibility(View.GONE);
-        viewTeams.setVisibility(View.GONE);
 
         if (!player.isHost()) {
             gameOperationsLinear.removeView(startGame);
+            viewTeams.setVisibility(View.GONE);
         }
+
+        toggleWordButtons();
+
+        startGame.setOnClickListener(v -> {
+            toggleWordButtons();
+        });
 
         teamAButton.setOnClickListener(v -> {
             socketConnection.socket.emit("chooseTeam", player.getNickname(), "A", roomName);
@@ -168,6 +200,7 @@ public class online_game extends AppCompatActivity {
             requestSpymaster.setEnabled(true);
             changeTeamButton.setEnabled(true);
             chatButton.setEnabled(true);
+            viewTeams.setEnabled(true);
         });
 
         teamBButton.setOnClickListener(v -> {
@@ -177,6 +210,12 @@ public class online_game extends AppCompatActivity {
             requestSpymaster.setEnabled(true);
             changeTeamButton.setEnabled(true);
             chatButton.setEnabled(true);
+            viewTeams.setEnabled(true);
+        });
+
+        requestSpymaster.setOnClickListener(v -> {
+            socketConnection.socket.emit("requestSpymaster", player.getNickname(), roomName, player.getTeam());
+            requestSpymaster.setVisibility(View.GONE); //When a spymaster quits bring the button back
         });
 
         changeTeamButton.setOnClickListener(v -> {
@@ -193,6 +232,14 @@ public class online_game extends AppCompatActivity {
                     break;
                 }
             }
+        });
+
+        closeTeamsBox.setOnClickListener(v -> {
+            toggleTeamsBox();
+        });
+
+        viewTeams.setOnClickListener(v -> {
+            toggleTeamsBox();
         });
 
         socketConnection.socket.on("gameDetails", new Emitter.Listener() {
@@ -265,12 +312,6 @@ public class online_game extends AppCompatActivity {
                 System.out.println("Team B Users: " + teamBUsers);
                 System.out.println("Starting Team: " + startingTeam);
 
-                wordButtons = new WordButton[]{squareOne, squareTwo, squareThree, squareFour, squareFive,
-                        squareSix, squareSeven, squareEight, squareNine, squareTen, squareEleven,
-                        squareTwelve, squareThirteen, squareFourteen, squareFifteen, squareSixteen,
-                        squareSeventeen, squareEighteen, squareNineteen, squareTwenty, squareTwentyOne,
-                        squareTwentyTwo, squareTwentyThree, squareTwentyFour, squareTwentyFive};
-
                 for (int i = 0; i < wordButtons.length; i++) {
                     wordButtons[i].setText(allWords.get(i));
                 }
@@ -291,7 +332,7 @@ public class online_game extends AppCompatActivity {
                 String playerName = (String) args[0];
                 String team = (String) args[1];
 
-                Player newPlayer = new Player(playerName);
+                Player newPlayer = new Player(playerName, team);
 
                 for (Player p : teamAUsers) {
                     if (p.getNickname().equals(playerName)) {
@@ -312,6 +353,10 @@ public class online_game extends AppCompatActivity {
                 } else {
                     teamBUsers.add(newPlayer);
                 }
+
+                if (newPlayer.getNickname().equals(player.getNickname())) {
+                    player.setTeam(team);
+                }
             }
         });
 
@@ -327,6 +372,85 @@ public class online_game extends AppCompatActivity {
         socketConnection.socket.emit("leaveRoom");
         Intent i = new Intent(view.getContext(), main_menu.class);
         startActivity(i);
+    }
+
+    private void toggleWordButtons() {
+        for (WordButton wb : wordButtons) {
+            wb.setEnabled(wordButtonsEnabled);
+        }
+
+        wordButtonsEnabled = !wordButtonsEnabled;
+    }
+
+    private void toggleTeamsBox() {
+        if (!teamsBoxOpen) {
+            teamALinear.removeAllViews();
+            teamBLinear.removeAllViews();
+
+            exitButton.setEnabled(false);
+            startGame.setEnabled(false);
+            requestSpymaster.setEnabled(false);
+            changeTeamButton.setEnabled(false);
+            chatButton.setEnabled(false);
+            viewTeams.setEnabled(false);
+            hintText.setEnabled(false);
+            editHint.setEnabled(false);
+            hintNumber.setEnabled(false);
+            turnAction.setEnabled(false);
+            textToSpeechButton.setEnabled(false);
+
+            viewTeamsBox.setVisibility(View.VISIBLE);
+            teamsBoxOpen = true;
+
+            for (Player p : teamAUsers) {
+                TextView newPlayer = new TextView(this);
+
+                newPlayer.setText(p.getNickname());
+
+                if (userSettings.getInstance().getPreference(userSettings.getInstance().MENU_TEXT).equals("")) {
+                    defaultColour = userSettings.getInstance().MENU_TEXT_DEFAULT;
+                } else {
+                    defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().MENU_TEXT));
+                }
+
+                newPlayer.setTextColor(defaultColour);
+                newPlayer.setTextSize(30);
+
+                teamALinear.addView(newPlayer);
+            }
+
+            for (Player p : teamBUsers) {
+                TextView newPlayer = new TextView(this);
+
+                newPlayer.setText(p.getNickname());
+
+                if (userSettings.getInstance().getPreference(userSettings.getInstance().MENU_TEXT).equals("")) {
+                    defaultColour = userSettings.getInstance().MENU_TEXT_DEFAULT;
+                } else {
+                    defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().MENU_TEXT));
+                }
+
+                newPlayer.setTextColor(defaultColour);
+                newPlayer.setTextSize(30);
+
+                teamBLinear.addView(newPlayer);
+            }
+        } else {
+            viewTeamsBox.setVisibility(View.INVISIBLE);
+            teamsBoxOpen = false;
+
+            exitButton.setEnabled(true);
+            startGame.setEnabled(true);
+            requestSpymaster.setEnabled(true);
+            changeTeamButton.setEnabled(true);
+            chatButton.setEnabled(true);
+            viewTeams.setEnabled(true);
+            hintText.setEnabled(true);
+            editHint.setEnabled(true);
+            hintNumber.setEnabled(true);
+            turnAction.setEnabled(true);
+            textToSpeechButton.setEnabled(true);
+        }
     }
 
     private ArrayList<Player> jsonArrayToPlayers(JSONArray jsonArray) throws JSONException {
@@ -358,6 +482,70 @@ public class online_game extends AppCompatActivity {
     }
 
     private void updateColours() {
+        if (userSettings.getInstance().getPreference(userSettings.getInstance().TEAM_A).equals("")) {
+            defaultColour = userSettings.getInstance().TEAM_A_DEFAULT;
+        } else {
+            defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().TEAM_A));
+        }
 
+        teamACount.setTextColor(defaultColour);
+
+        if (userSettings.getInstance().getPreference(userSettings.getInstance().TEAM_B).equals("")) {
+            defaultColour = userSettings.getInstance().TEAM_B_DEFAULT;
+        } else {
+            defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().TEAM_B));
+        }
+
+        teamBCount.setTextColor(defaultColour);
+
+        if (userSettings.getInstance().getPreference(userSettings.getInstance().APPLICATION_BACKGROUND).equals("")) {
+            defaultColour = userSettings.getInstance().APPLICATION_BACKGROUND_DEFAULT;
+        } else {
+            defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().APPLICATION_BACKGROUND));
+        }
+
+        constraintLayout.setBackgroundColor(defaultColour);
+        chooseTeamBox.setBackgroundColor(defaultColour);
+        viewTeamsBox.setBackgroundColor(defaultColour);
+
+        if (userSettings.getInstance().getPreference(userSettings.getInstance().MENU_BUTTONS).equals("")) {
+            defaultColour = userSettings.getInstance().MENU_BUTTONS_DEFAULT;
+        } else {
+            defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().MENU_BUTTONS));
+        }
+
+        exitButton.setBackgroundColor(defaultColour);
+        startGame.setBackgroundColor(defaultColour);
+        requestSpymaster.setBackgroundColor(defaultColour);
+        changeTeamButton.setBackgroundColor(defaultColour);
+        teamAButton.setBackgroundColor(defaultColour);
+        teamBButton.setBackgroundColor(defaultColour);
+        closeTeamsBox.setBackgroundColor(defaultColour);
+        turnAction.setBackgroundColor(defaultColour);
+        textToSpeechButton.setBackgroundColor(defaultColour);
+        viewTeams.setBackgroundColor(defaultColour);
+        chatButton.setBackgroundColor(defaultColour);
+
+        if (userSettings.getInstance().getPreference(userSettings.getInstance().MENU_TEXT).equals("")) {
+            defaultColour = userSettings.getInstance().MENU_TEXT_DEFAULT;
+        } else {
+            defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().MENU_TEXT));
+        }
+
+        teamCounterLine.setTextColor(defaultColour);
+        teamAHeader.setTextColor(defaultColour);
+        teamBHeader.setTextColor(defaultColour);
+        exitButton.setTextColor(defaultColour);
+        startGame.setTextColor(defaultColour);
+        requestSpymaster.setTextColor(defaultColour);
+        changeTeamButton.setTextColor(defaultColour);
+        teamAButton.setTextColor(defaultColour);
+        teamBButton.setTextColor(defaultColour);
+        closeTeamsBox.setTextColor(defaultColour);
+        turnAction.setTextColor(defaultColour);
+        textToSpeechButton.setTextColor(defaultColour);
+        viewTeams.setTextColor(defaultColour);
+        chatButton.setTextColor(defaultColour);
+        teamSeparator.setBackgroundColor(defaultColour);
     }
 }

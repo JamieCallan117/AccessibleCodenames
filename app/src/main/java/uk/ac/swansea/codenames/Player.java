@@ -2,11 +2,17 @@ package uk.ac.swansea.codenames;
 
 public class Player {
     private String nickname;
+    private String team;
     private boolean isHost;
     private boolean isSpymaster;
 
     public Player(String nickname) {
         this.nickname = nickname;
+    }
+
+    public Player(String nickname, String team) {
+        this.nickname = nickname;
+        this.team = team;
     }
 
     public String getNickname() {
@@ -15,6 +21,14 @@ public class Player {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public String getTeam() {
+        return team;
+    }
+
+    public void setTeam(String team) {
+        this.team = team;
     }
 
     public boolean isHost() {
