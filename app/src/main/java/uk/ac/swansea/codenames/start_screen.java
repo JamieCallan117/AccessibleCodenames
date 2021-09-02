@@ -31,17 +31,31 @@ public class start_screen extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.start_screen);
 
+        quitBox = findViewById(R.id.quitBox);
+        playButton = findViewById(R.id.playButton);
+        settingsButton = findViewById(R.id.settingsButton);
+        constraintLayout = findViewById(R.id.saveButton);
+        yesButton = findViewById(R.id.yesButton);
+        noButton = findViewById(R.id.noButton);
+        quitText = findViewById(R.id.quitText);
+        startScreenTitle = findViewById(R.id.startScreenTitle);
+
         userSettings.getInstance().Initialize(getApplicationContext());
+
+        //This is how TTS will work. Pressing the button quickly performs it's default action. Holding it
+        //with a return true in this listener, will cause it to run the code in here, and not run the code
+        //for a regular click.
+        //For actual TTS it won't print out the word, it'll obviously read it aloud
+        playButton.setOnLongClickListener(v -> {
+            System.out.println(playButton.getText().toString());
+            return true;
+        });
 
         updateColours();
     }
 
     @Override
     public void onBackPressed() {
-        quitBox = findViewById(R.id.quitBox);
-        playButton = findViewById(R.id.playButton);
-        settingsButton = findViewById(R.id.settingsButton);
-
         if (exiting) {
             quitBox.setVisibility(View.INVISIBLE);
             playButton.setVisibility(View.VISIBLE);
@@ -82,15 +96,6 @@ public class start_screen extends AppCompatActivity {
     }
 
     public void updateColours() {
-        quitBox = findViewById(R.id.quitBox);
-        constraintLayout = findViewById(R.id.saveButton);
-        playButton = findViewById(R.id.playButton);
-        settingsButton = findViewById(R.id.settingsButton);
-        yesButton = findViewById(R.id.yesButton);
-        noButton = findViewById(R.id.noButton);
-        quitText = findViewById(R.id.quitText);
-        startScreenTitle = findViewById(R.id.startScreenTitle);
-
         if (userSettings.getInstance().getPreference(userSettings.getInstance().APPLICATION_BACKGROUND).equals("")) {
             defaultColour = userSettings.getInstance().APPLICATION_BACKGROUND_DEFAULT;
         } else {
