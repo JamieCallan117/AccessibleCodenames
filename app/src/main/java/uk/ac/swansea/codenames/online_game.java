@@ -360,6 +360,50 @@ public class online_game extends AppCompatActivity {
             }
         });
 
+        socketConnection.socket.on("teamASpymaster", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                String newUser = (String) args[0];
+                teamASpymaster = new Player(newUser, "A");
+
+                for (Player p : teamAUsers) {
+                    if (p.getNickname().equals(newUser)) {
+                        p.setSpymaster(true);
+                    }
+                }
+            }
+        });
+
+        socketConnection.socket.on("teamBSpymaster", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                String newUser = (String) args[0];
+                teamBSpymaster = new Player(newUser, "B");
+
+                for (Player p : teamBUsers) {
+                    if (p.getNickname().equals(newUser)) {
+                        p.setSpymaster(true);
+                    }
+                }
+            }
+        });
+
+        socketConnection.socket.on("spymasterFail", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                toggleMessageBox(); //"The Spymaster for your team has already been selected"
+            }
+        });
+
+        socketConnection.socket.on("hostQuit", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                //Maybe change to pop up box saying host quit, return to main menu with button
+                Intent i = new Intent(getApplicationContext(), main_menu.class);
+                startActivity(i);
+            }
+        });
+
         updateColours();
     }
 
@@ -372,6 +416,11 @@ public class online_game extends AppCompatActivity {
         socketConnection.socket.emit("leaveRoom");
         Intent i = new Intent(view.getContext(), main_menu.class);
         startActivity(i);
+    }
+
+    //Either take in a string for the displayed message or numbered switch case for each potential message
+    private void toggleMessageBox() {
+
     }
 
     private void toggleWordButtons() {
