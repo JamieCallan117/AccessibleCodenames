@@ -215,7 +215,6 @@ public class online_game extends AppCompatActivity {
 
         requestSpymaster.setOnClickListener(v -> {
             socketConnection.socket.emit("requestSpymaster", player.getNickname(), roomName, player.getTeam());
-            requestSpymaster.setVisibility(View.GONE); //When a spymaster quits bring the button back
         });
 
         changeTeamButton.setOnClickListener(v -> {
@@ -371,6 +370,24 @@ public class online_game extends AppCompatActivity {
                         p.setSpymaster(true);
                     }
                 }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        requestSpymaster.setVisibility(View.GONE);
+                    }
+                });
+
+                if (player.getNickname().equals(newUser)) {
+                    player.setSpymaster(true);
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            changeTeamButton.setVisibility(View.GONE);
+                        }
+                    });
+                }
             }
         });
 
@@ -385,6 +402,24 @@ public class online_game extends AppCompatActivity {
                         p.setSpymaster(true);
                     }
                 }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        requestSpymaster.setVisibility(View.GONE);
+                    }
+                });
+
+                if (player.getNickname().equals(newUser)) {
+                    player.setSpymaster(true);
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            changeTeamButton.setVisibility(View.GONE);
+                        }
+                    });
+                }
             }
         });
 
@@ -392,6 +427,59 @@ public class online_game extends AppCompatActivity {
             @Override
             public void call(Object... args) {
                 toggleMessageBox(); //"The Spymaster for your team has already been selected"
+            }
+        });
+
+        socketConnection.socket.on("spymasterQuitA", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                teamASpymaster = null;
+
+                if (player.getTeam().equals("A")) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            requestSpymaster.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
+            }
+        });
+
+        socketConnection.socket.on("spymasterQuitB", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                teamBSpymaster = null;
+
+                if (player.getTeam().equals("B")) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            requestSpymaster.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
+            }
+        });
+
+        socketConnection.socket.on("playerQuit", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                String username = (String) args[0];
+
+                for (Player p : teamAUsers) {
+                    if (p.getNickname().equals(username)) {
+                        teamAUsers.remove(p);
+                        return;
+                    }
+                }
+
+                for (Player p : teamBUsers) {
+                    if (p.getNickname().equals(username)) {
+                        teamBUsers.remove(p);
+                        return;
+                    }
+                }
             }
         });
 
@@ -451,10 +539,16 @@ public class online_game extends AppCompatActivity {
             viewTeamsBox.setVisibility(View.VISIBLE);
             teamsBoxOpen = true;
 
+            String spymasterSymbol = new String(Character.toChars(0x1F441));
+
             for (Player p : teamAUsers) {
                 TextView newPlayer = new TextView(this);
 
-                newPlayer.setText(p.getNickname());
+                if (p.isSpymaster()) {
+                    newPlayer.setText(p.getNickname() + " " + spymasterSymbol);
+                } else {
+                    newPlayer.setText(p.getNickname());
+                }
 
                 if (userSettings.getInstance().getPreference(userSettings.getInstance().MENU_TEXT).equals("")) {
                     defaultColour = userSettings.getInstance().MENU_TEXT_DEFAULT;
