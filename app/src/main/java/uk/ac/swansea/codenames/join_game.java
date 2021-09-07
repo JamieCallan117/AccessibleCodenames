@@ -3,7 +3,9 @@ package uk.ac.swansea.codenames;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +41,8 @@ public class join_game extends AppCompatActivity {
     private EditText roomNameEdit;
     private EditText passwordEdit;
 
+    private ArrayList<Button> publicJoinButtons = new ArrayList<>();
+
     private int defaultColour;
     private String username;
     private boolean validJoin;
@@ -66,6 +70,40 @@ public class join_game extends AppCompatActivity {
 
         joinPrivateButton.setOnClickListener(v -> {
             validJoin = true;
+
+            socketConnection.socket.emit("joinRoom", username, roomNameEdit.getText().toString(),
+                    passwordEdit.getText().toString());
+
+            backButton.setEnabled(false);
+            refreshButton.setEnabled(false);
+            roomNameEdit.setEnabled(false);
+            passwordEdit.setEnabled(false);
+            joinPrivateButton.setEnabled(false);
+
+            for (Button b : publicJoinButtons) {
+                b.setEnabled(false);
+            }
+
+            Handler handler = new Handler();
+
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (validJoin) {
+                        Intent i = new Intent(getApplicationContext(), online_game.class);
+                        i.putExtra("username", userSettings.getInstance().getPreference("username"));
+                        i.putExtra("roomName", roomNameEdit.getText().toString());
+                        i.putExtra("isHost", false);
+                        startActivity(i);
+                    } else {
+                        backButton.setEnabled(true);
+                        refreshButton.setEnabled(true);
+                        roomNameEdit.setEnabled(true);
+                        passwordEdit.setEnabled(true);
+                        joinPrivateButton.setEnabled(true);
+                    }
+                }
+            }, 3000);
         });
 
         refreshButton.setOnClickListener(v -> {
@@ -93,6 +131,8 @@ public class join_game extends AppCompatActivity {
         socketConnection.socket.on("allRooms", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
+                publicJoinButtons.clear();
+
                 JSONObject data = (JSONObject) args[0];
 
                 ArrayList<String> allRoomNames = new ArrayList<>();
@@ -143,23 +183,19 @@ public class join_game extends AppCompatActivity {
                             LinearLayout roomLinear = new LinearLayout(getApplicationContext());
                             roomLinear.setOrientation(LinearLayout.HORIZONTAL);
 
-                            TextView newRoom = new TextView(getApplicationContext());
-                            newRoom.setText(name);
-
-                            Typeface typeface = ResourcesCompat.getFont(getApplicationContext(), R.font.general_font);
-                            newRoom.setTypeface(typeface);
-
                             if (userSettings.getInstance().getPreference(userSettings.getInstance().MENU_TEXT).equals("")) {
                                 defaultColour = userSettings.getInstance().MENU_TEXT_DEFAULT;
                             } else {
                                 defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().MENU_TEXT));
                             }
 
-                            newRoom.setTextColor(defaultColour);
-
                             Button joinButton = new Button(getApplicationContext());
-                            joinButton.setText("Join");
+                            joinButton.setText(name);
                             joinButton.setTextColor(defaultColour);
+
+                            LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+                            joinButton.setLayoutParams(buttonParams);
 
                             if (userSettings.getInstance().getPreference(userSettings.getInstance().MENU_BUTTONS).equals("")) {
                                 defaultColour = userSettings.getInstance().MENU_BUTTONS_DEFAULT;
@@ -170,11 +206,45 @@ public class join_game extends AppCompatActivity {
                             joinButton.setBackgroundColor(defaultColour);
 
                             joinButton.setOnClickListener(v -> {
-                                socketConnection.socket.emit("joinGame", username, name);
+                                validJoin = true;
+
+                                socketConnection.socket.emit("joinRoom", username, name, "");
+
+                                backButton.setEnabled(false);
+                                refreshButton.setEnabled(false);
+                                roomNameEdit.setEnabled(false);
+                                passwordEdit.setEnabled(false);
+                                joinPrivateButton.setEnabled(false);
+
+                                for (Button b : publicJoinButtons) {
+                                    b.setEnabled(false);
+                                }
+
+                                Handler handler = new Handler();
+
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (validJoin) {
+                                            Intent i = new Intent(getApplicationContext(), online_game.class);
+                                            i.putExtra("username", userSettings.getInstance().getPreference("username"));
+                                            i.putExtra("roomName", name);
+                                            i.putExtra("isHost", false);
+                                            startActivity(i);
+                                        } else {
+                                            backButton.setEnabled(true);
+                                            refreshButton.setEnabled(true);
+                                            roomNameEdit.setEnabled(true);
+                                            passwordEdit.setEnabled(true);
+                                            joinPrivateButton.setEnabled(true);
+                                        }
+                                    }
+                                }, 3000);
                             });
 
+                            publicJoinButtons.add(joinButton);
+
                             scrollLinear.addView(roomLinear);
-                            roomLinear.addView(newRoom);
                             roomLinear.addView(joinButton);
                         }
                     }

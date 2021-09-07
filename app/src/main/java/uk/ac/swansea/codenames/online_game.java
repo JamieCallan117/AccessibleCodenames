@@ -200,7 +200,6 @@ public class online_game extends AppCompatActivity {
 
         if (!player.isHost()) {
             gameOperationsLinear.removeView(startGame);
-            viewTeams.setVisibility(View.GONE);
         }
 
         toggleWordButtons();
