@@ -91,6 +91,7 @@ public class online_setup extends AppCompatActivity {
         updateColours();
     }
 
+    //Disable whilst the connecting box is up
     @Override
     public void onBackPressed() {
         backButton(getWindow().getDecorView());

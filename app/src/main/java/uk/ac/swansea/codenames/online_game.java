@@ -1,9 +1,14 @@
 package uk.ac.swansea.codenames;
 
 import static uk.ac.swansea.codenames.onlinePhase.START;
+import static uk.ac.swansea.codenames.onlinePhase.TEAM_A;
+import static uk.ac.swansea.codenames.onlinePhase.TEAM_A_SPY;
+import static uk.ac.swansea.codenames.onlinePhase.TEAM_B;
+import static uk.ac.swansea.codenames.onlinePhase.TEAM_B_SPY;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -40,6 +45,7 @@ public class online_game extends AppCompatActivity {
     private int startingTeam;
     private int defaultColour;
     private boolean teamsBoxOpen = false;
+    private boolean chatWindowOpen = false;
     private boolean wordButtonsEnabled = false;
     private onlinePhase gamePhase = START;
 
@@ -81,8 +87,12 @@ public class online_game extends AppCompatActivity {
     private Button teamBButton;
     private Button chatButton;
     private Button closeTeamsBox;
+    private Button sendChatButton;
+    private Button closeChatButton;
     private ScrollView gameOperationsScroll;
+    private ScrollView chatScroll;
     private LinearLayout gameOperationsLinear;
+    private LinearLayout chatLinear;
     private LinearLayout teamALinear;
     private LinearLayout teamBLinear;
     private TextView teamACount;
@@ -92,6 +102,7 @@ public class online_game extends AppCompatActivity {
     private TextView teamCounterLine;
     private TextView hintText;
     private EditText editHint;
+    private EditText chatEdit;
     private Spinner hintNumber;
     private androidx.gridlayout.widget.GridLayout chooseTeamBox;
     private androidx.gridlayout.widget.GridLayout viewTeamsBox;
@@ -155,6 +166,11 @@ public class online_game extends AppCompatActivity {
         teamBLinear = findViewById(R.id.teamBLinear);
         closeTeamsBox = findViewById(R.id.closeTeamsBox);
         teamSeparator = findViewById(R.id.teamSeparator);
+        closeChatButton = findViewById(R.id.closeChatButton);
+        sendChatButton = findViewById(R.id.sendChatButton);
+        chatScroll = findViewById(R.id.chatScroll);
+        chatLinear = findViewById(R.id.chatLinear);
+        chatEdit = findViewById(R.id.chatEdit);
 
         wordButtons = new WordButton[]{squareOne, squareTwo, squareThree, squareFour, squareFive,
                 squareSix, squareSeven, squareEight, squareNine, squareTen, squareEleven,
@@ -239,6 +255,23 @@ public class online_game extends AppCompatActivity {
 
         viewTeams.setOnClickListener(v -> {
             toggleTeamsBox();
+        });
+
+        chatButton.setOnClickListener(v -> {
+            toggleChatWindow();
+        });
+
+        closeChatButton.setOnClickListener(v -> {
+            toggleChatWindow();
+        });
+
+        sendChatButton.setOnClickListener(v -> {
+            String message = chatEdit.getText().toString();
+
+            if (!message.equals("")) {
+                socketConnection.socket.emit("chat", player.getNickname(), player.getTeam(), message, roomName);
+                chatEdit.setText("");
+            }
         });
 
         socketConnection.socket.on("gameDetails", new Emitter.Listener() {
@@ -430,6 +463,78 @@ public class online_game extends AppCompatActivity {
             }
         });
 
+        socketConnection.socket.on("teamAChat", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                String username = (String) args[0];
+                String message = (String) args[1];
+
+                if (userSettings.getInstance().getPreference(userSettings.getInstance().TEAM_A).equals("")) {
+                    defaultColour = userSettings.getInstance().TEAM_A_DEFAULT;
+                } else {
+                    defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().TEAM_A));
+                }
+
+                String usernameColour = "<font color=" + defaultColour + ">" + username + "</font>";
+
+                if (userSettings.getInstance().getPreference(userSettings.getInstance().MENU_TEXT).equals("")) {
+                    defaultColour = userSettings.getInstance().MENU_TEXT_DEFAULT;
+                } else {
+                    defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().MENU_TEXT));
+                }
+
+                String messageColour = "<font color=" + defaultColour + ">" + message + "</font>";
+
+                TextView newMessage = new TextView(getApplicationContext());
+
+                newMessage.setText(Html.fromHtml(usernameColour + ": " + messageColour));
+                newMessage.setTextSize(18);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        chatLinear.addView(newMessage);
+                    }
+                });
+            }
+        });
+
+        socketConnection.socket.on("teamBChat", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                String username = (String) args[0];
+                String message = (String) args[1];
+
+                if (userSettings.getInstance().getPreference(userSettings.getInstance().TEAM_B).equals("")) {
+                    defaultColour = userSettings.getInstance().TEAM_B_DEFAULT;
+                } else {
+                    defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().TEAM_B));
+                }
+
+                String usernameColour = "<font color=" + defaultColour + ">" + username + "</font>";
+
+                if (userSettings.getInstance().getPreference(userSettings.getInstance().MENU_TEXT).equals("")) {
+                    defaultColour = userSettings.getInstance().MENU_TEXT_DEFAULT;
+                } else {
+                    defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().MENU_TEXT));
+                }
+
+                String messageColour = "<font color=" + defaultColour + ">" + message + "</font>";
+
+                TextView newMessage = new TextView(getApplicationContext());
+
+                newMessage.setText(Html.fromHtml(usernameColour + ": " + messageColour));
+                newMessage.setTextSize(18);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        chatLinear.addView(newMessage);
+                    }
+                });
+            }
+        });
+
         socketConnection.socket.on("spymasterQuitA", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -504,6 +609,106 @@ public class online_game extends AppCompatActivity {
         socketConnection.socket.emit("leaveRoom");
         Intent i = new Intent(view.getContext(), main_menu.class);
         startActivity(i);
+    }
+
+    private void toggleChatWindow() {
+        if (chatWindowOpen) {
+            closeChatButton.setVisibility(View.GONE);
+            chatScroll.setVisibility(View.GONE);
+            chatEdit.setVisibility(View.GONE);
+            sendChatButton.setVisibility(View.GONE);
+
+            exitButton.setVisibility(View.VISIBLE);
+            chatButton.setVisibility(View.VISIBLE);
+            viewTeams.setVisibility(View.VISIBLE);
+            textToSpeechButton.setVisibility(View.VISIBLE);
+            teamACount.setVisibility(View.VISIBLE);
+            teamCounterLine.setVisibility(View.VISIBLE);
+            teamBCount.setVisibility(View.VISIBLE);
+
+            for (WordButton wb : wordButtons) {
+                wb.setVisibility(View.VISIBLE);
+            }
+
+            if (gamePhase == START && player.isHost()) {
+                startGame.setVisibility(View.VISIBLE);
+            }
+
+            if (gamePhase == START) {
+                changeTeamButton.setVisibility(View.VISIBLE);
+            }
+
+            if (player.getTeam().equals("A") && teamASpymaster == null) {
+                requestSpymaster.setVisibility(View.VISIBLE);
+            } else if (player.getTeam().equals("B") && teamBSpymaster == null) {
+                requestSpymaster.setVisibility(View.VISIBLE);
+            }
+
+            if (gamePhase == TEAM_A_SPY && player.isSpymaster() && player.getTeam().equals("A")) {
+                editHint.setVisibility(View.VISIBLE);
+                hintNumber.setVisibility(View.VISIBLE);
+            } else if (gamePhase == TEAM_B_SPY && player.isSpymaster() && player.getTeam().equals("B")) {
+                editHint.setVisibility(View.VISIBLE);
+                hintNumber.setVisibility(View.VISIBLE);
+            }
+
+            if (gamePhase == TEAM_A && !player.isSpymaster() && player.getTeam().equals("A")) {
+                turnAction.setVisibility(View.VISIBLE);
+            } else if (gamePhase == TEAM_B && !player.isSpymaster() && player.getTeam().equals("B")) {
+                turnAction.setVisibility(View.VISIBLE);
+            }
+
+            chatWindowOpen = false;
+        } else {
+            chatScroll.fullScroll(View.FOCUS_DOWN);
+
+            closeChatButton.setVisibility(View.VISIBLE);
+            chatScroll.setVisibility(View.VISIBLE);
+            chatEdit.setVisibility(View.VISIBLE);
+            sendChatButton.setVisibility(View.VISIBLE);
+
+            exitButton.setVisibility(View.GONE);
+            chatButton.setVisibility(View.GONE);
+            viewTeams.setVisibility(View.GONE);
+            textToSpeechButton.setVisibility(View.GONE);
+            teamACount.setVisibility(View.GONE);
+            teamCounterLine.setVisibility(View.GONE);
+            teamBCount.setVisibility(View.GONE);
+
+            for (WordButton wb : wordButtons) {
+                wb.setVisibility(View.GONE);
+            }
+
+            if (gamePhase == START && player.isHost()) {
+                startGame.setVisibility(View.GONE);
+            }
+
+            if (gamePhase == START) {
+                changeTeamButton.setVisibility(View.GONE);
+            }
+
+            if (player.getTeam().equals("A") && teamASpymaster == null) {
+                requestSpymaster.setVisibility(View.GONE);
+            } else if (player.getTeam().equals("B") && teamBSpymaster == null) {
+                requestSpymaster.setVisibility(View.GONE);
+            }
+
+            if (gamePhase == TEAM_A_SPY && player.isSpymaster() && player.getTeam().equals("A")) {
+                editHint.setVisibility(View.GONE);
+                hintNumber.setVisibility(View.GONE);
+            } else if (gamePhase == TEAM_B_SPY && player.isSpymaster() && player.getTeam().equals("B")) {
+                editHint.setVisibility(View.GONE);
+                hintNumber.setVisibility(View.GONE);
+            }
+
+            if (gamePhase == TEAM_A && !player.isSpymaster() && player.getTeam().equals("A")) {
+                turnAction.setVisibility(View.GONE);
+            } else if (gamePhase == TEAM_B && !player.isSpymaster() && player.getTeam().equals("B")) {
+                turnAction.setVisibility(View.GONE);
+            }
+
+            chatWindowOpen = true;
+        }
     }
 
     //Either take in a string for the displayed message or numbered switch case for each potential message
@@ -668,6 +873,8 @@ public class online_game extends AppCompatActivity {
         textToSpeechButton.setBackgroundColor(defaultColour);
         viewTeams.setBackgroundColor(defaultColour);
         chatButton.setBackgroundColor(defaultColour);
+        closeChatButton.setBackgroundColor(defaultColour);
+        sendChatButton.setBackgroundColor(defaultColour);
 
         if (userSettings.getInstance().getPreference(userSettings.getInstance().MENU_TEXT).equals("")) {
             defaultColour = userSettings.getInstance().MENU_TEXT_DEFAULT;
@@ -689,6 +896,8 @@ public class online_game extends AppCompatActivity {
         textToSpeechButton.setTextColor(defaultColour);
         viewTeams.setTextColor(defaultColour);
         chatButton.setTextColor(defaultColour);
+        closeChatButton.setTextColor(defaultColour);
+        sendChatButton.setTextColor(defaultColour);
         teamSeparator.setBackgroundColor(defaultColour);
     }
 }
