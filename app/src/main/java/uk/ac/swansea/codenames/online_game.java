@@ -388,6 +388,16 @@ public class online_game extends AppCompatActivity {
                 if (newPlayer.getNickname().equals(player.getNickname())) {
                     player.setTeam(team);
                 }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (teamsBoxOpen) {
+                            teamsBoxOpen = false;
+                            toggleTeamsBox();
+                        }
+                    }
+                });
             }
         });
 
@@ -574,16 +584,26 @@ public class online_game extends AppCompatActivity {
                 for (Player p : teamAUsers) {
                     if (p.getNickname().equals(username)) {
                         teamAUsers.remove(p);
-                        return;
+                        break;
                     }
                 }
 
                 for (Player p : teamBUsers) {
                     if (p.getNickname().equals(username)) {
                         teamBUsers.remove(p);
-                        return;
+                        break;
                     }
                 }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (teamsBoxOpen) {
+                            teamsBoxOpen = false;
+                            toggleTeamsBox();
+                        }
+                    }
+                });
             }
         });
 
