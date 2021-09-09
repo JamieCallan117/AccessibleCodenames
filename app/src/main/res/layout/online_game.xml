@@ -522,9 +522,8 @@
                 android:layout_width="110dp"
                 android:layout_height="55dp"
                 android:layout_marginStart="6dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/give_hint"
-                android:layout_marginLeft="6dp" />
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="8dp" />
 
             <Button
                 android:id="@+id/textToSpeechButton"

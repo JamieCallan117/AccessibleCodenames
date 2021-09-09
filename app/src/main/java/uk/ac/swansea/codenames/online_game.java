@@ -30,6 +30,7 @@ import java.util.ArrayList;
 
 import io.socket.emitter.Emitter;
 
+//Anything that runs something like toggleMessageBox() might need to be in a runOnUiThread
 public class online_game extends AppCompatActivity {
     private Player player;
     private String roomName;
@@ -205,7 +206,7 @@ public class online_game extends AppCompatActivity {
         toggleWordButtons();
 
         startGame.setOnClickListener(v -> {
-            toggleWordButtons();
+            socketConnection.socket.emit("startGame");
         });
 
         teamAButton.setOnClickListener(v -> {
@@ -352,6 +353,53 @@ public class online_game extends AppCompatActivity {
                     public void run() {
                         teamACount.setText(String.valueOf(teamAWords.size()));
                         teamBCount.setText(String.valueOf(teamBWords.size()));
+                    }
+                });
+            }
+        });
+
+        socketConnection.socket.on("startSuccess", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        startGame.setVisibility(View.GONE);
+                        changeTeamButton.setVisibility(View.GONE);
+
+                        if (startingTeam == 1) {
+                            gamePhase = TEAM_A_SPY;
+                        } else {
+                            gamePhase = TEAM_B_SPY;
+                        }
+
+                        if (player.isSpymaster() && player.getTeam().equals("A") && gamePhase == TEAM_A_SPY) {
+                            editHint.setVisibility(View.VISIBLE);
+                            hintNumber.setVisibility(View.VISIBLE);
+                            turnAction.setVisibility(View.VISIBLE);
+                            turnAction.setText("Give Hint");
+                        }
+
+                        if (player.isSpymaster() && player.getTeam().equals("B") && gamePhase == TEAM_B_SPY) {
+                            editHint.setVisibility(View.VISIBLE);
+                            hintNumber.setVisibility(View.VISIBLE);
+                            turnAction.setVisibility(View.VISIBLE);
+                            turnAction.setText("Give Hint");
+                        }
+                    }
+                });
+            }
+        });
+
+        socketConnection.socket.on("startFail", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (player.isHost()) {
+                            toggleMessageBox(/*(String) args[0]*/);
+                        }
                     }
                 });
             }
