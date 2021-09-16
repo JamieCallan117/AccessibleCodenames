@@ -8,6 +8,7 @@ import static uk.ac.swansea.codenames.onlinePhase.TEAM_B_SPY;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
@@ -185,7 +186,16 @@ public class online_game extends AppCompatActivity {
 
         roomName = getIntent().getStringExtra("roomName");
 
-        socketConnection.socket.emit("getGameDetails", roomName);
+        //Possibly make everything Visible.GONE until after the handler has run. Maybe a loading game textbox in the middle
+
+        Handler handler = new Handler();
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                socketConnection.socket.emit("getGameDetails", roomName);
+            }
+        }, 2000);
 
         startGame.setEnabled(false);
         requestSpymaster.setEnabled(false);
