@@ -312,6 +312,8 @@ public class online_game extends AppCompatActivity {
                 if (validHint) {
                     String hint = editHint.getText().toString() + ": " + hintNumber.getSelectedItem().toString();
 
+                    editHint.setText("");
+
                     socketConnection.socket.emit("hint", hint, roomName);
                 }
             } else {
@@ -413,6 +415,7 @@ public class online_game extends AppCompatActivity {
                     public void run() {
                         startGame.setVisibility(View.GONE);
                         changeTeamButton.setVisibility(View.GONE);
+                        textToSpeechButton.setVisibility(View.VISIBLE);
 
                         if (startingTeam == 1) {
                             gamePhase = TEAM_A_SPY;
@@ -634,6 +637,42 @@ public class online_game extends AppCompatActivity {
             }
         });
 
+        socketConnection.socket.on("endTurn", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                if (gamePhase == TEAM_A) {
+                    gamePhase = TEAM_B_SPY;
+                } else {
+                    gamePhase = TEAM_A_SPY;
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (player.isSpymaster() && player.getTeam().equals("A") && gamePhase == TEAM_A_SPY) {
+                            editHint.setVisibility(View.VISIBLE);
+                            hintNumber.setVisibility(View.VISIBLE);
+                            turnAction.setVisibility(View.VISIBLE);
+                            turnAction.setText("Give Hint");
+                        } else if (!player.isSpymaster() && player.getTeam().equals("A") && gamePhase == TEAM_B_SPY) {
+                            turnAction.setVisibility(View.GONE);
+                        }
+
+                        if (player.isSpymaster() && player.getTeam().equals("B") && gamePhase == TEAM_B_SPY) {
+                            editHint.setVisibility(View.VISIBLE);
+                            hintNumber.setVisibility(View.VISIBLE);
+                            turnAction.setVisibility(View.VISIBLE);
+                            turnAction.setText("Give Hint");
+                        } else if (!player.isSpymaster() && player.getTeam().equals("B") && gamePhase == TEAM_A_SPY) {
+                            turnAction.setVisibility(View.GONE);
+                        }
+
+                        updateSpinner();
+                    }
+                });
+            }
+        });
+
         socketConnection.socket.on("teamAChat", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -802,7 +841,6 @@ public class online_game extends AppCompatActivity {
             exitButton.setVisibility(View.VISIBLE);
             chatButton.setVisibility(View.VISIBLE);
             hintText.setVisibility(View.VISIBLE);
-            turnAction.setVisibility(View.VISIBLE);
             viewTeams.setVisibility(View.VISIBLE);
             textToSpeechButton.setVisibility(View.VISIBLE);
             teamACount.setVisibility(View.VISIBLE);
@@ -853,7 +891,6 @@ public class online_game extends AppCompatActivity {
             exitButton.setVisibility(View.GONE);
             chatButton.setVisibility(View.GONE);
             hintText.setVisibility(View.GONE);
-            turnAction.setVisibility(View.GONE);
             viewTeams.setVisibility(View.GONE);
             textToSpeechButton.setVisibility(View.GONE);
             teamACount.setVisibility(View.GONE);
