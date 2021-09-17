@@ -690,7 +690,6 @@ public class local_game extends AppCompatActivity {
         if (gamePhase == TEAM_A_SPY) {
             for (int i = 0; i < teamASquaresCount + 1; i++) {
                 spinnerArray.add(String.valueOf(i));
-                System.out.println(i);
             }
         } else {
             for (int i = 0; i < teamBSquaresCount + 1; i++) {
