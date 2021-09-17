@@ -3,8 +3,10 @@ package uk.ac.swansea.codenames;
 import static uk.ac.swansea.codenames.onlinePhase.START;
 import static uk.ac.swansea.codenames.onlinePhase.TEAM_A;
 import static uk.ac.swansea.codenames.onlinePhase.TEAM_A_SPY;
+import static uk.ac.swansea.codenames.onlinePhase.TEAM_A_WIN;
 import static uk.ac.swansea.codenames.onlinePhase.TEAM_B;
 import static uk.ac.swansea.codenames.onlinePhase.TEAM_B_SPY;
+import static uk.ac.swansea.codenames.onlinePhase.TEAM_B_WIN;
 
 import android.content.Intent;
 import android.opengl.Visibility;
@@ -48,6 +50,8 @@ public class online_game extends AppCompatActivity {
     private ArrayList<String> teamAWords = new ArrayList<>();
     private ArrayList<String> teamBWords = new ArrayList<>();
     private int startingTeam;
+    private int teamAWordCount;
+    private int teamBWordCount;
     private int defaultColour;
     private boolean teamsBoxOpen = false;
     private boolean chatWindowOpen = false;
@@ -221,7 +225,7 @@ public class online_game extends AppCompatActivity {
             gameOperationsLinear.removeView(startGame);
         }
 
-        toggleWordButtons();
+        //toggleWordButtons();
 
         startGame.setOnClickListener(v -> {
             socketConnection.socket.emit("startGame");
@@ -321,6 +325,16 @@ public class online_game extends AppCompatActivity {
             }
         });
 
+        for (WordButton wb : wordButtons) {
+            wb.setOnClickListener(v -> {
+                if (gamePhase == TEAM_A && player.getTeam().equals("A") && !player.isSpymaster() && !wb.hasBeenClicked()) {
+                    socketConnection.socket.emit("wordButton", wb.getText().toString(), player.getNickname(), roomName);
+                } else if (gamePhase == TEAM_B && player.getTeam().equals("B") && !player.isSpymaster() && !wb.hasBeenClicked()) {
+                    socketConnection.socket.emit("wordButton", wb.getText().toString(), player.getNickname(), roomName);
+                }
+            });
+        }
+
         socketConnection.socket.on("gameDetails", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -398,8 +412,10 @@ public class online_game extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        teamACount.setText(String.valueOf(teamAWords.size()));
-                        teamBCount.setText(String.valueOf(teamBWords.size()));
+                        teamAWordCount = teamAWords.size();
+                        teamBWordCount = teamBWords.size();
+                        teamACount.setText(String.valueOf(teamAWordCount));
+                        teamBCount.setText(String.valueOf(teamBWordCount));
                         loadingBox.setVisibility(View.GONE);
                         chooseTeamBox.setVisibility(View.VISIBLE);
                     }
@@ -423,21 +439,26 @@ public class online_game extends AppCompatActivity {
                             gamePhase = TEAM_B_SPY;
                         }
 
+                        if (player.isSpymaster()) {
+                            turnAction.setText("Give Hint");
+                        } else {
+                            turnAction.setText("End Turn");
+                        }
+
                         if (player.isSpymaster() && player.getTeam().equals("A") && gamePhase == TEAM_A_SPY) {
                             editHint.setVisibility(View.VISIBLE);
                             hintNumber.setVisibility(View.VISIBLE);
                             turnAction.setVisibility(View.VISIBLE);
-                            turnAction.setText("Give Hint");
                         }
 
                         if (player.isSpymaster() && player.getTeam().equals("B") && gamePhase == TEAM_B_SPY) {
                             editHint.setVisibility(View.VISIBLE);
                             hintNumber.setVisibility(View.VISIBLE);
                             turnAction.setVisibility(View.VISIBLE);
-                            turnAction.setText("Give Hint");
                         }
 
                         updateSpinner();
+                        updateColours();
                     }
                 });
             }
@@ -625,10 +646,8 @@ public class online_game extends AppCompatActivity {
                             turnAction.setVisibility(View.GONE);
                         } else {
                             if (gamePhase == TEAM_A && player.getTeam().equals("A")) {
-                                turnAction.setText("End Turn");
                                 turnAction.setVisibility(View.VISIBLE);
                             } else if (gamePhase == TEAM_B && player.getTeam().equals("B")) {
-                                turnAction.setText("End Turn");
                                 turnAction.setVisibility(View.VISIBLE);
                             }
                         }
@@ -653,7 +672,6 @@ public class online_game extends AppCompatActivity {
                             editHint.setVisibility(View.VISIBLE);
                             hintNumber.setVisibility(View.VISIBLE);
                             turnAction.setVisibility(View.VISIBLE);
-                            turnAction.setText("Give Hint");
                         } else if (!player.isSpymaster() && player.getTeam().equals("A") && gamePhase == TEAM_B_SPY) {
                             turnAction.setVisibility(View.GONE);
                         }
@@ -662,12 +680,151 @@ public class online_game extends AppCompatActivity {
                             editHint.setVisibility(View.VISIBLE);
                             hintNumber.setVisibility(View.VISIBLE);
                             turnAction.setVisibility(View.VISIBLE);
-                            turnAction.setText("Give Hint");
                         } else if (!player.isSpymaster() && player.getTeam().equals("B") && gamePhase == TEAM_A_SPY) {
                             turnAction.setVisibility(View.GONE);
                         }
 
                         updateSpinner();
+                    }
+                });
+            }
+        });
+
+        socketConnection.socket.on("wordButton", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String word = (String) args[0];
+                        String user = (String) args[1];
+
+                        String typeClicked = null;
+                        int index = 0;
+
+                        for (int i = 0; i < wordButtons.length; i++) {
+                            if (wordButtons[i].getText().toString().equals(word)) {
+                                index = i;
+                                break;
+                            }
+                        }
+
+                        WordButton buttonClicked = wordButtons[index];
+
+                        for (String s : teamAWords) {
+                            if (s.equals(word)) {
+                                typeClicked = "A";
+                                break;
+                            }
+                        }
+
+                        if (typeClicked == null) {
+                            for (String s : teamBWords) {
+                                if (s.equals(word)) {
+                                    typeClicked = "B";
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (typeClicked == null) {
+                            for (String s : neutralWords) {
+                                if (s.equals(word)) {
+                                    typeClicked = "Neutral";
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (typeClicked == null) {
+                            for (String s : bombWords) {
+                                if (s.equals(word)) {
+                                    typeClicked = "Bomb";
+                                    break;
+                                }
+                            }
+                        }
+
+                        switch (typeClicked) {
+                            case "A":
+                                buttonClicked.setHasBeenClicked(true);
+
+                                if (gamePhase == TEAM_B) {
+                                    gamePhase = TEAM_A_SPY;
+
+                                    hintText.setVisibility(View.GONE);
+
+                                    if (player.isSpymaster() && player.getTeam().equals("A")) {
+                                        editHint.setVisibility(View.VISIBLE);
+                                        hintNumber.setVisibility(View.VISIBLE);
+                                        turnAction.setVisibility(View.VISIBLE);
+                                    }
+                                }
+
+                                teamAWordCount--;
+
+                                teamACount.setText(String.valueOf(teamAWordCount));
+
+                                updateColours();
+                                break;
+                            case "B":
+                                buttonClicked.setHasBeenClicked(true);
+
+                                if (gamePhase == TEAM_A) {
+                                    gamePhase = TEAM_B_SPY;
+
+                                    hintText.setVisibility(View.GONE);
+
+                                    if (player.isSpymaster() && player.getTeam().equals("B")) {
+                                        editHint.setVisibility(View.VISIBLE);
+                                        hintNumber.setVisibility(View.VISIBLE);
+                                        turnAction.setVisibility(View.VISIBLE);
+                                    }
+                                }
+
+                                teamBWordCount--;
+
+                                teamBCount.setText(String.valueOf(teamBWordCount));
+
+                                updateColours();
+                                break;
+                            case "Neutral":
+                                buttonClicked.setHasBeenClicked(true);
+
+                                if (gamePhase == TEAM_A) {
+                                    gamePhase = TEAM_B_SPY;
+
+                                    hintText.setVisibility(View.GONE);
+
+                                    if (player.isSpymaster() && player.getTeam().equals("B")) {
+                                        editHint.setVisibility(View.VISIBLE);
+                                        hintNumber.setVisibility(View.VISIBLE);
+                                        turnAction.setVisibility(View.VISIBLE);
+                                    }
+                                } else {
+                                    gamePhase = TEAM_A_SPY;
+
+                                    if (player.isSpymaster() && player.getTeam().equals("A")) {
+                                        editHint.setVisibility(View.VISIBLE);
+                                        hintNumber.setVisibility(View.VISIBLE);
+                                        turnAction.setVisibility(View.VISIBLE);
+                                    }
+                                }
+
+                                updateColours();
+                                break;
+                            case "Bomb":
+                                buttonClicked.setHasBeenClicked(true);
+
+                                if (gamePhase == TEAM_A) {
+                                    gamePhase = TEAM_B_WIN;
+                                } else {
+                                    gamePhase = TEAM_A_WIN;
+                                }
+
+                                updateColours();
+                                break;
+                        }
                     }
                 });
             }
@@ -938,13 +1095,13 @@ public class online_game extends AppCompatActivity {
 
     }
 
-    private void toggleWordButtons() {
-        for (WordButton wb : wordButtons) {
-            wb.setEnabled(wordButtonsEnabled);
-        }
-
-        wordButtonsEnabled = !wordButtonsEnabled;
-    }
+//    private void toggleWordButtons() {
+//        for (WordButton wb : wordButtons) {
+//            wb.setVisibility(View.GONE);
+//        }
+//
+//        wordButtonsEnabled = !wordButtonsEnabled;
+//    }
 
     private void toggleTeamsBox() {
         if (!teamsBoxOpen) {
@@ -1085,6 +1242,20 @@ public class online_game extends AppCompatActivity {
 
         teamACount.setTextColor(defaultColour);
 
+        if (player.isSpymaster()) {
+            for (WordButton wb : wordButtons) {
+                if (teamAWords.contains(wb.getText().toString())) {
+                    wb.setBackgroundColor(defaultColour);
+                }
+            }
+        }
+
+        for (WordButton wb : wordButtons) {
+            if (wb.hasBeenClicked() && teamAWords.contains(wb.getText().toString())) {
+                wb.setBackgroundColor(defaultColour);
+            }
+        }
+
         if (userSettings.getInstance().getPreference(userSettings.getInstance().TEAM_B).equals("")) {
             defaultColour = userSettings.getInstance().TEAM_B_DEFAULT;
         } else {
@@ -1092,6 +1263,60 @@ public class online_game extends AppCompatActivity {
         }
 
         teamBCount.setTextColor(defaultColour);
+
+        if (player.isSpymaster()) {
+            for (WordButton wb : wordButtons) {
+                if (teamBWords.contains(wb.getText().toString())) {
+                    wb.setBackgroundColor(defaultColour);
+                }
+            }
+        }
+
+        for (WordButton wb : wordButtons) {
+            if (wb.hasBeenClicked() && teamBWords.contains(wb.getText().toString())) {
+                wb.setBackgroundColor(defaultColour);
+            }
+        }
+
+        if (userSettings.getInstance().getPreference(userSettings.getInstance().NEUTRAL_SQUARE).equals("")) {
+            defaultColour = userSettings.getInstance().NEUTRAL_SQUARE_DEFAULT;
+        } else {
+            defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().NEUTRAL_SQUARE));
+        }
+
+        if (player.isSpymaster()) {
+            for (WordButton wb : wordButtons) {
+                if (neutralWords.contains(wb.getText().toString())) {
+                    wb.setBackgroundColor(defaultColour);
+                }
+            }
+        }
+
+        for (WordButton wb : wordButtons) {
+            if (wb.hasBeenClicked() && neutralWords.contains(wb.getText().toString())) {
+                wb.setBackgroundColor(defaultColour);
+            }
+        }
+
+        if (userSettings.getInstance().getPreference(userSettings.getInstance().BOMB_SQUARE).equals("")) {
+            defaultColour = userSettings.getInstance().BOMB_SQUARE_DEFAULT;
+        } else {
+            defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().BOMB_SQUARE));
+        }
+
+        if (player.isSpymaster()) {
+            for (WordButton wb : wordButtons) {
+                if (bombWords.contains(wb.getText().toString())) {
+                    wb.setBackgroundColor(defaultColour);
+                }
+            }
+        }
+
+        for (WordButton wb : wordButtons) {
+            if (wb.hasBeenClicked() && bombWords.contains(wb.getText().toString())) {
+                wb.setBackgroundColor(defaultColour);
+            }
+        }
 
         if (userSettings.getInstance().getPreference(userSettings.getInstance().APPLICATION_BACKGROUND).equals("")) {
             defaultColour = userSettings.getInstance().APPLICATION_BACKGROUND_DEFAULT;
@@ -1149,5 +1374,11 @@ public class online_game extends AppCompatActivity {
         messageText.setTextColor(defaultColour);
         loadingText.setTextColor(defaultColour);
         teamSeparator.setBackgroundColor(defaultColour);
+
+        for (WordButton wb : wordButtons) {
+            if (wb.hasBeenClicked()) {
+                wb.getBackground().setAlpha(128);
+            }
+        }
     }
 }
