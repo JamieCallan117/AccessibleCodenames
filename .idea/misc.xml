@@ -4,16 +4,17 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/TheSh/AndroidStudioProjects/Codenames/app/src/main/res/drawable/join_public_game.xml" value="0.3828125" />
-        <entry key="..\:/Users/TheSh/AndroidStudioProjects/Codenames/app/src/main/res/layout/create_game.xml" value="0.2484375" />
+        <entry key="..\:/Users/TheSh/AndroidStudioProjects/Codenames/app/src/main/res/layout/create_game.xml" value="0.41081081081081083" />
         <entry key="..\:/Users/TheSh/AndroidStudioProjects/Codenames/app/src/main/res/layout/game_options.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/TheSh/AndroidStudioProjects/Codenames/app/src/main/res/layout/game_setup.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/TheSh/AndroidStudioProjects/Codenames/app/src/main/res/layout/join_game.xml" value="0.4297297297297297" />
         <entry key="..\:/Users/TheSh/AndroidStudioProjects/Codenames/app/src/main/res/layout/join_public_game.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/TheSh/AndroidStudioProjects/Codenames/app/src/main/res/layout/local_game.xml" value="0.49270833333333336" />
         <entry key="..\:/Users/TheSh/AndroidStudioProjects/Codenames/app/src/main/res/layout/local_setup.xml" value="0.48020833333333335" />
-        <entry key="..\:/Users/TheSh/AndroidStudioProjects/Codenames/app/src/main/res/layout/main_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/TheSh/AndroidStudioProjects/Codenames/app/src/main/res/layout/main_menu.xml" value="0.41081081081081083" />
         <entry key="..\:/Users/TheSh/AndroidStudioProjects/Codenames/app/src/main/res/layout/online_game.xml" value="0.5213541666666667" />
-        <entry key="..\:/Users/TheSh/AndroidStudioProjects/Codenames/app/src/main/res/layout/online_setup.xml" value="0.4540540540540541" />
+        <entry key="..\:/Users/TheSh/AndroidStudioProjects/Codenames/app/src/main/res/layout/online_setup.xml" value="0.41081081081081083" />
+        <entry key="..\:/Users/TheSh/AndroidStudioProjects/Codenames/app/src/main/res/layout/start_screen.xml" value="0.48385416666666664" />
         <entry key="..\:/Users/TheSh/AndroidStudioProjects/Codenames/app/src/main/res/layout/temp.xml" value="0.36666666666666664" />
       </map>
     </option>

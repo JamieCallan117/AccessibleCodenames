@@ -34,6 +34,31 @@ public class local_setup extends AppCompatActivity {
         gameOptionsButton = findViewById(R.id.joinGameButton);
         playGameButton = findViewById(R.id.createGameButton);
 
+        backButton.setOnLongClickListener(v -> {
+            System.out.println(backButton.getText().toString());
+            return true;
+        });
+
+        localSetupTitle.setOnLongClickListener(v -> {
+            System.out.println(localSetupTitle.getText().toString());
+            return true;
+        });
+
+        localSetupSubtitle.setOnLongClickListener(v -> {
+            System.out.println(localSetupSubtitle.getText().toString());
+            return true;
+        });
+
+        gameOptionsButton.setOnLongClickListener(v -> {
+            System.out.println(gameOptionsButton.getText().toString());
+            return true;
+        });
+
+        playGameButton.setOnLongClickListener(v -> {
+            System.out.println(playGameButton.getText().toString());
+            return true;
+        });
+
         updateColours();
     }
 

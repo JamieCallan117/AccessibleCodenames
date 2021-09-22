@@ -28,6 +28,38 @@ public class main_menu extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.main_menu);
 
+        constraintLayout = findViewById(R.id.saveButton);
+        mainMenuTitle = findViewById(R.id.mainMenuTitle);
+        backButton = findViewById(R.id.backButton);
+        playOnline = findViewById(R.id.playOnline);
+        playLocal = findViewById(R.id.playLocal);
+        settings = findViewById(R.id.settings);
+
+        mainMenuTitle.setOnLongClickListener(v -> {
+            System.out.println(mainMenuTitle.getText().toString());
+            return true;
+        });
+
+        backButton.setOnLongClickListener(v -> {
+            System.out.println(backButton.getText().toString());
+            return true;
+        });
+
+        playOnline.setOnLongClickListener(v -> {
+            System.out.println(playOnline.getText().toString());
+            return true;
+        });
+
+        playLocal.setOnLongClickListener(v -> {
+            System.out.println(playLocal.getText().toString());
+            return true;
+        });
+
+        settings.setOnLongClickListener(v -> {
+            System.out.println(settings.getText().toString());
+            return true;
+        });
+
         updateColours();
     }
 
@@ -58,13 +90,6 @@ public class main_menu extends AppCompatActivity {
     }
 
     public void updateColours() {
-        constraintLayout = findViewById(R.id.saveButton);
-        mainMenuTitle = findViewById(R.id.mainMenuTitle);
-        backButton = findViewById(R.id.backButton);
-        playOnline = findViewById(R.id.playOnline);
-        playLocal = findViewById(R.id.playLocal);
-        settings = findViewById(R.id.settings);
-
         if (userSettings.getInstance().getPreference(userSettings.getInstance().APPLICATION_BACKGROUND).equals("")) {
             defaultColour = userSettings.getInstance().APPLICATION_BACKGROUND_DEFAULT;
         } else {

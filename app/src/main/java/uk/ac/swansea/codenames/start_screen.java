@@ -51,6 +51,31 @@ public class start_screen extends AppCompatActivity {
             return true;
         });
 
+        settingsButton.setOnLongClickListener(v -> {
+            System.out.println(settingsButton.getText().toString());
+            return true;
+        });
+
+        yesButton.setOnLongClickListener(v -> {
+            System.out.println(yesButton.getText().toString());
+            return true;
+        });
+
+        noButton.setOnLongClickListener(v -> {
+            System.out.println(noButton.getText().toString());
+            return true;
+        });
+
+        quitText.setOnLongClickListener(v -> {
+            System.out.println(quitText.getText().toString());
+            return true;
+        });
+
+        startScreenTitle.setOnLongClickListener(v -> {
+            System.out.println(startScreenTitle.getText().toString());
+            return true;
+        });
+
         updateColours();
     }
 
