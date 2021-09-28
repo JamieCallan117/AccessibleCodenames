@@ -1318,6 +1318,20 @@ public class online_game extends AppCompatActivity {
             }
         }
 
+        if (userSettings.getInstance().getPreference(userSettings.getInstance().UNMODIFIED_SQUARE).equals("")) {
+            defaultColour = userSettings.getInstance().UNMODIFIED_SQUARE_DEFAULT;
+        } else {
+            defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().UNMODIFIED_SQUARE));
+        }
+
+        if (!player.isSpymaster()) {
+            for (WordButton wb : wordButtons) {
+                if (!wb.hasBeenClicked()) {
+                    wb.setBackgroundColor(defaultColour);
+                }
+            }
+        }
+
         if (userSettings.getInstance().getPreference(userSettings.getInstance().APPLICATION_BACKGROUND).equals("")) {
             defaultColour = userSettings.getInstance().APPLICATION_BACKGROUND_DEFAULT;
         } else {

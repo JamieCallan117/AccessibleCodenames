@@ -331,6 +331,108 @@
             app:layout_row="1" />
     </androidx.gridlayout.widget.GridLayout>
 
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/ttsBox"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="28dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:background="#FFFFFF"
+        android:elevation="2dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/squareTwentyOne"
+        app:layout_constraintEnd_toStartOf="@+id/squareNineteen"
+        app:layout_constraintStart_toEndOf="@+id/squareSixteen"
+        app:layout_constraintTop_toBottomOf="@+id/squareSix">
+
+        <Button
+            android:id="@+id/ttsAll"
+            android:layout_width="137dp"
+            android:layout_height="95dp"
+            android:text="All Words"
+            app:layout_column="0"
+            app:layout_columnWeight="1"
+            app:layout_gravity="center_horizontal|center_vertical"
+            app:layout_row="0" />
+
+        <Button
+            android:id="@+id/ttsA"
+            android:layout_width="137dp"
+            android:layout_height="95dp"
+            android:text="Team A Words"
+            app:layout_column="1"
+            app:layout_columnWeight="1"
+            app:layout_gravity="center_horizontal|center_vertical"
+            app:layout_row="0" />
+
+        <Button
+            android:id="@+id/ttsB"
+            android:layout_width="137dp"
+            android:layout_height="95dp"
+            android:text="Team B Words"
+            app:layout_column="2"
+            app:layout_columnWeight="1"
+            app:layout_gravity="center_horizontal|center_vertical"
+            app:layout_row="0" />
+
+        <Button
+            android:id="@+id/ttsNeutral"
+            android:layout_width="137dp"
+            android:layout_height="95dp"
+            android:text="Neutral Words"
+            app:layout_column="3"
+            app:layout_columnWeight="1"
+            app:layout_gravity="center_horizontal|center_vertical"
+            app:layout_row="0" />
+
+        <Button
+            android:id="@+id/ttsBomb"
+            android:layout_width="137dp"
+            android:layout_height="95dp"
+            android:text="Bomb Words"
+            app:layout_column="0"
+            app:layout_columnWeight="1"
+            app:layout_gravity="center_horizontal|center_vertical"
+            app:layout_row="1" />
+
+        <Button
+            android:id="@+id/ttsUnclicked"
+            android:layout_width="137dp"
+            android:layout_height="95dp"
+            android:text="Unclicked Words"
+            app:layout_column="1"
+            app:layout_columnWeight="1"
+            app:layout_gravity="center_horizontal|center_vertical"
+            app:layout_row="1" />
+
+        <Button
+            android:id="@+id/ttsClicked"
+            android:layout_width="137dp"
+            android:layout_height="95dp"
+            android:text="Clicked Words"
+            app:layout_column="2"
+            app:layout_columnWeight="1"
+            app:layout_gravity="center_horizontal|center_vertical"
+            app:layout_row="1" />
+
+        <Button
+            android:id="@+id/closeTts"
+            android:layout_width="137dp"
+            android:layout_height="95dp"
+            android:text="Close"
+            app:layout_column="3"
+            app:layout_columnWeight="1"
+            app:layout_gravity="center_horizontal|center_vertical"
+            app:layout_row="1" />
+
+    </androidx.gridlayout.widget.GridLayout>
+
     <ScrollView
         android:scrollbars="none"
         android:overScrollMode="never"

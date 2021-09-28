@@ -3,6 +3,7 @@ package uk.ac.swansea.codenames;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static uk.ac.swansea.codenames.localPhase.START;
 import static uk.ac.swansea.codenames.localPhase.TEAM_A;
@@ -43,11 +45,12 @@ public class local_game extends AppCompatActivity {
     private int startingTeam = 1;
     private int defaultColour;
     private boolean messageBoxOpen = false;
+    private boolean ttsOpen = false;
     private ArrayList<String> customWords;
-    private String[] bombWords;
-    private String[] neutralWords;
-    private String[] teamAWords;
-    private String[] teamBWords;
+    private ArrayList<String> bombWords;
+    private ArrayList<String> neutralWords;
+    private ArrayList<String> teamAWords;
+    private ArrayList<String> teamBWords;
     private final String[] words = new String[25];
     private WordButton[] wordButtons;
     private Button exitButton;
@@ -58,6 +61,14 @@ public class local_game extends AppCompatActivity {
     private Button hidePreviousHints;
     private Button yesMessage;
     private Button noMessage;
+    private Button ttsAll;
+    private Button ttsA;
+    private Button ttsB;
+    private Button ttsNeutral;
+    private Button ttsBomb;
+    private Button ttsUnclicked;
+    private Button ttsClicked;
+    private Button closeTts;
     private TextView teamACount;
     private TextView teamBCount;
     private TextView teamCounterLine;
@@ -65,6 +76,7 @@ public class local_game extends AppCompatActivity {
     private TextView hintText;
     private EditText editHint;
     private androidx.gridlayout.widget.GridLayout messageBox;
+    private androidx.gridlayout.widget.GridLayout ttsBox;
     private ConstraintLayout constraintLayout;
     private LinearLayout gameOperationsLinear;
     private LinearLayout previousHints;
@@ -108,10 +120,20 @@ public class local_game extends AppCompatActivity {
         constraintLayout = findViewById(R.id.constraintLayout);
         exitButton = findViewById(R.id.exitButton);
         messageBox = findViewById(R.id.messageBox);
+        ttsBox = findViewById(R.id.ttsBox);
         messageText = findViewById(R.id.messageText);
         confirmButton = findViewById(R.id.confirmButton);
         yesMessage = findViewById(R.id.yesMessage);
         noMessage = findViewById(R.id.noMessage);
+
+        ttsAll = findViewById(R.id.ttsAll);
+        ttsA = findViewById(R.id.ttsA);
+        ttsB = findViewById(R.id.ttsB);
+        ttsNeutral = findViewById(R.id.ttsNeutral);
+        ttsBomb = findViewById(R.id.ttsBomb);
+        ttsUnclicked = findViewById(R.id.ttsUnclicked);
+        ttsClicked = findViewById(R.id.ttsClicked);
+        closeTts = findViewById(R.id.closeTts);
 
         teamACount = findViewById(R.id.teamACount);
         teamBCount = findViewById(R.id.teamBCount);
@@ -142,10 +164,10 @@ public class local_game extends AppCompatActivity {
             customWords = getIntent().getStringArrayListExtra("customWords");
         }
 
-        bombWords = new String[bombSquaresCount];
-        neutralWords = new String[neutralSquaresCount];
-        teamAWords = new String[teamASquaresCount];
-        teamBWords = new String[teamBSquaresCount];
+        bombWords = new ArrayList<>(bombSquaresCount);
+        neutralWords = new ArrayList<>(neutralSquaresCount);
+        teamAWords = new ArrayList<>(teamASquaresCount);
+        teamBWords = new ArrayList<>(teamBSquaresCount);
 
         if (startingTeam == 1) {
             gamePhase = TEAM_A_INTERMISSION;
@@ -253,26 +275,24 @@ public class local_game extends AppCompatActivity {
         int counter = 0;
 
         for (int i = 0; i < bombSquaresCount; i++) {
-            bombWords[i] = words[list.get(counter)];
+            bombWords.add(words[list.get(counter)]);
             counter++;
         }
 
         for (int i = 0; i < neutralSquaresCount; i++) {
-            neutralWords[i] = words[list.get(counter)];
+            neutralWords.add(words[list.get(counter)]);
             counter++;
         }
 
         for (int i = 0; i < teamASquaresCount; i++) {
-            teamAWords[i] = words[list.get(counter)];
+            teamAWords.add(words[list.get(counter)]);
             counter++;
         }
 
         for (int i = 0; i < teamBSquaresCount; i++) {
-            teamBWords[i] = words[list.get(counter)];
+            teamBWords.add(words[list.get(counter)]);
             counter++;
         }
-
-        constraintLayout.setOnClickListener(v -> System.out.println("Current phase: " + gamePhase.toString()));
 
         squareOne.setOnClickListener(v -> wordButtonPress(squareOne));
 
@@ -458,7 +478,86 @@ public class local_game extends AppCompatActivity {
         noMessage.setOnClickListener(v -> toggleMessageBox(false, 1));
 
         textToSpeechButton.setOnClickListener(v -> {
+            toggleTtsBox(true);
+        });
 
+        ttsAll.setOnClickListener(v -> {
+            for (WordButton wb : wordButtons) {
+                //Uncomment if needing a delay between tts.
+//                try {
+//                    TimeUnit.MILLISECONDS.sleep(1500);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+
+                System.out.println(wb.getText().toString());
+            }
+
+            toggleTtsBox(false);
+        });
+
+        ttsA.setOnClickListener(v -> {
+            for (WordButton wb : wordButtons) {
+                if (teamAWords.contains(wb.getText().toString())) {
+                    System.out.println(wb.getText().toString());
+                }
+            }
+
+            toggleTtsBox(false);
+        });
+
+        ttsB.setOnClickListener(v -> {
+            for (WordButton wb : wordButtons) {
+                if (teamBWords.contains(wb.getText().toString())) {
+                    System.out.println(wb.getText().toString());
+                }
+            }
+
+            toggleTtsBox(false);
+        });
+
+        ttsNeutral.setOnClickListener(v -> {
+            for (WordButton wb : wordButtons) {
+                if (neutralWords.contains(wb.getText().toString())) {
+                    System.out.println(wb.getText().toString());
+                }
+            }
+
+            toggleTtsBox(false);
+        });
+
+        ttsBomb.setOnClickListener(v -> {
+            for (WordButton wb : wordButtons) {
+                if (bombWords.contains(wb.getText().toString())) {
+                    System.out.println(wb.getText().toString());
+                }
+            }
+
+            toggleTtsBox(false);
+        });
+
+        ttsUnclicked.setOnClickListener(v -> {
+            for (WordButton wb : wordButtons) {
+                if (!wb.hasBeenClicked()) {
+                    System.out.println(wb.getText().toString());
+                }
+            }
+
+            toggleTtsBox(false);
+        });
+
+        ttsClicked.setOnClickListener(v -> {
+            for (WordButton wb : wordButtons) {
+                if (wb.hasBeenClicked()) {
+                    System.out.println(wb.getText().toString());
+                }
+            }
+
+            toggleTtsBox(false);
+        });
+
+        closeTts.setOnClickListener(v -> {
+            toggleTtsBox(false);
         });
 
         viewPreviousHints.setOnClickListener(v -> {
@@ -656,6 +755,27 @@ public class local_game extends AppCompatActivity {
         }
     }
 
+    public void toggleTtsBox(boolean enabled) {
+        ttsOpen = enabled;
+
+        if (enabled) {
+            ttsBox.setVisibility(View.VISIBLE);
+        } else {
+            ttsBox.setVisibility(View.INVISIBLE);
+        }
+
+        for (WordButton wb : wordButtons) {
+            wb.setEnabled(!enabled);
+        }
+
+        exitButton.setEnabled(!enabled);
+        editHint.setEnabled(!enabled);
+        hintNumber.setEnabled(!enabled);
+        turnAction.setEnabled(!enabled);
+        textToSpeechButton.setEnabled(!enabled);
+        viewPreviousHints.setEnabled(!enabled);
+    }
+
     public void addHint(String hint) {
         TextView newHint = new TextView(this);
         newHint.setText(hint);
@@ -712,6 +832,7 @@ public class local_game extends AppCompatActivity {
         }
 
         teamACount.setTextColor(defaultColour);
+        ttsA.setBackgroundColor(defaultColour);
 
         if (userSettings.getInstance().getPreference(userSettings.getInstance().TEAM_B).equals("")) {
             defaultColour = userSettings.getInstance().TEAM_B_DEFAULT;
@@ -720,6 +841,31 @@ public class local_game extends AppCompatActivity {
         }
 
         teamBCount.setTextColor(defaultColour);
+        ttsB.setBackgroundColor(defaultColour);
+
+        if (userSettings.getInstance().getPreference(userSettings.getInstance().BOMB_SQUARE).equals("")) {
+            defaultColour = userSettings.getInstance().BOMB_SQUARE_DEFAULT;
+        } else {
+            defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().BOMB_SQUARE));
+        }
+
+        ttsBomb.setBackgroundColor(defaultColour);
+
+        if (userSettings.getInstance().getPreference(userSettings.getInstance().NEUTRAL_SQUARE).equals("")) {
+            defaultColour = userSettings.getInstance().NEUTRAL_SQUARE_DEFAULT;
+        } else {
+            defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().NEUTRAL_SQUARE));
+        }
+
+        ttsNeutral.setBackgroundColor(defaultColour);
+
+        if (userSettings.getInstance().getPreference(userSettings.getInstance().UNMODIFIED_SQUARE).equals("")) {
+            defaultColour = userSettings.getInstance().UNMODIFIED_SQUARE_DEFAULT;
+        } else {
+            defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().UNMODIFIED_SQUARE));
+        }
+
+        ttsUnclicked.setBackgroundColor(defaultColour);
 
         if (userSettings.getInstance().getPreference(userSettings.getInstance().APPLICATION_BACKGROUND).equals("")) {
             defaultColour = userSettings.getInstance().APPLICATION_BACKGROUND_DEFAULT;
@@ -729,6 +875,7 @@ public class local_game extends AppCompatActivity {
 
         constraintLayout.setBackgroundColor(defaultColour);
         messageBox.setBackgroundColor(defaultColour);
+        ttsBox.setBackgroundColor(defaultColour);
 
         if (userSettings.getInstance().getPreference(userSettings.getInstance().MENU_BUTTONS).equals("")) {
             defaultColour = userSettings.getInstance().MENU_BUTTONS_DEFAULT;
@@ -744,6 +891,9 @@ public class local_game extends AppCompatActivity {
         textToSpeechButton.setBackgroundColor(defaultColour);
         viewPreviousHints.setBackgroundColor(defaultColour);
         hidePreviousHints.setBackgroundColor(defaultColour);
+        ttsAll.setBackgroundColor(defaultColour);
+        ttsClicked.setBackgroundColor(defaultColour);
+        closeTts.setBackgroundColor(defaultColour);
 
         if (userSettings.getInstance().getPreference(userSettings.getInstance().MENU_TEXT).equals("")) {
             defaultColour = userSettings.getInstance().MENU_TEXT_DEFAULT;
@@ -838,10 +988,10 @@ public class local_game extends AppCompatActivity {
                                 break;
                         }
                     } else {
-                        if (userSettings.getInstance().getPreference(userSettings.getInstance().MENU_BUTTONS).equals("")) {
-                            defaultColour = userSettings.getInstance().MENU_BUTTONS_DEFAULT;
+                        if (userSettings.getInstance().getPreference(userSettings.getInstance().UNMODIFIED_SQUARE).equals("")) {
+                            defaultColour = userSettings.getInstance().UNMODIFIED_SQUARE_DEFAULT;
                         } else {
-                            defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().MENU_BUTTONS));
+                            defaultColour = Integer.parseInt(userSettings.getInstance().getPreference(userSettings.getInstance().UNMODIFIED_SQUARE));
                         }
 
                         wb.setBackgroundColor(defaultColour);
