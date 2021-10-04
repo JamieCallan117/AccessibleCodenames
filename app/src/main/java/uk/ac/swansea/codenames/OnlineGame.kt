@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.*
 import androidx.gridlayout.widget.GridLayout
 import java.io.File
+import java.io.IOException
 import java.util.ArrayList
 import kotlin.Throws
 
@@ -32,6 +33,7 @@ class OnlineGame : AppCompatActivity() {
     private var teamAWordCount = 0
     private var teamBWordCount = 0
     private var preferencesFile = "preferences.txt"
+    private var preferences = arrayOfNulls<String>(14)
     private var teamAColour = -16773377
     private var teamBColour = -65536
     private var bombColour = -14342875
@@ -178,11 +180,26 @@ class OnlineGame : AppCompatActivity() {
                 squareSeventeen, squareEighteen, squareNineteen, squareTwenty, squareTwentyOne,
                 squareTwentyTwo, squareTwentyThree, squareTwentyFour, squareTwentyFive)
 
-        val preferences = File(preferencesFile).useLines { it.toList() }
+        var tempPref = ""
+
+        try {
+            val input = assets.open("preferences")
+            val size = input.available()
+            val buffer = ByteArray(size)
+
+            input.read(buffer)
+            input.close()
+
+            tempPref = String(buffer)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        preferences = tempPref.split("\n").toTypedArray()
 
         val username = preferences[8]
 
-        player = Player(username)
+        player = username?.let { Player(it) }
 
         player?.isHost = intent.getBooleanExtra("isHost", false)
         roomName = intent.getStringExtra("roomName")
@@ -1049,16 +1066,34 @@ class OnlineGame : AppCompatActivity() {
     }
 
     private fun updateColours() {
-        val colours = File(preferencesFile).useLines { it.toList() }
+        val regex = "[^A-Za-z0-9 ]".toRegex()
 
-        teamAColour = colours[0].toInt()
-        teamBColour = colours[1].toInt()
-        bombColour = colours[2].toInt()
-        neutralColour = colours[3].toInt()
-        unmodifiedColour = colours[4].toInt()
-        applicationBackgroundColour = colours[5].toInt()
-        menuButtonsColour = colours[6].toInt()
-        menuTextColour = colours[7].toInt()
+        var teamAColoursStr = preferences[0]?.let { regex.replace(it, "") }
+        var teamBColoursStr = preferences[1]?.let { regex.replace(it, "") }
+        var bombColoursStr = preferences[2]?.let { regex.replace(it, "") }
+        var neutralColoursStr = preferences[3]?.let { regex.replace(it, "") }
+        var unmodifiedColourStr = preferences[4]?.let { regex.replace(it, "") }
+        var applicationBackgroundColourStr = preferences[5]?.let { regex.replace(it, "") }
+        var menuButtonsColourStr = preferences[6]?.let { regex.replace(it, "") }
+        var menuTextColourStr = preferences[7]?.let { regex.replace(it, "") }
+
+        teamAColoursStr = "-$teamAColoursStr"
+        teamBColoursStr = "-$teamBColoursStr"
+        bombColoursStr = "-$bombColoursStr"
+        neutralColoursStr = "-$neutralColoursStr"
+        unmodifiedColourStr = "-$unmodifiedColourStr"
+        applicationBackgroundColourStr = "-$applicationBackgroundColourStr"
+        menuButtonsColourStr = "-$menuButtonsColourStr"
+        menuTextColourStr = "-$menuTextColourStr"
+
+        teamAColour = teamAColoursStr.toInt()
+        teamBColour = teamBColoursStr.toInt()
+        bombColour = bombColoursStr.toInt()
+        neutralColour = neutralColoursStr.toInt()
+        unmodifiedColour = unmodifiedColourStr.toInt()
+        applicationBackgroundColour = applicationBackgroundColourStr.toInt()
+        menuButtonsColour = menuButtonsColourStr.toInt()
+        menuTextColour = menuTextColourStr.toInt()
         
         teamACount?.setTextColor(teamAColour)
         

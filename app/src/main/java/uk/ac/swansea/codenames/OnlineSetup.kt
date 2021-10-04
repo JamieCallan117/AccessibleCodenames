@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.Button
 import androidx.gridlayout.widget.GridLayout
 import java.io.File
+import java.io.IOException
 
 class OnlineSetup : AppCompatActivity() {
     private var constraintLayout: ConstraintLayout? = null
@@ -25,6 +26,7 @@ class OnlineSetup : AppCompatActivity() {
     private var createGameButton: Button? = null
     private var okButton: Button? = null
     private var preferencesFile = "preferences.txt"
+    private var preferences = arrayOfNulls<String>(14)
     private var applicationBackgroundColour = -10921639
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
@@ -46,7 +48,20 @@ class OnlineSetup : AppCompatActivity() {
         messageText = findViewById(R.id.messageText)
         okButton = findViewById(R.id.okButton)
 
-        val preferences = File(preferencesFile).useLines { it.toList() }
+        var tempPref = ""
+
+        try {
+            val input = assets.open("preferences")
+            val size = input.available()
+            val buffer = ByteArray(size)
+
+            input.read(buffer)
+            input.close()
+
+            tempPref = String(buffer)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
 
         val username = preferences[8]
 
@@ -148,11 +163,19 @@ class OnlineSetup : AppCompatActivity() {
     }
 
     fun updateColours() {
-        val colours = File(preferencesFile).useLines { it.toList() }
+        val regex = "[^A-Za-z0-9 ]".toRegex()
 
-        applicationBackgroundColour = colours[5].toInt()
-        menuButtonsColour = colours[6].toInt()
-        menuTextColour = colours[7].toInt()
+        var applicationBackgroundColourStr = preferences[5]?.let { regex.replace(it, "") }
+        var menuButtonsColourStr = preferences[6]?.let { regex.replace(it, "") }
+        var menuTextColourStr = preferences[7]?.let { regex.replace(it, "") }
+
+        applicationBackgroundColourStr = "-$applicationBackgroundColourStr"
+        menuButtonsColourStr = "-$menuButtonsColourStr"
+        menuTextColourStr = "-$menuTextColourStr"
+
+        applicationBackgroundColour = applicationBackgroundColourStr.toInt()
+        menuButtonsColour = menuButtonsColourStr.toInt()!!
+        menuTextColour = menuTextColourStr.toInt()!!
 
         constraintLayout?.setBackgroundColor(applicationBackgroundColour)
         messageBox?.setBackgroundColor(applicationBackgroundColour)

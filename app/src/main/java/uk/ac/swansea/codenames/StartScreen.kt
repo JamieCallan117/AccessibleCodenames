@@ -132,9 +132,19 @@ class StartScreen : AppCompatActivity() {
     }
 
     fun updateColours() {
-        applicationBackgroundColour = preferences[5]?.toInt()!!
-        menuButtonsColour = preferences[6]?.toInt()!!
-        menuTextColour = preferences[7]?.toInt()!!
+        val regex = "[^A-Za-z0-9 ]".toRegex()
+
+        var applicationBackgroundColourStr = preferences[5]?.let { regex.replace(it, "") }
+        var menuButtonsColourStr = preferences[6]?.let { regex.replace(it, "") }
+        var menuTextColourStr = preferences[7]?.let { regex.replace(it, "") }
+
+        applicationBackgroundColourStr = "-$applicationBackgroundColourStr"
+        menuButtonsColourStr = "-$menuButtonsColourStr"
+        menuTextColourStr = "-$menuTextColourStr"
+
+        applicationBackgroundColour = applicationBackgroundColourStr.toInt()
+        menuButtonsColour = menuButtonsColourStr.toInt()!!
+        menuTextColour = menuTextColourStr.toInt()!!
 
         constraintLayout!!.setBackgroundColor(applicationBackgroundColour)
         quitBox!!.setBackgroundColor(applicationBackgroundColour)

@@ -30,6 +30,7 @@ class ColourOptions : AppCompatActivity() {
     private var constraintLayout: ConstraintLayout? = null
     private var defaultColour = 0
     private var preferencesFile = "preferences.txt"
+    private var preferences = arrayOfNulls<String>(14)
     private var teamADefault = -16773377
     private var teamBDefault = -65536
     private var bombDefault = -14342875
@@ -121,6 +122,19 @@ class ColourOptions : AppCompatActivity() {
     }
 
     fun updateColours() {
+        val regex = "[^A-Za-z0-9 ]".toRegex()
+
+        var applicationBackgroundColourStr = preferences[5]?.let { regex.replace(it, "") }
+        var menuButtonsColourStr = preferences[6]?.let { regex.replace(it, "") }
+        var menuTextColourStr = preferences[7]?.let { regex.replace(it, "") }
+
+        applicationBackgroundColourStr = "-$applicationBackgroundColourStr"
+        menuButtonsColourStr = "-$menuButtonsColourStr"
+        menuTextColourStr = "-$menuTextColourStr"
+
+        applicationBackgroundColour = applicationBackgroundColourStr.toInt()
+        menuButtonsColour = menuButtonsColourStr.toInt()!!
+        menuTextColour = menuTextColourStr.toInt()!!
         val colours = File(preferencesFile).useLines { it.toList() }
 
         teamAColour = colours[0].toInt()

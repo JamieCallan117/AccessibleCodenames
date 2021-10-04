@@ -7,6 +7,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import android.content.Intent
 import android.widget.*
 import java.io.File
+import java.io.IOException
 
 class Settings : AppCompatActivity() {
     // TODO: Redesign layout.
@@ -28,6 +29,7 @@ class Settings : AppCompatActivity() {
     private var musicVolume = 0
     private var soundFXVolume = 0
     private var preferencesFile = "preferences.txt"
+    private var preferences = arrayOfNulls<String>(14)
     private var applicationBackgroundColour = -10921639
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
@@ -54,11 +56,33 @@ class Settings : AppCompatActivity() {
         contrastCheck = findViewById(R.id.contrastCheck)
         textToSpeechCheck = findViewById(R.id.textToSpeechCheck)
 
+        var tempPref = ""
+
+        try {
+            val input = assets.open("preferences")
+            val size = input.available()
+            val buffer = ByteArray(size)
+
+            input.read(buffer)
+            input.close()
+
+            tempPref = String(buffer)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        preferences = tempPref.split("\n").toTypedArray()
+
         updateColours()
 
-        val preferences = File(preferencesFile).useLines { it.toList() }
+        val regex = "[^A-Za-z0-9 ]".toRegex()
 
-        musicVolume = preferences[9].toInt()
+        var musicVolumeStr = preferences[9]?.let { regex.replace(it, "") }
+        var soundFxVolumeStr = preferences[10]?.let { regex.replace(it, "") }
+
+        if (musicVolumeStr != null) {
+            musicVolume = musicVolumeStr.toInt()
+        }
 
         musicVolumeSeek?.progress = musicVolume
 
@@ -71,7 +95,9 @@ class Settings : AppCompatActivity() {
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
 
-        soundFXVolume = preferences[10].toInt()
+        if (soundFxVolumeStr != null) {
+            soundFXVolume = soundFxVolumeStr.toInt()
+        }
 
         soundFXVolumeSeek?.progress = soundFXVolume
 
@@ -91,7 +117,6 @@ class Settings : AppCompatActivity() {
         vibrationCheck?.setOnCheckedChangeListener { _, _ ->
             updatePreferencesFile()
         }
-
 
         contrast = preferences[12].toBoolean()
 
@@ -139,12 +164,31 @@ class Settings : AppCompatActivity() {
     }
 
     private fun updatePreferencesFile() {
-        val preferences = File(preferencesFile).useLines { it.toList() }
-        val teamAColour = preferences[0].toInt()
-        val teamBColour = preferences[1].toInt()
-        val bombColour = preferences[2].toInt()
-        val neutralColour = preferences[3].toInt()
-        val unmodifiedColour = preferences[4].toInt()
+        val regex = "[^A-Za-z0-9 ]".toRegex()
+
+        var teamAColoursStr = preferences[0]?.let { regex.replace(it, "") }
+        var teamBColoursStr = preferences[1]?.let { regex.replace(it, "") }
+        var bombColoursStr = preferences[2]?.let { regex.replace(it, "") }
+        var neutralColoursStr = preferences[3]?.let { regex.replace(it, "") }
+        var unmodifiedColourStr = preferences[4]?.let { regex.replace(it, "") }
+        var applicationBackgroundColourStr = preferences[5]?.let { regex.replace(it, "") }
+        var menuButtonsColourStr = preferences[6]?.let { regex.replace(it, "") }
+        var menuTextColourStr = preferences[7]?.let { regex.replace(it, "") }
+
+        teamAColoursStr = "-$teamAColoursStr"
+        teamBColoursStr = "-$teamBColoursStr"
+        bombColoursStr = "-$bombColoursStr"
+        neutralColoursStr = "-$neutralColoursStr"
+        unmodifiedColourStr = "-$unmodifiedColourStr"
+        applicationBackgroundColourStr = "-$applicationBackgroundColourStr"
+        menuButtonsColourStr = "-$menuButtonsColourStr"
+        menuTextColourStr = "-$menuTextColourStr"
+
+        val teamAColour = teamAColoursStr.toInt()
+        val teamBColour = teamBColoursStr.toInt()
+        val bombColour = bombColoursStr.toInt()
+        val neutralColour = neutralColoursStr.toInt()
+        val unmodifiedColour = unmodifiedColourStr.toInt()
         val username = preferences[8]
         val musicVolume = musicVolumeSeek?.progress.toString()
         val soundFxVolume = soundFXVolumeSeek?.progress.toString()
@@ -152,9 +196,9 @@ class Settings : AppCompatActivity() {
         val contrast = contrastCheck?.isChecked.toString()
         val textToSpeech = textToSpeechCheck?.isChecked.toString()
 
-        applicationBackgroundColour = preferences[5].toInt()
-        menuButtonsColour = preferences[6].toInt()
-        menuTextColour = preferences[7].toInt()
+        applicationBackgroundColour = applicationBackgroundColourStr.toInt()
+        menuButtonsColour = menuButtonsColourStr.toInt()
+        menuTextColour = menuTextColourStr.toInt()
 
         val prefStr = "$teamAColour\n$teamBColour\n$bombColour\n$neutralColour\n$unmodifiedColour" +
                 "\n$applicationBackgroundColour\n$menuButtonsColour\n$menuTextColour\n$username" +
@@ -164,11 +208,19 @@ class Settings : AppCompatActivity() {
     }
 
     fun updateColours() {
-        val colours = File(preferencesFile).useLines { it.toList() }
+        val regex = "[^A-Za-z0-9 ]".toRegex()
 
-        applicationBackgroundColour = colours[5].toInt()
-        menuButtonsColour = colours[6].toInt()
-        menuTextColour = colours[7].toInt()
+        var applicationBackgroundColourStr = preferences[5]?.let { regex.replace(it, "") }
+        var menuButtonsColourStr = preferences[6]?.let { regex.replace(it, "") }
+        var menuTextColourStr = preferences[7]?.let { regex.replace(it, "") }
+
+        applicationBackgroundColourStr = "-$applicationBackgroundColourStr"
+        menuButtonsColourStr = "-$menuButtonsColourStr"
+        menuTextColourStr = "-$menuTextColourStr"
+
+        applicationBackgroundColour = applicationBackgroundColourStr.toInt()
+        menuButtonsColour = menuButtonsColourStr.toInt()!!
+        menuTextColour = menuTextColourStr.toInt()!!
 
         constraintLayout?.setBackgroundColor(applicationBackgroundColour)
         backButton?.setBackgroundColor(menuButtonsColour)

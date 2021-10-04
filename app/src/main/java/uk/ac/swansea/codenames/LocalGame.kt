@@ -89,6 +89,7 @@ class LocalGame : AppCompatActivity() {
     private var previousHintsScroll: ScrollView? = null
     private var gameOperations: ScrollView? = null
     private var preferencesFile = "preferences.txt"
+    private var preferences = arrayOfNulls<String>(14)
     private var teamAColour = -16773377
     private var teamBColour = -65536
     private var bombColour = -14342875
@@ -132,6 +133,23 @@ class LocalGame : AppCompatActivity() {
         previousHintsScroll = findViewById(R.id.previousHintsScroll)
         previousHints = findViewById(R.id.previousHints)
         hidePreviousHints = findViewById(R.id.hidePreviousHints)
+
+        var tempPref = ""
+
+        try {
+            val input = assets.open("preferences")
+            val size = input.available()
+            val buffer = ByteArray(size)
+
+            input.read(buffer)
+            input.close()
+
+            tempPref = String(buffer)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        preferences = tempPref.split("\n").toTypedArray()
 
         gamePhase = LocalPhase.START
 
@@ -766,17 +784,34 @@ class LocalGame : AppCompatActivity() {
     }
 
     fun updateColours() {
-        val colours = File(preferencesFile).useLines { it.toList() }
+        val regex = "[^A-Za-z0-9 ]".toRegex()
 
-        teamAColour = colours[0].toInt()
-        teamBColour = colours[1].toInt()
-        bombColour = colours[2].toInt()
-        neutralColour = colours[3].toInt()
-        unmodifiedColour = colours[4].toInt()
-        applicationBackgroundColour = colours[5].toInt()
-        menuButtonsColour = colours[6].toInt()
-        menuTextColour = colours[7].toInt()
+        var teamAColoursStr = preferences[0]?.let { regex.replace(it, "") }
+        var teamBColoursStr = preferences[1]?.let { regex.replace(it, "") }
+        var bombColoursStr = preferences[2]?.let { regex.replace(it, "") }
+        var neutralColoursStr = preferences[3]?.let { regex.replace(it, "") }
+        var unmodifiedColourStr = preferences[4]?.let { regex.replace(it, "") }
+        var applicationBackgroundColourStr = preferences[5]?.let { regex.replace(it, "") }
+        var menuButtonsColourStr = preferences[6]?.let { regex.replace(it, "") }
+        var menuTextColourStr = preferences[7]?.let { regex.replace(it, "") }
 
+        teamAColoursStr = "-$teamAColoursStr"
+        teamBColoursStr = "-$teamBColoursStr"
+        bombColoursStr = "-$bombColoursStr"
+        neutralColoursStr = "-$neutralColoursStr"
+        unmodifiedColourStr = "-$unmodifiedColourStr"
+        applicationBackgroundColourStr = "-$applicationBackgroundColourStr"
+        menuButtonsColourStr = "-$menuButtonsColourStr"
+        menuTextColourStr = "-$menuTextColourStr"
+
+        teamAColour = teamAColoursStr.toInt()
+        teamBColour = teamBColoursStr.toInt()
+        bombColour = bombColoursStr.toInt()
+        neutralColour = neutralColoursStr.toInt()
+        unmodifiedColour = unmodifiedColourStr.toInt()
+        applicationBackgroundColour = applicationBackgroundColourStr.toInt()
+        menuButtonsColour = menuButtonsColourStr.toInt()
+        menuTextColour = menuTextColourStr.toInt()
 
         teamACount?.setTextColor(teamAColour)
         ttsA?.setBackgroundColor(teamAColour)
