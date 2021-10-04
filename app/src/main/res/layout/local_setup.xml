@@ -5,7 +5,7 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".local_setup">
+    tools:context=".LocalSetup">
 
     <Button
         android:id="@+id/backButton"
@@ -17,7 +17,6 @@
         android:layout_marginEnd="627dp"
         android:layout_marginRight="627dp"
         android:layout_marginBottom="353dp"
-        android:onClick="backButton"
         android:text="@string/back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -67,7 +66,7 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <Button
-        android:id="@+id/joinGameButton"
+        android:id="@+id/gameOptionsButton"
         android:layout_width="144dp"
         android:layout_height="144dp"
         android:layout_marginStart="104dp"
@@ -76,7 +75,6 @@
         android:layout_marginEnd="80dp"
         android:layout_marginRight="80dp"
         android:layout_marginBottom="97dp"
-        android:onClick="gameOptions"
         android:text="Game Options"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/createGameButton"
@@ -92,11 +90,10 @@
         android:layout_marginEnd="104dp"
         android:layout_marginRight="104dp"
         android:layout_marginBottom="97dp"
-        android:onClick="playGame"
         android:text="Play"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/joinGameButton"
+        app:layout_constraintStart_toEndOf="@+id/gameOptionsButton"
         app:layout_constraintTop_toBottomOf="@+id/localSetupSubtitle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

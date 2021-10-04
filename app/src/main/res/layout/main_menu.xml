@@ -5,7 +5,7 @@
     android:id="@+id/saveButton"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main_menu">
+    tools:context=".MainMenu">
 
     <TextView
         android:id="@+id/mainMenuTitle"
@@ -38,7 +38,6 @@
         android:layout_marginRight="322dp"
         android:layout_marginBottom="182dp"
         android:gravity="center"
-        android:onClick="playOnline"
         android:text="@string/online"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -56,7 +55,6 @@
         android:layout_marginRight="322dp"
         android:layout_marginBottom="132dp"
         android:gravity="center"
-        android:onClick="playLocal"
         android:text="@string/local"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -64,7 +62,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/settings"
+        android:id="@+id/settingsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="312dp"
@@ -74,7 +72,6 @@
         android:layout_marginRight="313dp"
         android:layout_marginBottom="84dp"
         android:gravity="center"
-        android:onClick="toSettings"
         android:text="@string/settings"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -92,7 +89,6 @@
         android:layout_marginRight="625dp"
         android:layout_marginBottom="353dp"
         android:gravity="center"
-        android:onClick="backButton"
         android:text="@string/back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

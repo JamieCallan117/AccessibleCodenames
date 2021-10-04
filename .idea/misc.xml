@@ -15,6 +15,7 @@
         <entry key="..\:/Users/TheSh/AndroidStudioProjects/Codenames/app/src/main/res/layout/main_menu.xml" value="0.41081081081081083" />
         <entry key="..\:/Users/TheSh/AndroidStudioProjects/Codenames/app/src/main/res/layout/online_game.xml" value="0.5213541666666667" />
         <entry key="..\:/Users/TheSh/AndroidStudioProjects/Codenames/app/src/main/res/layout/online_setup.xml" value="0.41081081081081083" />
+        <entry key="..\:/Users/TheSh/AndroidStudioProjects/Codenames/app/src/main/res/layout/settings.xml" value="0.45625" />
         <entry key="..\:/Users/TheSh/AndroidStudioProjects/Codenames/app/src/main/res/layout/start_screen.xml" value="0.48385416666666664" />
         <entry key="..\:/Users/TheSh/AndroidStudioProjects/Codenames/app/src/main/res/layout/temp.xml" value="0.36666666666666664" />
       </map>
@@ -25,5 +26,8 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="SuppressKotlinCodeStyleNotification">
+    <option name="disableForAll" value="true" />
   </component>
 </project>

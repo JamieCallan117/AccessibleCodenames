@@ -13,7 +13,7 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.Codenames">
         <activity
-            android:name=".start_screen"
+            android:name=".StartScreen"
             android:screenOrientation="sensorLandscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,43 +22,43 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".main_menu"
+            android:name=".MainMenu"
             android:screenOrientation="sensorLandscape">
         </activity>
         <activity
-            android:name=".settings"
+            android:name=".Settings"
             android:screenOrientation="sensorLandscape">
         </activity>
         <activity
-            android:name=".colour_options"
+            android:name=".ColourOptions"
             android:screenOrientation="sensorLandscape">
         </activity>
         <activity
-            android:name=".local_setup"
+            android:name=".LocalSetup"
             android:screenOrientation="sensorLandscape">
         </activity>
         <activity
-            android:name=".online_setup"
+            android:name=".OnlineSetup"
             android:screenOrientation="sensorLandscape">
         </activity>
         <activity
-            android:name=".create_game"
+            android:name=".CreateGame"
             android:screenOrientation="sensorLandscape">
         </activity>
         <activity
-            android:name=".join_game"
+            android:name=".JoinGame"
             android:screenOrientation="sensorLandscape">
         </activity>
         <activity
-            android:name=".game_options"
+            android:name=".GameOptions"
             android:screenOrientation="sensorLandscape">
         </activity>
         <activity
-            android:name=".local_game"
+            android:name=".LocalGame"
             android:screenOrientation="sensorLandscape">
         </activity>
         <activity
-            android:name=".online_game"
+            android:name=".OnlineGame"
             android:screenOrientation="sensorLandscape">
         </activity>
     </application>

@@ -5,7 +5,7 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".local_game">
+    tools:context=".LocalGame">
 
     <uk.ac.swansea.codenames.WordButton
         android:id="@+id/squareOne"
@@ -263,7 +263,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:onClick="exitButton"
         android:text="@string/exit"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -303,7 +302,6 @@
             android:id="@+id/yesMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="yesMessage"
             android:text="@string/yes"
             app:layout_column="0"
             app:layout_columnWeight="1"
