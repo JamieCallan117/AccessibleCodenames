@@ -1,5 +1,6 @@
 package uk.ac.swansea.codenames
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.widget.TextView
@@ -10,8 +11,6 @@ import android.os.Handler
 import android.view.View
 import android.widget.Button
 import androidx.gridlayout.widget.GridLayout
-import java.io.File
-import java.io.IOException
 
 class OnlineSetup : AppCompatActivity() {
     private var constraintLayout: ConstraintLayout? = null
@@ -25,8 +24,6 @@ class OnlineSetup : AppCompatActivity() {
     private var joinGameButton: Button? = null
     private var createGameButton: Button? = null
     private var okButton: Button? = null
-    private var preferencesFile = "preferences.txt"
-    private var preferences = arrayOfNulls<String>(14)
     private var applicationBackgroundColour = -10921639
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
@@ -48,22 +45,9 @@ class OnlineSetup : AppCompatActivity() {
         messageText = findViewById(R.id.messageText)
         okButton = findViewById(R.id.okButton)
 
-        var tempPref = ""
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
-        try {
-            val input = assets.open("preferences")
-            val size = input.available()
-            val buffer = ByteArray(size)
-
-            input.read(buffer)
-            input.close()
-
-            tempPref = String(buffer)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        val username = preferences[8]
+        val username = preferences.getString("username", "")
 
         usernameEdit?.setText(username)
 
@@ -113,14 +97,22 @@ class OnlineSetup : AppCompatActivity() {
     }
 
     fun backButton(view: View) {
-        updatePreferencesFile()
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+        val editor = preferences!!.edit()
+
+        editor.putString("username", usernameEdit?.text.toString())
+        editor.apply()
 
         val i = Intent(view.context, MainMenu::class.java)
         startActivity(i)
     }
 
     fun createGame(view: View) {
-        updatePreferencesFile()
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+        val editor = preferences!!.edit()
+
+        editor.putString("username", usernameEdit?.text.toString())
+        editor.apply()
 
         val i = Intent(view.context, CreateGame::class.java)
         i.putExtra("hasCustomSettings", false)
@@ -128,61 +120,31 @@ class OnlineSetup : AppCompatActivity() {
     }
 
     fun joinGame(view: View) {
-        updatePreferencesFile()
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+        val editor = preferences!!.edit()
+
+        editor.putString("username", usernameEdit?.text.toString())
+        editor.apply()
 
         val i = Intent(view.context, JoinGame::class.java)
         startActivity(i)
     }
 
-    private fun updatePreferencesFile() {
-        val preferences = File(preferencesFile).useLines { it.toList() }
-
-        val teamAColour = preferences[0].toInt()
-        val teamBColour = preferences[1].toInt()
-        val bombColour = preferences[2].toInt()
-        val neutralColour = preferences[3].toInt()
-        val unmodifiedColour = preferences[4].toInt()
-        var username = preferences[8]
-        val musicVolume = preferences[9]
-        val soundFxVolume = preferences[10]
-        val vibration = preferences[11]
-        val contrast = preferences[12]
-        val textToSpeech = preferences[13]
-
-        applicationBackgroundColour = preferences[5].toInt()
-        menuButtonsColour = preferences[6].toInt()
-        menuTextColour = preferences[7].toInt()
-
-        username = username.trimEnd()
-
-        val prefStr = "$teamAColour\n$teamBColour\n$bombColour\n$neutralColour\n$unmodifiedColour" +
-                "\n$applicationBackgroundColour\n$menuButtonsColour\n$menuTextColour\n$username" +
-                "\n$musicVolume\n$soundFxVolume\n$vibration\n$contrast\n$textToSpeech"
-
-        File(preferencesFile).writeText(prefStr)
-    }
-
     fun updateColours() {
-        val regex = "[^A-Za-z0-9 ]".toRegex()
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
-        var applicationBackgroundColourStr = preferences[5]?.let { regex.replace(it, "") }
-        var menuButtonsColourStr = preferences[6]?.let { regex.replace(it, "") }
-        var menuTextColourStr = preferences[7]?.let { regex.replace(it, "") }
-
-        applicationBackgroundColourStr = "-$applicationBackgroundColourStr"
-        menuButtonsColourStr = "-$menuButtonsColourStr"
-        menuTextColourStr = "-$menuTextColourStr"
-
-        applicationBackgroundColour = applicationBackgroundColourStr.toInt()
-        menuButtonsColour = menuButtonsColourStr.toInt()!!
-        menuTextColour = menuTextColourStr.toInt()!!
+        applicationBackgroundColour = preferences.getInt("applicationBackground", -10921639)
+        menuButtonsColour = preferences.getInt("menuButton", -8164501)
+        menuTextColour = preferences.getInt("menuText", -1)
 
         constraintLayout?.setBackgroundColor(applicationBackgroundColour)
         messageBox?.setBackgroundColor(applicationBackgroundColour)
+
         backButton?.setBackgroundColor(menuButtonsColour)
         joinGameButton?.setBackgroundColor(menuButtonsColour)
         createGameButton?.setBackgroundColor(menuButtonsColour)
         okButton?.setBackgroundColor(menuButtonsColour)
+
         gameSetupTitle?.setTextColor(menuTextColour)
         gameSetupSubtitle?.setTextColor(menuTextColour)
         usernameText?.setTextColor(menuTextColour)

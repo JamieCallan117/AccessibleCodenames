@@ -1,5 +1,6 @@
 package uk.ac.swansea.codenames
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.os.Bundle
@@ -60,8 +61,6 @@ class GameOptions : AppCompatActivity() {
     private var teamBSqrInc: ImageView? = null
     private var teamBSqrDec: ImageView? = null
     private var startingTeamButton: ToggleButton? = null
-    private var preferencesFile = "preferences.txt"
-    private var preferences = arrayOfNulls<String>(14)
     private var applicationBackgroundColour = -10921639
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
@@ -127,23 +126,6 @@ class GameOptions : AppCompatActivity() {
         gameOptionsTitle = findViewById(R.id.gameOptionsTitle)
         gameOptionsSubtitle = findViewById(R.id.gameOptionsSubtitle)
         backButton = findViewById(R.id.backButton)
-
-        var tempPref = ""
-
-        try {
-            val input = assets.open("preferences")
-            val size = input.available()
-            val buffer = ByteArray(size)
-
-            input.read(buffer)
-            input.close()
-
-            tempPref = String(buffer)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        preferences = tempPref.split("\n").toTypedArray()
 
         if (intent.getStringExtra("type") == "local") {
             gameOptionsSubtitle?.text = getString(R.string.local)
@@ -645,23 +627,15 @@ class GameOptions : AppCompatActivity() {
     }
 
     fun updateColours() {
-        val regex = "[^A-Za-z0-9 ]".toRegex()
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
-        var applicationBackgroundColourStr = preferences[5]?.let { regex.replace(it, "") }
-        var menuButtonsColourStr = preferences[6]?.let { regex.replace(it, "") }
-        var menuTextColourStr = preferences[7]?.let { regex.replace(it, "") }
-
-        applicationBackgroundColourStr = "-$applicationBackgroundColourStr"
-        menuButtonsColourStr = "-$menuButtonsColourStr"
-        menuTextColourStr = "-$menuTextColourStr"
-
-        applicationBackgroundColour = applicationBackgroundColourStr.toInt()
-        menuButtonsColour = menuButtonsColourStr.toInt()!!
-        menuTextColour = menuTextColourStr.toInt()!!
+        applicationBackgroundColour = preferences.getInt("applicationBackground", -10921639)
+        menuButtonsColour = preferences.getInt("menuButton", -8164501)
+        menuTextColour = preferences.getInt("menuText", -1)
         
         constraintLayout?.setBackgroundColor(applicationBackgroundColour)
         messageBox?.setBackgroundColor(applicationBackgroundColour)
-        
+
         backButton?.setBackgroundColor(menuButtonsColour)
         saveButton?.setBackgroundColor(menuButtonsColour)
         yesButton?.setBackgroundColor(menuButtonsColour)

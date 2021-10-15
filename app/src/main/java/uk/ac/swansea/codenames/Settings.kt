@@ -1,13 +1,12 @@
 package uk.ac.swansea.codenames
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.os.Bundle
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.content.Intent
 import android.widget.*
-import java.io.File
-import java.io.IOException
 
 class Settings : AppCompatActivity() {
     // TODO: Redesign layout.
@@ -28,8 +27,6 @@ class Settings : AppCompatActivity() {
     private var textToSpeechCheck: CheckBox? = null
     private var musicVolume = 0
     private var soundFXVolume = 0
-    private var preferencesFile = "preferences.txt"
-    private var preferences = arrayOfNulls<String>(14)
     private var applicationBackgroundColour = -10921639
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
@@ -56,82 +53,68 @@ class Settings : AppCompatActivity() {
         contrastCheck = findViewById(R.id.contrastCheck)
         textToSpeechCheck = findViewById(R.id.textToSpeechCheck)
 
-        var tempPref = ""
-
-        try {
-            val input = assets.open("preferences")
-            val size = input.available()
-            val buffer = ByteArray(size)
-
-            input.read(buffer)
-            input.close()
-
-            tempPref = String(buffer)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        preferences = tempPref.split("\n").toTypedArray()
-
         updateColours()
 
-        val regex = "[^A-Za-z0-9 ]".toRegex()
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
-        var musicVolumeStr = preferences[9]?.let { regex.replace(it, "") }
-        var soundFxVolumeStr = preferences[10]?.let { regex.replace(it, "") }
-
-        if (musicVolumeStr != null) {
-            musicVolume = musicVolumeStr.toInt()
-        }
+        musicVolume = preferences.getInt("musicVolume", 100)
 
         musicVolumeSeek?.progress = musicVolume
 
         musicVolumeSeek?.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                updatePreferencesFile()
+                val editor = preferences!!.edit()
+                editor.putInt("musicVolume", progress)
+                editor.apply()
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
 
-        if (soundFxVolumeStr != null) {
-            soundFXVolume = soundFxVolumeStr.toInt()
-        }
+        soundFXVolume = preferences.getInt("soundFXVolume", 100)
 
         soundFXVolumeSeek?.progress = soundFXVolume
 
         soundFXVolumeSeek?.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                updatePreferencesFile()
+                val editor = preferences!!.edit()
+                editor.putInt("soundFXVolume", progress)
+                editor.apply()
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
 
-        vibration = preferences[11].toBoolean()
+        vibration = preferences.getBoolean("vibration", true)
 
         vibrationCheck?.isChecked = vibration
 
         vibrationCheck?.setOnCheckedChangeListener { _, _ ->
-            updatePreferencesFile()
+            val editor = preferences!!.edit()
+            editor.putBoolean("vibration", vibrationCheck!!.isChecked)
+            editor.apply()
         }
 
-        contrast = preferences[12].toBoolean()
+        contrast = preferences.getBoolean("contrast", false)
 
         contrastCheck?.isChecked = contrast
 
         contrastCheck?.setOnCheckedChangeListener { _, _ ->
-            updatePreferencesFile()
+            val editor = preferences!!.edit()
+            editor.putBoolean("contrast", contrastCheck!!.isChecked)
+            editor.apply()
         }
 
-        textToSpeech = preferences[13].toBoolean()
+        textToSpeech = preferences.getBoolean("textToSpeech", true)
 
         textToSpeechCheck?.isChecked = textToSpeech
 
         textToSpeechCheck?.setOnCheckedChangeListener { _, _ ->
-            updatePreferencesFile()
+            val editor = preferences!!.edit()
+            editor.putBoolean("textToSpeech", textToSpeechCheck!!.isChecked)
+            editor.apply()
         }
 
         backButton?.setOnClickListener {
@@ -163,68 +146,18 @@ class Settings : AppCompatActivity() {
         backButton?.performClick()
     }
 
-    private fun updatePreferencesFile() {
-        val regex = "[^A-Za-z0-9 ]".toRegex()
-
-        var teamAColoursStr = preferences[0]?.let { regex.replace(it, "") }
-        var teamBColoursStr = preferences[1]?.let { regex.replace(it, "") }
-        var bombColoursStr = preferences[2]?.let { regex.replace(it, "") }
-        var neutralColoursStr = preferences[3]?.let { regex.replace(it, "") }
-        var unmodifiedColourStr = preferences[4]?.let { regex.replace(it, "") }
-        var applicationBackgroundColourStr = preferences[5]?.let { regex.replace(it, "") }
-        var menuButtonsColourStr = preferences[6]?.let { regex.replace(it, "") }
-        var menuTextColourStr = preferences[7]?.let { regex.replace(it, "") }
-
-        teamAColoursStr = "-$teamAColoursStr"
-        teamBColoursStr = "-$teamBColoursStr"
-        bombColoursStr = "-$bombColoursStr"
-        neutralColoursStr = "-$neutralColoursStr"
-        unmodifiedColourStr = "-$unmodifiedColourStr"
-        applicationBackgroundColourStr = "-$applicationBackgroundColourStr"
-        menuButtonsColourStr = "-$menuButtonsColourStr"
-        menuTextColourStr = "-$menuTextColourStr"
-
-        val teamAColour = teamAColoursStr.toInt()
-        val teamBColour = teamBColoursStr.toInt()
-        val bombColour = bombColoursStr.toInt()
-        val neutralColour = neutralColoursStr.toInt()
-        val unmodifiedColour = unmodifiedColourStr.toInt()
-        val username = preferences[8]
-        val musicVolume = musicVolumeSeek?.progress.toString()
-        val soundFxVolume = soundFXVolumeSeek?.progress.toString()
-        val vibration = vibrationCheck?.isChecked.toString()
-        val contrast = contrastCheck?.isChecked.toString()
-        val textToSpeech = textToSpeechCheck?.isChecked.toString()
-
-        applicationBackgroundColour = applicationBackgroundColourStr.toInt()
-        menuButtonsColour = menuButtonsColourStr.toInt()
-        menuTextColour = menuTextColourStr.toInt()
-
-        val prefStr = "$teamAColour\n$teamBColour\n$bombColour\n$neutralColour\n$unmodifiedColour" +
-                "\n$applicationBackgroundColour\n$menuButtonsColour\n$menuTextColour\n$username" +
-                "\n$musicVolume\n$soundFxVolume\n$vibration\n$contrast\n$textToSpeech"
-
-        File(preferencesFile).writeText(prefStr)
-    }
-
     fun updateColours() {
-        val regex = "[^A-Za-z0-9 ]".toRegex()
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
-        var applicationBackgroundColourStr = preferences[5]?.let { regex.replace(it, "") }
-        var menuButtonsColourStr = preferences[6]?.let { regex.replace(it, "") }
-        var menuTextColourStr = preferences[7]?.let { regex.replace(it, "") }
-
-        applicationBackgroundColourStr = "-$applicationBackgroundColourStr"
-        menuButtonsColourStr = "-$menuButtonsColourStr"
-        menuTextColourStr = "-$menuTextColourStr"
-
-        applicationBackgroundColour = applicationBackgroundColourStr.toInt()
-        menuButtonsColour = menuButtonsColourStr.toInt()!!
-        menuTextColour = menuTextColourStr.toInt()!!
+        applicationBackgroundColour = preferences.getInt("applicationBackgroundColour", -10921639)
+        menuButtonsColour = preferences.getInt("menuButtonsColour", -8164501)
+        menuTextColour = preferences.getInt("menuTextColour", -1)
 
         constraintLayout?.setBackgroundColor(applicationBackgroundColour)
+
         backButton?.setBackgroundColor(menuButtonsColour)
         colourButton?.setBackgroundColor(menuButtonsColour)
+
         settingsTitle?.setTextColor(menuTextColour)
         musicVolumeText?.setTextColor(menuTextColour)
         soundFXVolumeText?.setTextColor(menuTextColour)

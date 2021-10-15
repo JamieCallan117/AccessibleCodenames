@@ -1,5 +1,6 @@
 package uk.ac.swansea.codenames
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.os.Bundle
@@ -11,8 +12,6 @@ import android.os.Handler
 import android.view.View
 import android.widget.*
 import androidx.gridlayout.widget.GridLayout
-import java.io.File
-import java.io.IOException
 import java.util.ArrayList
 import kotlin.Throws
 
@@ -32,8 +31,6 @@ class OnlineGame : AppCompatActivity() {
     private var startingTeam = 0
     private var teamAWordCount = 0
     private var teamBWordCount = 0
-    private var preferencesFile = "preferences.txt"
-    private var preferences = arrayOfNulls<String>(14)
     private var teamAColour = -16773377
     private var teamBColour = -65536
     private var bombColour = -14342875
@@ -180,24 +177,10 @@ class OnlineGame : AppCompatActivity() {
                 squareSeventeen, squareEighteen, squareNineteen, squareTwenty, squareTwentyOne,
                 squareTwentyTwo, squareTwentyThree, squareTwentyFour, squareTwentyFive)
 
-        var tempPref = ""
 
-        try {
-            val input = assets.open("preferences")
-            val size = input.available()
-            val buffer = ByteArray(size)
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
-            input.read(buffer)
-            input.close()
-
-            tempPref = String(buffer)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        preferences = tempPref.split("\n").toTypedArray()
-
-        val username = preferences[8]
+        val username = preferences.getString("username", "")
 
         player = username?.let { Player(it) }
 
@@ -239,7 +222,7 @@ class OnlineGame : AppCompatActivity() {
             viewTeams?.isEnabled = true
         }
 
-        teamBButton?.setOnClickListener(View.OnClickListener { v: View? ->
+        teamBButton?.setOnClickListener { v: View? ->
             SocketConnection.socket.emit("chooseTeam", player?.nickname, "B", roomName)
             constraintLayout?.removeView(chooseTeamBox)
 
@@ -248,7 +231,7 @@ class OnlineGame : AppCompatActivity() {
             changeTeamButton?.isEnabled = true
             chatButton?.isEnabled = true
             viewTeams?.isEnabled = true
-        })
+        }
 
         requestSpymaster?.setOnClickListener { SocketConnection.socket.emit("requestSpymaster", player?.nickname, roomName, player?.team) }
 
@@ -420,9 +403,9 @@ class OnlineGame : AppCompatActivity() {
                 }
 
                 if (player?.isSpymaster == true) {
-                    turnAction?.text = "Give Hint"
+                    turnAction?.setText(R.string.give_hint)
                 } else {
-                    turnAction?.text = "End Turn"
+                    turnAction?.setText(R.string.end_turn)
                 }
 
                 if (player?.isSpymaster == true && player?.team == "A" && gamePhase === OnlinePhase.TEAM_A_SPY) {
@@ -550,10 +533,10 @@ class OnlineGame : AppCompatActivity() {
         SocketConnection.socket.on("hint") { args ->
             runOnUiThread {
                 val hint = args[0] as String
-                val colours = File(preferencesFile).useLines { it.toList() }
 
-                teamAColour = colours[0].toInt()
-                teamBColour = colours[1].toInt()
+                teamAColour = preferences.getInt("teamA", -16773377)
+                teamBColour = preferences.getInt("teamB", -65536)
+
 
                 if (gamePhase === OnlinePhase.TEAM_A_SPY) {
                     gamePhase = OnlinePhase.TEAM_A
@@ -750,14 +733,13 @@ class OnlineGame : AppCompatActivity() {
         }
 
         SocketConnection.socket.on("teamAChat") { args ->
-            val username = args[0] as String
+            val usernameChat = args[0] as String
             val message = args[1] as String
-            val colours = File(preferencesFile).useLines { it.toList() }
 
-            teamAColour = colours[0].toInt()
-            menuTextColour = colours[7].toInt()
+            teamAColour = preferences.getInt("teamA", -16773377)
+            menuTextColour = preferences.getInt("menuTextColour", -1)
 
-            val usernameColour = "<font color=$teamAColour>$username</font>"
+            val usernameColour = "<font color=$teamAColour>$usernameChat</font>"
             val messageColour = "<font color=$menuTextColour>$message</font>"
             val newMessage = TextView(applicationContext)
 
@@ -768,14 +750,13 @@ class OnlineGame : AppCompatActivity() {
         }
 
         SocketConnection.socket.on("teamBChat") { args ->
-            val username = args[0] as String
+            val usernameChat = args[0] as String
             val message = args[1] as String
-            val colours = File(preferencesFile).useLines { it.toList() }
 
-            teamBColour = colours[1].toInt()
-            menuTextColour = colours[7].toInt()
+            teamBColour = preferences.getInt("teamB", -65536)
+            menuTextColour = preferences.getInt("menuTextColour", -1)
 
-            val usernameColour = "<font color=$teamBColour>$username</font>"
+            val usernameColour = "<font color=$teamBColour>$usernameChat</font>"
             val messageColour = "<font color=$menuTextColour>$message</font>"
             val newMessage = TextView(applicationContext)
 
@@ -802,17 +783,17 @@ class OnlineGame : AppCompatActivity() {
         }
 
         SocketConnection.socket.on("playerQuit") { args ->
-            val username = args[0] as String
+            val usernameQuit = args[0] as String
 
             for (p in teamAUsers) {
-                if (p.nickname == username) {
+                if (p.nickname == usernameQuit) {
                     teamAUsers.remove(p)
                     break
                 }
             }
 
             for (p in teamBUsers) {
-                if (p.nickname == username) {
+                if (p.nickname == usernameQuit) {
                     teamBUsers.remove(p)
                     break
                 }
@@ -966,10 +947,10 @@ class OnlineGame : AppCompatActivity() {
             viewTeamsBox?.visibility = View.VISIBLE
             teamsBoxOpen = true
 
+            val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
             val spymasterSymbol = String(Character.toChars(0x1F441))
-            val colours = File(preferencesFile).useLines { it.toList() }
 
-            menuTextColour = colours[7].toInt()
+            menuTextColour = preferences.getInt("menuTextColour", -1)
 
             for (p in teamAUsers) {
                 val newPlayer = TextView(this)
@@ -1066,34 +1047,16 @@ class OnlineGame : AppCompatActivity() {
     }
 
     private fun updateColours() {
-        val regex = "[^A-Za-z0-9 ]".toRegex()
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
-        var teamAColoursStr = preferences[0]?.let { regex.replace(it, "") }
-        var teamBColoursStr = preferences[1]?.let { regex.replace(it, "") }
-        var bombColoursStr = preferences[2]?.let { regex.replace(it, "") }
-        var neutralColoursStr = preferences[3]?.let { regex.replace(it, "") }
-        var unmodifiedColourStr = preferences[4]?.let { regex.replace(it, "") }
-        var applicationBackgroundColourStr = preferences[5]?.let { regex.replace(it, "") }
-        var menuButtonsColourStr = preferences[6]?.let { regex.replace(it, "") }
-        var menuTextColourStr = preferences[7]?.let { regex.replace(it, "") }
-
-        teamAColoursStr = "-$teamAColoursStr"
-        teamBColoursStr = "-$teamBColoursStr"
-        bombColoursStr = "-$bombColoursStr"
-        neutralColoursStr = "-$neutralColoursStr"
-        unmodifiedColourStr = "-$unmodifiedColourStr"
-        applicationBackgroundColourStr = "-$applicationBackgroundColourStr"
-        menuButtonsColourStr = "-$menuButtonsColourStr"
-        menuTextColourStr = "-$menuTextColourStr"
-
-        teamAColour = teamAColoursStr.toInt()
-        teamBColour = teamBColoursStr.toInt()
-        bombColour = bombColoursStr.toInt()
-        neutralColour = neutralColoursStr.toInt()
-        unmodifiedColour = unmodifiedColourStr.toInt()
-        applicationBackgroundColour = applicationBackgroundColourStr.toInt()
-        menuButtonsColour = menuButtonsColourStr.toInt()
-        menuTextColour = menuTextColourStr.toInt()
+        teamAColour = preferences.getInt("teamA", -16773377)
+        teamBColour = preferences.getInt("teamB", -65536)
+        bombColour = preferences.getInt("bomb", -14342875)
+        neutralColour = preferences.getInt("neutral", -908)
+        unmodifiedColour = preferences.getInt("unmodified", -3684409)
+        applicationBackgroundColour = preferences.getInt("applicationBackground", -10921639)
+        menuButtonsColour = preferences.getInt("menuButton", -8164501)
+        menuTextColour = preferences.getInt("menuText", -1)
         
         teamACount?.setTextColor(teamAColour)
         
@@ -1167,6 +1130,7 @@ class OnlineGame : AppCompatActivity() {
         chooseTeamBox?.setBackgroundColor(applicationBackgroundColour)
         viewTeamsBox?.setBackgroundColor(applicationBackgroundColour)
         loadingBox?.setBackgroundColor(applicationBackgroundColour)
+
         exitButton?.setBackgroundColor(menuButtonsColour)
         startGame?.setBackgroundColor(menuButtonsColour)
         requestSpymaster?.setBackgroundColor(menuButtonsColour)
@@ -1180,6 +1144,7 @@ class OnlineGame : AppCompatActivity() {
         chatButton?.setBackgroundColor(menuButtonsColour)
         closeChatButton?.setBackgroundColor(menuButtonsColour)
         sendChatButton?.setBackgroundColor(menuButtonsColour)
+
         teamCounterLine?.setTextColor(menuTextColour)
         teamAHeader?.setTextColor(menuTextColour)
         teamBHeader?.setTextColor(menuTextColour)

@@ -1,5 +1,6 @@
 package uk.ac.swansea.codenames
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -8,7 +9,6 @@ import android.content.Intent
 import android.widget.Button
 import yuku.ambilwarna.AmbilWarnaDialog
 import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener
-import java.io.File
 
 class ColourOptions : AppCompatActivity() {
     // TODO: Redesign layout.
@@ -29,16 +29,6 @@ class ColourOptions : AppCompatActivity() {
     private var colourTitle: TextView? = null
     private var constraintLayout: ConstraintLayout? = null
     private var defaultColour = 0
-    private var preferencesFile = "preferences.txt"
-    private var preferences = arrayOfNulls<String>(14)
-    private var teamADefault = -16773377
-    private var teamBDefault = -65536
-    private var bombDefault = -14342875
-    private var neutralDefault = -908
-    private var unmodifiedDefault = -3684409
-    private var applicationBackgroundDefault = -10921639
-    private var menuButtonsDefault = -8164501
-    private var menuTextDefault = -1
     private var teamAColour = -16773377
     private var teamBColour = -65536
     private var bombColour = -14342875
@@ -65,6 +55,8 @@ class ColourOptions : AppCompatActivity() {
         colourTitle = findViewById(R.id.colourTitle)
         constraintLayout = findViewById(R.id.constraintLayout)
 
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
         backButton?.setOnClickListener {
             val i = Intent(applicationContext, Settings::class.java)
 
@@ -78,14 +70,19 @@ class ColourOptions : AppCompatActivity() {
         }
 
         resetColoursButton?.setOnClickListener {
-            val colourStr = "$teamADefault\n$teamBDefault\n$bombDefault\n$neutralDefault\n$unmodifiedDefault\n$applicationBackgroundDefault\n$menuButtonsDefault\n$menuTextDefault"
-
-            File(preferencesFile).writeText(colourStr)
+            val editor = preferences!!.edit()
+            editor.putInt("teamA", -16773377)
+            editor.putInt("teamB", -65536)
+            editor.putInt("bomb", -14342875)
+            editor.putInt("neutral", -908)
+            editor.putInt("unmodified", -3684409)
+            editor.putInt("applicationBackground", -10921639)
+            editor.putInt("menuButton", -8164501)
+            editor.putInt("menuText", -1)
+            editor.apply()
 
             updateColours()
         }
-
-        updateColours()
 
         teamAButton?.setOnClickListener { openColourPicker("teamA") }
         teamBButton?.setOnClickListener { openColourPicker("teamB") }
@@ -95,67 +92,43 @@ class ColourOptions : AppCompatActivity() {
         applicationBackgroundButton?.setOnClickListener { openColourPicker("applicationBackground") }
         menuButtonsButton?.setOnClickListener { openColourPicker("menuButton") }
         menuTextButton?.setOnClickListener { openColourPicker("menuText") }
+
+        updateColours()
     }
 
     override fun onBackPressed() {
         backButton?.performClick()
     }
 
-    fun updatePreferencesFile() {
-        val preferences = File(preferencesFile).useLines { it.toList() }
-
-        val username = preferences[8]
-        val musicVolume = preferences[9]
-        val soundFxVolume = preferences[10]
-        val vibration = preferences[11]
-        val contrast = preferences[12]
-        val textToSpeech = preferences[13]
-
-
-        val prefStr = "$teamAColour\n$teamBColour\n$bombColour\n$neutralColour\n$unmodifiedColour" +
-                "\n$applicationBackgroundColour\n$menuButtonsColour\n$menuTextColour\n$username" +
-                "\n$musicVolume\n$soundFxVolume\n$vibration\n$contrast\n$textToSpeech"
-
-        File(preferencesFile).writeText(prefStr)
-
-        updateColours()
-    }
-
     fun updateColours() {
-        val regex = "[^A-Za-z0-9 ]".toRegex()
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
-        var applicationBackgroundColourStr = preferences[5]?.let { regex.replace(it, "") }
-        var menuButtonsColourStr = preferences[6]?.let { regex.replace(it, "") }
-        var menuTextColourStr = preferences[7]?.let { regex.replace(it, "") }
-
-        applicationBackgroundColourStr = "-$applicationBackgroundColourStr"
-        menuButtonsColourStr = "-$menuButtonsColourStr"
-        menuTextColourStr = "-$menuTextColourStr"
-
-        applicationBackgroundColour = applicationBackgroundColourStr.toInt()
-        menuButtonsColour = menuButtonsColourStr.toInt()!!
-        menuTextColour = menuTextColourStr.toInt()!!
-        val colours = File(preferencesFile).useLines { it.toList() }
-
-        teamAColour = colours[0].toInt()
-        teamBColour = colours[1].toInt()
-        bombColour = colours[2].toInt()
-        neutralColour = colours[3].toInt()
-        unmodifiedColour = colours[4].toInt()
-        applicationBackgroundColour = colours[5].toInt()
-        menuButtonsColour = colours[6].toInt()
-        menuTextColour = colours[7].toInt()
+        teamAColour = preferences.getInt("teamA", -16773377)
+        teamBColour = preferences.getInt("teamB", -65536)
+        bombColour = preferences.getInt("bomb", -14342875)
+        neutralColour = preferences.getInt("neutral", -908)
+        unmodifiedColour = preferences.getInt("unmodified", -3684409)
+        applicationBackgroundColour = preferences.getInt("applicationBackground", -10921639)
+        menuButtonsColour = preferences.getInt("menuButton", -8164501)
+        menuTextColour = preferences.getInt("menuText", -1)
 
         teamAButton?.setBackgroundColor(teamAColour)
+
         teamBButton?.setBackgroundColor(teamBColour)
+
         bombSquareButton?.setBackgroundColor(bombColour)
+
         neutralSquareButton?.setBackgroundColor(neutralColour)
+
         unmodifiedSquareButton?.setBackgroundColor(unmodifiedColour)
+
         applicationBackgroundButton?.setBackgroundColor(applicationBackgroundColour)
         constraintLayout?.setBackgroundColor(applicationBackgroundColour)
+
         menuButtonsButton?.setBackgroundColor(menuButtonsColour)
         backButton?.setBackgroundColor(menuButtonsColour)
         resetColoursButton?.setBackgroundColor(menuButtonsColour)
+
         menuTextButton?.setBackgroundColor(menuTextColour)
         colourTitle?.setBackgroundColor(menuTextColour)
     }
@@ -165,20 +138,24 @@ class ColourOptions : AppCompatActivity() {
             override fun onCancel(dialog: AmbilWarnaDialog) {}
 
             override fun onOk(dialog: AmbilWarnaDialog, color: Int) {
+                val preferences = applicationContext.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+                val editor = preferences!!.edit()
                 defaultColour = color
 
                 when (colourToChange) {
-                    "teamA" -> teamAColour = defaultColour
-                    "teamB" -> teamBColour = defaultColour
-                    "bomb" -> bombColour = defaultColour
-                    "neutral" -> neutralColour = defaultColour
-                    "unmodified" -> unmodifiedColour = defaultColour
-                    "applicationBackground" -> applicationBackgroundColour = defaultColour
-                    "menuButton" -> menuButtonsColour = defaultColour
-                    "menuText" -> menuTextColour = defaultColour
+                    "teamA" -> editor.putInt("teamA", defaultColour)
+                    "teamB" -> editor.putInt("teamB", defaultColour)
+                    "bomb" -> editor.putInt("bomb", defaultColour)
+                    "neutral" -> editor.putInt("neutral", defaultColour)
+                    "unmodified" -> editor.putInt("unmodified", defaultColour)
+                    "applicationBackground" -> editor.putInt("applicationBackground", defaultColour)
+                    "menuButton" -> editor.putInt("menuButton", defaultColour)
+                    "menuText" -> editor.putInt("menuText", defaultColour)
                 }
 
-                updatePreferencesFile()
+                editor.apply()
+
+                updateColours()
             }
         })
 

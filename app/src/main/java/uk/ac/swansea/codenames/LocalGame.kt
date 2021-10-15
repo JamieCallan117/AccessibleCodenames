@@ -1,5 +1,6 @@
 package uk.ac.swansea.codenames
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.os.Bundle
@@ -9,7 +10,6 @@ import android.view.Gravity
 import android.view.View
 import android.widget.*
 import androidx.gridlayout.widget.GridLayout
-import java.io.File
 import java.io.IOException
 import java.util.*
 
@@ -88,8 +88,6 @@ class LocalGame : AppCompatActivity() {
     private var hintNumber: Spinner? = null
     private var previousHintsScroll: ScrollView? = null
     private var gameOperations: ScrollView? = null
-    private var preferencesFile = "preferences.txt"
-    private var preferences = arrayOfNulls<String>(14)
     private var teamAColour = -16773377
     private var teamBColour = -65536
     private var bombColour = -14342875
@@ -133,23 +131,6 @@ class LocalGame : AppCompatActivity() {
         previousHintsScroll = findViewById(R.id.previousHintsScroll)
         previousHints = findViewById(R.id.previousHints)
         hidePreviousHints = findViewById(R.id.hidePreviousHints)
-
-        var tempPref = ""
-
-        try {
-            val input = assets.open("preferences")
-            val size = input.available()
-            val buffer = ByteArray(size)
-
-            input.read(buffer)
-            input.close()
-
-            tempPref = String(buffer)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        preferences = tempPref.split("\n").toTypedArray()
 
         gamePhase = LocalPhase.START
 
@@ -744,10 +725,10 @@ class LocalGame : AppCompatActivity() {
         newHint.text = hint
         previousHints?.addView(newHint)
 
-        val colours = File(preferencesFile).useLines { it.toList() }
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
-        teamAColour = colours[0].toInt()
-        teamBColour = colours[1].toInt()
+        teamAColour = preferences.getInt("teamA", -16773377)
+        teamBColour = preferences.getInt("teamB", -65536)
 
         if (gamePhase == LocalPhase.TEAM_A) {
             newHint.setTextColor(teamAColour)
@@ -784,45 +765,33 @@ class LocalGame : AppCompatActivity() {
     }
 
     fun updateColours() {
-        val regex = "[^A-Za-z0-9 ]".toRegex()
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
-        var teamAColoursStr = preferences[0]?.let { regex.replace(it, "") }
-        var teamBColoursStr = preferences[1]?.let { regex.replace(it, "") }
-        var bombColoursStr = preferences[2]?.let { regex.replace(it, "") }
-        var neutralColoursStr = preferences[3]?.let { regex.replace(it, "") }
-        var unmodifiedColourStr = preferences[4]?.let { regex.replace(it, "") }
-        var applicationBackgroundColourStr = preferences[5]?.let { regex.replace(it, "") }
-        var menuButtonsColourStr = preferences[6]?.let { regex.replace(it, "") }
-        var menuTextColourStr = preferences[7]?.let { regex.replace(it, "") }
-
-        teamAColoursStr = "-$teamAColoursStr"
-        teamBColoursStr = "-$teamBColoursStr"
-        bombColoursStr = "-$bombColoursStr"
-        neutralColoursStr = "-$neutralColoursStr"
-        unmodifiedColourStr = "-$unmodifiedColourStr"
-        applicationBackgroundColourStr = "-$applicationBackgroundColourStr"
-        menuButtonsColourStr = "-$menuButtonsColourStr"
-        menuTextColourStr = "-$menuTextColourStr"
-
-        teamAColour = teamAColoursStr.toInt()
-        teamBColour = teamBColoursStr.toInt()
-        bombColour = bombColoursStr.toInt()
-        neutralColour = neutralColoursStr.toInt()
-        unmodifiedColour = unmodifiedColourStr.toInt()
-        applicationBackgroundColour = applicationBackgroundColourStr.toInt()
-        menuButtonsColour = menuButtonsColourStr.toInt()
-        menuTextColour = menuTextColourStr.toInt()
+        teamAColour = preferences.getInt("teamA", -16773377)
+        teamBColour = preferences.getInt("teamB", -65536)
+        bombColour = preferences.getInt("bomb", -14342875)
+        neutralColour = preferences.getInt("neutral", -908)
+        unmodifiedColour = preferences.getInt("unmodified", -3684409)
+        applicationBackgroundColour = preferences.getInt("applicationBackground", -10921639)
+        menuButtonsColour = preferences.getInt("menuButton", -8164501)
+        menuTextColour = preferences.getInt("menuText", -1)
 
         teamACount?.setTextColor(teamAColour)
         ttsA?.setBackgroundColor(teamAColour)
+
         teamBCount?.setTextColor(teamBColour)
         ttsB?.setBackgroundColor(teamBColour)
+
         ttsBomb?.setBackgroundColor(bombColour)
+
         ttsNeutral?.setBackgroundColor(neutralColour)
+
         ttsUnclicked?.setBackgroundColor(unmodifiedColour)
+
         constraintLayout?.setBackgroundColor(applicationBackgroundColour)
         messageBox?.setBackgroundColor(applicationBackgroundColour)
         ttsBox?.setBackgroundColor(applicationBackgroundColour)
+
         exitButton?.setBackgroundColor(menuButtonsColour)
         confirmButton?.setBackgroundColor(menuButtonsColour)
         yesMessage?.setBackgroundColor(menuButtonsColour)
@@ -834,6 +803,7 @@ class LocalGame : AppCompatActivity() {
         ttsAll?.setBackgroundColor(menuButtonsColour)
         ttsClicked?.setBackgroundColor(menuButtonsColour)
         closeTts?.setBackgroundColor(menuButtonsColour)
+
         exitButton?.setTextColor(menuTextColour)
         confirmButton?.setTextColor(menuTextColour)
         yesMessage?.setTextColor(menuTextColour)
