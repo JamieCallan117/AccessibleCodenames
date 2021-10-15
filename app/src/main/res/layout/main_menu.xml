@@ -29,72 +29,79 @@
 
     <Button
         android:id="@+id/playOnline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="321dp"
-        android:layout_marginLeft="321dp"
-        android:layout_marginTop="181dp"
-        android:layout_marginEnd="322dp"
-        android:layout_marginRight="322dp"
-        android:layout_marginBottom="182dp"
+        android:layout_width="135dp"
+        android:layout_height="65dp"
+        android:layout_marginStart="62dp"
+        android:layout_marginBottom="100dp"
         android:gravity="center"
         android:text="@string/online"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/playLocal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="321dp"
-        android:layout_marginLeft="321dp"
-        android:layout_marginTop="231dp"
-        android:layout_marginEnd="322dp"
-        android:layout_marginRight="322dp"
-        android:layout_marginBottom="132dp"
+        android:layout_width="135dp"
+        android:layout_height="65dp"
+        android:layout_marginStart="102dp"
+        android:layout_marginEnd="101dp"
+        android:layout_marginBottom="100dp"
         android:gravity="center"
         android:text="@string/local"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/settingsButton"
+        app:layout_constraintStart_toEndOf="@+id/playOnline" />
 
     <Button
         android:id="@+id/settingsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="312dp"
-        android:layout_marginLeft="312dp"
-        android:layout_marginTop="279dp"
-        android:layout_marginEnd="313dp"
-        android:layout_marginRight="313dp"
-        android:layout_marginBottom="84dp"
+        android:layout_width="135dp"
+        android:layout_height="65dp"
+        android:layout_marginEnd="62dp"
+        android:layout_marginBottom="100dp"
         android:gravity="center"
         android:text="@string/settings"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/backButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="625dp"
-        android:layout_marginRight="625dp"
-        android:layout_marginBottom="353dp"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
         android:gravity="center"
         android:text="@string/back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/onlineImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="@+id/playOnline"
+        app:layout_constraintStart_toStartOf="@+id/playOnline"
+        app:layout_constraintTop_toBottomOf="@+id/mainMenuTitle"
+        app:srcCompat="@android:drawable/ic_menu_mapmode" />
+
+    <ImageView
+        android:id="@+id/settingsImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="@+id/settingsButton"
+        app:layout_constraintStart_toStartOf="@+id/settingsButton"
+        app:layout_constraintTop_toBottomOf="@+id/mainMenuTitle"
+        app:srcCompat="@android:drawable/ic_menu_preferences" />
+
+    <ImageView
+        android:id="@+id/localImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="@+id/playLocal"
+        app:layout_constraintHorizontal_bias="0.457"
+        app:layout_constraintStart_toStartOf="@+id/playLocal"
+        app:layout_constraintTop_toBottomOf="@+id/mainMenuTitle"
+        app:srcCompat="@drawable/smartphone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

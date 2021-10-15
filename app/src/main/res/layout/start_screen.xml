@@ -56,10 +56,8 @@
         android:layout_width="607dp"
         android:layout_height="95dp"
         android:layout_marginStart="62dp"
-        android:layout_marginLeft="62dp"
         android:layout_marginTop="48dp"
         android:layout_marginEnd="62dp"
-        android:layout_marginRight="62dp"
         android:layout_marginBottom="268dp"
         android:ems="10"
         android:fontFamily="@font/title_font"
@@ -73,38 +71,56 @@
 
     <Button
         android:id="@+id/playButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="321dp"
-        android:layout_marginLeft="321dp"
-        android:layout_marginTop="38dp"
-        android:layout_marginEnd="322dp"
-        android:layout_marginRight="322dp"
-        android:layout_marginBottom="182dp"
+        android:layout_width="176dp"
+        android:layout_height="88dp"
+        android:layout_marginEnd="124dp"
+        android:layout_marginBottom="70dp"
         android:gravity="center"
         android:text="@string/play"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startScreenTitle" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/settingsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="320dp"
-        android:layout_marginLeft="320dp"
-        android:layout_marginTop="31dp"
-        android:layout_marginEnd="318dp"
-        android:layout_marginRight="318dp"
-        android:layout_marginBottom="103dp"
+        android:layout_width="176dp"
+        android:layout_height="88dp"
+        android:layout_marginStart="124dp"
+        android:layout_marginBottom="70dp"
         android:gravity="center"
         android:text="@string/settings"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/exitButton"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:text="@string/exit"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playButton" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/playImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="@+id/playButton"
+        app:layout_constraintStart_toStartOf="@+id/playButton"
+        app:layout_constraintTop_toBottomOf="@+id/startScreenTitle"
+        app:srcCompat="@android:drawable/ic_media_play" />
+
+    <ImageView
+        android:id="@+id/settingsImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="@+id/settingsButton"
+        app:layout_constraintStart_toStartOf="@+id/settingsButton"
+        app:layout_constraintTop_toBottomOf="@+id/startScreenTitle"
+        app:srcCompat="@android:drawable/ic_menu_preferences" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

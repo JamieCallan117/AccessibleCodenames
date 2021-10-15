@@ -8,29 +8,37 @@ import android.os.Bundle
 import android.content.Intent
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import androidx.gridlayout.widget.GridLayout
-import java.io.IOException
 import kotlin.system.exitProcess
 
+/**
+ * Starting screen, what is seen when the app is launched. Can go to the main menu, or the settings page from here.
+ */
 class StartScreen : AppCompatActivity() {
-    // TODO: Redesign layout.
     // TODO: On first launch, ask about TTS settings.
-    // TODO: Add an exit button.
     // TODO: Properly implement TTS.
 
     private var quitBox: GridLayout? = null
     private var constraintLayout: ConstraintLayout? = null
     private var playButton: Button? = null
     private var settingsButton: Button? = null
+    private var exitButton: Button? = null
     private var yesButton: Button? = null
     private var noButton: Button? = null
     private var quitText: TextView? = null
     private var startScreenTitle: TextView? = null
+    private var playImage: ImageView? = null
+    private var settingsImage: ImageView? = null
     private var applicationBackgroundColour = -10921639
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
     private var exiting = false
 
+    /**
+     * Sets up the layout for the screen.
+     * Adds references to each View, sets up listeners and calls the updateColours function.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.start_screen)
@@ -38,11 +46,14 @@ class StartScreen : AppCompatActivity() {
         quitBox = findViewById(R.id.quitBox)
         playButton = findViewById(R.id.playButton)
         settingsButton = findViewById(R.id.settingsButton)
+        exitButton = findViewById(R.id.exitButton)
         constraintLayout = findViewById(R.id.saveButton)
         yesButton = findViewById(R.id.yesButton)
         noButton = findViewById(R.id.noButton)
         quitText = findViewById(R.id.quitText)
         startScreenTitle = findViewById(R.id.startScreenTitle)
+        playImage = findViewById(R.id.playImage)
+        settingsImage = findViewById(R.id.settingsImage)
 
         playButton!!.setOnClickListener {
             val i = Intent(this, MainMenu::class.java)
@@ -55,7 +66,12 @@ class StartScreen : AppCompatActivity() {
             startActivity(i)
         }
 
+        exitButton!!.setOnClickListener {
+            onBackPressed()
+        }
+
         yesButton!!.setOnClickListener {
+            //Closes the app.
             finishAffinity()
             exitProcess(0)
         }
@@ -64,6 +80,7 @@ class StartScreen : AppCompatActivity() {
             quitBox!!.visibility = View.INVISIBLE
             playButton!!.visibility = View.VISIBLE
             settingsButton!!.visibility = View.VISIBLE
+            exitButton!!.visibility = View.VISIBLE
             exiting = false
         }
 
@@ -75,22 +92,32 @@ class StartScreen : AppCompatActivity() {
             println(playButton?.text)
             true
         }
+
         settingsButton!!.setOnLongClickListener {
             println(settingsButton?.text)
             true
         }
+
+        exitButton!!.setOnLongClickListener {
+            println(exitButton?.text)
+            true
+        }
+
         yesButton!!.setOnLongClickListener {
             println(yesButton?.text)
             true
         }
+
         noButton!!.setOnLongClickListener {
             println(noButton?.text)
             true
         }
+
         quitText!!.setOnLongClickListener {
             println(quitText?.text)
             true
         }
+
         startScreenTitle!!.setOnLongClickListener {
             println(startScreenTitle?.text)
             true
@@ -99,20 +126,29 @@ class StartScreen : AppCompatActivity() {
         updateColours()
     }
 
+    /**
+     * Opens a box giving the user the choice to close the app
+     * completely or not.
+     */
     override fun onBackPressed() {
         if (exiting) {
             quitBox!!.visibility = View.INVISIBLE
             playButton!!.visibility = View.VISIBLE
             settingsButton!!.visibility = View.VISIBLE
+            exitButton!!.visibility = View.VISIBLE
             exiting = false
         } else {
             quitBox!!.visibility = View.VISIBLE
             playButton!!.visibility = View.INVISIBLE
             settingsButton!!.visibility = View.INVISIBLE
+            exitButton!!.visibility = View.INVISIBLE
             exiting = true
         }
     }
 
+    /**
+     * Applies the chosen colour scheme to the layout.
+     */
     fun updateColours() {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -122,13 +158,19 @@ class StartScreen : AppCompatActivity() {
 
         constraintLayout!!.setBackgroundColor(applicationBackgroundColour)
         quitBox!!.setBackgroundColor(applicationBackgroundColour)
+
         playButton!!.setBackgroundColor(menuButtonsColour)
         settingsButton!!.setBackgroundColor(menuButtonsColour)
+        exitButton!!.setBackgroundColor(menuButtonsColour)
         yesButton!!.setBackgroundColor(menuButtonsColour)
         noButton!!.setBackgroundColor(menuButtonsColour)
+        playImage!!.setColorFilter(menuButtonsColour)
+        settingsImage!!.setColorFilter(menuButtonsColour)
+
         quitText!!.setTextColor(menuTextColour)
         startScreenTitle!!.setTextColor(menuTextColour)
         playButton!!.setTextColor(menuTextColour)
         settingsButton!!.setTextColor(menuTextColour)
+        exitButton!!.setTextColor(menuTextColour)
     }
 }

@@ -7,6 +7,7 @@ import android.widget.TextView
 import android.os.Bundle
 import android.content.Intent
 import android.widget.Button
+import android.widget.ImageView
 import java.io.File
 import java.io.IOException
 
@@ -21,6 +22,9 @@ class MainMenu : AppCompatActivity() {
     private var playOnline: Button? = null
     private var playLocal: Button? = null
     private var settingsButton: Button? = null
+    private var onlineImage: ImageView? = null
+    private var localImage: ImageView? = null
+    private var settingsImage: ImageView? = null
     private var applicationBackgroundColour = -10921639
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
@@ -35,6 +39,9 @@ class MainMenu : AppCompatActivity() {
         playOnline = findViewById(R.id.playOnline)
         playLocal = findViewById(R.id.playLocal)
         settingsButton = findViewById(R.id.settingsButton)
+        onlineImage = findViewById(R.id.onlineImage)
+        localImage = findViewById(R.id.localImage)
+        settingsImage = findViewById(R.id.settingsImage)
 
         backButton?.setOnClickListener {
             val i = Intent(applicationContext, StartScreen::class.java)
@@ -99,6 +106,9 @@ class MainMenu : AppCompatActivity() {
         playOnline?.setBackgroundColor(menuButtonsColour)
         playLocal?.setBackgroundColor(menuButtonsColour)
         settingsButton?.setBackgroundColor(menuButtonsColour)
+        onlineImage?.setColorFilter(menuButtonsColour)
+        localImage?.setColorFilter(menuButtonsColour)
+        settingsImage?.setColorFilter(menuButtonsColour)
 
         mainMenuTitle?.setTextColor(menuTextColour)
         backButton?.setTextColor(menuTextColour)
