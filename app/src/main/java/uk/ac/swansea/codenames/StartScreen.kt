@@ -6,16 +6,18 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import android.widget.TextView
 import android.os.Bundle
 import android.content.Intent
+import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import androidx.gridlayout.widget.GridLayout
+import java.util.*
 import kotlin.system.exitProcess
 
 /**
  * Starting screen, what is seen when the app is launched. Can go to the main menu, or the settings page from here.
  */
-class StartScreen : AppCompatActivity() {
+class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
     // TODO: On first launch, ask about TTS settings.
     // TODO: Properly implement TTS.
 
@@ -34,6 +36,8 @@ class StartScreen : AppCompatActivity() {
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
     private var exiting = false
+
+    private var textToSpeech: TextToSpeech? = null
 
     /**
      * Sets up the layout for the screen.
@@ -54,6 +58,8 @@ class StartScreen : AppCompatActivity() {
         startScreenTitle = findViewById(R.id.startScreenTitle)
         playImage = findViewById(R.id.playImage)
         settingsImage = findViewById(R.id.settingsImage)
+
+        textToSpeech = TextToSpeech(this, this)
 
         playButton!!.setOnClickListener {
             val i = Intent(this, MainMenu::class.java)
@@ -89,7 +95,7 @@ class StartScreen : AppCompatActivity() {
         //for a regular click.
         //For actual TTS it won't print out the word, it'll obviously read it aloud
         playButton!!.setOnLongClickListener {
-            println(playButton?.text)
+            speakOut(playButton?.text.toString())
             true
         }
 
@@ -126,6 +132,13 @@ class StartScreen : AppCompatActivity() {
         updateColours()
     }
 
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            // set UK English as language for tts
+            val result = textToSpeech!!.setLanguage(Locale.UK)
+        }
+    }
+
     /**
      * Opens a box giving the user the choice to close the app
      * completely or not.
@@ -144,6 +157,10 @@ class StartScreen : AppCompatActivity() {
             exitButton!!.visibility = View.INVISIBLE
             exiting = true
         }
+    }
+
+    private fun speakOut(message : String) {
+        textToSpeech!!.speak(message, TextToSpeech.QUEUE_FLUSH, null, "")
     }
 
     /**

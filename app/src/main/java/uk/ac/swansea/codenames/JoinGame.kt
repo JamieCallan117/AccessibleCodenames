@@ -32,8 +32,6 @@ class JoinGame : AppCompatActivity() {
     private var roomNameEdit: EditText? = null
     private var passwordEdit: EditText? = null
     private val publicJoinButtons = ArrayList<Button>()
-    private var preferencesFile = "preferences.txt"
-    private var preferences = arrayOfNulls<String>(14)
     private var applicationBackgroundColour = -10921639
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
@@ -55,24 +53,9 @@ class JoinGame : AppCompatActivity() {
         roomNameEdit = findViewById(R.id.roomNameEdit)
         passwordEdit = findViewById(R.id.passwordEdit)
 
-        var tempPref = ""
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
-        try {
-            val input = assets.open("preferences")
-            val size = input.available()
-            val buffer = ByteArray(size)
-
-            input.read(buffer)
-            input.close()
-
-            tempPref = String(buffer)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        preferences = tempPref.split("\n").toTypedArray()
-
-        username = preferences[8]
+        username = preferences.getString("username", "")
 
         SocketConnection.socket.emit("getAllRooms")
 
@@ -176,10 +159,10 @@ class JoinGame : AppCompatActivity() {
                     val roomLinear = LinearLayout(applicationContext)
                     roomLinear.orientation = LinearLayout.HORIZONTAL
 
-                    val colours = File(preferencesFile).useLines { it.toList() }
+                    val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
-                    menuButtonsColour = colours[6].toInt()
-                    menuTextColour = colours[7].toInt()
+                    menuButtonsColour = preferences.getInt("menuButton", -8164501)
+                    menuTextColour = preferences.getInt("menuText", -1)
 
                     val joinButton = Button(applicationContext)
 

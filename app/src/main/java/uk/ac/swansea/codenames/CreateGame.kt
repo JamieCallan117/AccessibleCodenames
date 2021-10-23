@@ -17,7 +17,7 @@ import java.util.*
 class CreateGame : AppCompatActivity() {
     private var constraintLayout: ConstraintLayout? = null
     private var customWordsLinear: LinearLayout? = null
-    private var privateSwitch: SwitchCompat? = null
+    private var privateSwitch: Switch? = null
     private var roomNameEdit: EditText? = null
     private var passwordEdit: EditText? = null
     private val customWordTexts = arrayOfNulls<TextView>(10)
