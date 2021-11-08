@@ -663,6 +663,7 @@ class OnlineGame : AppCompatActivity() {
                             hintText?.visibility = View.GONE
 
                             if (player?.isSpymaster == true && player?.team == "A") {
+                                hintText?.visibility = View.GONE
                                 editHint?.visibility = View.VISIBLE
                                 hintNumber?.visibility = View.VISIBLE
                                 turnAction?.visibility = View.VISIBLE
@@ -682,6 +683,7 @@ class OnlineGame : AppCompatActivity() {
                             hintText?.visibility = View.GONE
 
                             if (player?.isSpymaster == true && player?.team == "B") {
+                                hintText?.visibility = View.GONE
                                 editHint?.visibility = View.VISIBLE
                                 hintNumber?.visibility = View.VISIBLE
                                 turnAction?.visibility = View.VISIBLE
@@ -696,6 +698,7 @@ class OnlineGame : AppCompatActivity() {
 
                     "Neutral" -> {
                         buttonClicked?.setHasBeenClicked(true)
+                        
                         if (gamePhase === OnlinePhase.TEAM_A) {
                             gamePhase = OnlinePhase.TEAM_B_SPY
                             hintText?.visibility = View.GONE
@@ -707,6 +710,8 @@ class OnlineGame : AppCompatActivity() {
                             }
                         } else {
                             gamePhase = OnlinePhase.TEAM_A_SPY
+                            hintText?.visibility = View.GONE
+
                             if (player?.isSpymaster == true && player?.team == "A") {
                                 editHint?.visibility = View.VISIBLE
                                 hintNumber?.visibility = View.VISIBLE

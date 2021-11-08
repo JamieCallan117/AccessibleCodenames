@@ -105,22 +105,22 @@
 
     <ImageView
         android:id="@+id/playImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="@+id/playButton"
         app:layout_constraintStart_toStartOf="@+id/playButton"
         app:layout_constraintTop_toBottomOf="@+id/startScreenTitle"
-        app:srcCompat="@android:drawable/ic_media_play" />
+        app:srcCompat="@drawable/play" />
 
     <ImageView
         android:id="@+id/settingsImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="@+id/settingsButton"
         app:layout_constraintStart_toStartOf="@+id/settingsButton"
         app:layout_constraintTop_toBottomOf="@+id/startScreenTitle"
-        app:srcCompat="@android:drawable/ic_menu_preferences" />
+        app:srcCompat="@drawable/settings" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

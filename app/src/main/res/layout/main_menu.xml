@@ -32,7 +32,7 @@
         android:layout_width="135dp"
         android:layout_height="65dp"
         android:layout_marginStart="62dp"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="80dp"
         android:gravity="center"
         android:text="@string/online"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -44,7 +44,7 @@
         android:layout_height="65dp"
         android:layout_marginStart="102dp"
         android:layout_marginEnd="101dp"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="80dp"
         android:gravity="center"
         android:text="@string/local"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -56,7 +56,7 @@
         android:layout_width="135dp"
         android:layout_height="65dp"
         android:layout_marginEnd="62dp"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="80dp"
         android:gravity="center"
         android:text="@string/settings"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -75,33 +75,33 @@
 
     <ImageView
         android:id="@+id/onlineImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="12dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/playOnline"
         app:layout_constraintEnd_toEndOf="@+id/playOnline"
         app:layout_constraintStart_toStartOf="@+id/playOnline"
-        app:layout_constraintTop_toBottomOf="@+id/mainMenuTitle"
-        app:srcCompat="@android:drawable/ic_menu_mapmode" />
+        app:srcCompat="@drawable/online" />
 
     <ImageView
         android:id="@+id/settingsImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="12dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/settingsButton"
         app:layout_constraintEnd_toEndOf="@+id/settingsButton"
         app:layout_constraintStart_toStartOf="@+id/settingsButton"
-        app:layout_constraintTop_toBottomOf="@+id/mainMenuTitle"
-        app:srcCompat="@android:drawable/ic_menu_preferences" />
+        app:srcCompat="@drawable/settings" />
 
     <ImageView
         android:id="@+id/localImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="12dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/playLocal"
         app:layout_constraintEnd_toEndOf="@+id/playLocal"
         app:layout_constraintHorizontal_bias="0.457"
         app:layout_constraintStart_toStartOf="@+id/playLocal"
-        app:layout_constraintTop_toBottomOf="@+id/mainMenuTitle"
-        app:srcCompat="@drawable/smartphone" />
+        app:srcCompat="@drawable/local" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

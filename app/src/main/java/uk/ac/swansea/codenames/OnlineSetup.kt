@@ -11,6 +11,8 @@ import android.os.Handler
 import android.view.View
 import android.widget.Button
 import androidx.gridlayout.widget.GridLayout
+import io.socket.client.Socket
+import io.socket.emitter.Emitter
 
 class OnlineSetup : AppCompatActivity() {
     private var constraintLayout: ConstraintLayout? = null
@@ -62,12 +64,12 @@ class OnlineSetup : AppCompatActivity() {
             joinGameButton?.isEnabled = false
             createGameButton?.isEnabled = false
             usernameEdit?.isEnabled = false
-            
+
             val handler = Handler()
-            
+
             handler.postDelayed({
                 messageBox?.visibility = View.INVISIBLE
-                
+
                 if (!SocketConnection.socket.connected()) {
                     messageText?.setText(R.string.unable_server)
                     messageBox?.visibility = View.VISIBLE

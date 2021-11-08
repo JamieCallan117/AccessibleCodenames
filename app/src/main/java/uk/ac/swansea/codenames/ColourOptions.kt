@@ -6,13 +6,13 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.os.Bundle
 import android.content.Intent
+import android.graphics.Color
 import android.widget.Button
 import yuku.ambilwarna.AmbilWarnaDialog
 import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener
 
 class ColourOptions : AppCompatActivity() {
     // TODO: Redesign layout.
-    // TODO: Figure out how to get inverse colours. And then make the button text inverse of the button.
     // TODO: Add confirmation box to the reset button.
     // TODO: Properly implement TTS.
 
@@ -112,25 +112,42 @@ class ColourOptions : AppCompatActivity() {
         menuButtonsColour = preferences.getInt("menuButton", -8164501)
         menuTextColour = preferences.getInt("menuText", -1)
 
+        val teamAColourNegative = Color.rgb(255 - Color.red(teamAColour), 255 - Color.green(teamAColour), 255 - Color.blue(teamAColour))
+        val teamBColourNegative = Color.rgb(255 - Color.red(teamBColour), 255 - Color.green(teamBColour), 255 - Color.blue(teamBColour))
+        val bombColourNegative = Color.rgb(255 - Color.red(bombColour), 255 - Color.green(bombColour), 255 - Color.blue(bombColour))
+        val neutralColourNegative = Color.rgb(255 - Color.red(neutralColour), 255 - Color.green(neutralColour), 255 - Color.blue(neutralColour))
+        val unmodifiedColourNegative = Color.rgb(255 - Color.red(unmodifiedColour), 255 - Color.green(unmodifiedColour), 255 - Color.blue(unmodifiedColour))
+        val applicationBackgroundColourNegative = Color.rgb(255 - Color.red(applicationBackgroundColour), 255 - Color.green(applicationBackgroundColour), 255 - Color.blue(applicationBackgroundColour))
+        val menuButtonsColourNegative = Color.rgb(255 - Color.red(menuButtonsColour), 255 - Color.green(menuButtonsColour), 255 - Color.blue(menuButtonsColour))
+        val menuTextColourNegative = Color.rgb(255 - Color.red(menuTextColour), 255 - Color.green(menuTextColour), 255 - Color.blue(menuTextColour))
+
+        teamAButton?.setTextColor(teamAColourNegative)
         teamAButton?.setBackgroundColor(teamAColour)
 
+        teamBButton?.setTextColor(teamBColourNegative)
         teamBButton?.setBackgroundColor(teamBColour)
 
+        bombSquareButton?.setTextColor(bombColourNegative)
         bombSquareButton?.setBackgroundColor(bombColour)
 
+        neutralSquareButton?.setTextColor(neutralColourNegative)
         neutralSquareButton?.setBackgroundColor(neutralColour)
 
+        unmodifiedSquareButton?.setTextColor(unmodifiedColourNegative)
         unmodifiedSquareButton?.setBackgroundColor(unmodifiedColour)
 
+        applicationBackgroundButton?.setTextColor(applicationBackgroundColourNegative)
         applicationBackgroundButton?.setBackgroundColor(applicationBackgroundColour)
         constraintLayout?.setBackgroundColor(applicationBackgroundColour)
 
+        menuButtonsButton?.setTextColor(menuButtonsColourNegative)
         menuButtonsButton?.setBackgroundColor(menuButtonsColour)
         backButton?.setBackgroundColor(menuButtonsColour)
         resetColoursButton?.setBackgroundColor(menuButtonsColour)
 
+        menuTextButton?.setTextColor(menuTextColourNegative)
         menuTextButton?.setBackgroundColor(menuTextColour)
-        colourTitle?.setBackgroundColor(menuTextColour)
+        colourTitle?.setTextColor(menuTextColour)
     }
 
     private fun openColourPicker(colourToChange: String?) {
