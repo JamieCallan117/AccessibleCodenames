@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.os.Bundle
 import android.content.Intent
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.Button
 import androidx.gridlayout.widget.GridLayout
@@ -65,9 +66,7 @@ class OnlineSetup : AppCompatActivity() {
             createGameButton?.isEnabled = false
             usernameEdit?.isEnabled = false
 
-            val handler = Handler()
-
-            handler.postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 messageBox?.visibility = View.INVISIBLE
 
                 if (!SocketConnection.socket.connected()) {
