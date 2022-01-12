@@ -1,5 +1,7 @@
 package uk.ac.swansea.codenames
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import androidx.appcompat.app.AppCompatActivity
@@ -12,13 +14,26 @@ class LaunchScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.launch_screen)
+
+        textToSpeech = TextToSpeech(this, this)
+
+        val sharedPreferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        if (!sharedPreferences.getBoolean("firstLaunch", true)) {
+            val intent = Intent(applicationContext, StartScreen::class.java)
+            startActivity(intent)
+        }
+
+        val editor = sharedPreferences.edit()
+
+        editor.putBoolean("firstLaunch", false)
+
+        editor.apply()
     }
 
     override fun onInit(status: Int) {
-        //Get language from SharedPreferences
         if (status == TextToSpeech.SUCCESS) {
-            // set UK English as language for tts
-            val result = textToSpeech!!.setLanguage(Locale.UK)
+            textToSpeech!!.language = Locale.UK
         }
     }
 }
