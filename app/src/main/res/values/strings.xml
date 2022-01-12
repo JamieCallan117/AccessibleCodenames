@@ -46,4 +46,13 @@
     <string name="team_b_squares">Team B Squares:</string>
     <string name="starting_team">Starting Team:</string>
     <string name="custom_words">Custom Words:</string>
+    <string name="reset">Reset</string>
+    <string name="menu_text">Menu Text</string>
+    <string name="menu_buttons">Menu Buttons</string>
+    <string name="application_background">Application Background</string>
+    <string name="unmodified_square">Unmodified Square</string>
+    <string name="team_b">Team B</string>
+    <string name="bomb_square">Bomb Square</string>
+    <string name="neutral_square">Neutral Square</string>
+    <string name="team_a">Team A</string>
 </resources>

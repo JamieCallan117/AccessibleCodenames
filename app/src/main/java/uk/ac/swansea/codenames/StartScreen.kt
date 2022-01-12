@@ -133,6 +133,7 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     override fun onInit(status: Int) {
+        //Get language from SharedPreferences
         if (status == TextToSpeech.SUCCESS) {
             // set UK English as language for tts
             val result = textToSpeech!!.setLanguage(Locale.UK)
