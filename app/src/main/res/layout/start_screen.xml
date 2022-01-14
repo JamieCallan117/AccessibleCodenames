@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/saveButton"
+    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".StartScreen">
@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/startScreenTitle">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/quitText"
             android:layout_width="406dp"
             android:layout_height="74dp"
@@ -33,7 +33,7 @@
             app:layout_columnSpan="3"
             app:layout_row="0" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/noButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
             app:layout_column="2"
             app:layout_row="2" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/yesButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
 
     </androidx.gridlayout.widget.GridLayout>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/startScreenTitle"
         android:layout_width="607dp"
         android:layout_height="95dp"
@@ -69,7 +69,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/playButton"
         android:layout_width="176dp"
         android:layout_height="88dp"
@@ -81,7 +81,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/settingsButton"
         android:layout_width="176dp"
         android:layout_height="88dp"
@@ -93,7 +93,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/exitButton"
         android:layout_width="88dp"
         android:layout_height="88dp"

@@ -55,4 +55,7 @@
     <string name="bomb_square">Bomb Square</string>
     <string name="neutral_square">Neutral Square</string>
     <string name="team_a">Team A</string>
+    <string name="welcome_to_codenames">Welcome to Codenames!</string>
+    <string name="tts_info">This application features text-to-speech to assist those who may find it difficult to read elements in the app.\nIt is triggered by performing a held press on any text.\nIf you do not wish to have this feature, you can disable it with the switch below.</string>
+    <string name="continue_btn">Continue</string>
 </resources>

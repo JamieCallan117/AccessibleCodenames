@@ -11,6 +11,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import androidx.gridlayout.widget.GridLayout
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textview.MaterialTextView
 import java.util.*
 import kotlin.system.exitProcess
 
@@ -18,18 +20,17 @@ import kotlin.system.exitProcess
  * Starting screen, what is seen when the app is launched. Can go to the main menu, or the settings page from here.
  */
 class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
-    // TODO: On first launch, ask about TTS settings.
     // TODO: Properly implement TTS.
 
     private var quitBox: GridLayout? = null
     private var constraintLayout: ConstraintLayout? = null
-    private var playButton: Button? = null
-    private var settingsButton: Button? = null
-    private var exitButton: Button? = null
-    private var yesButton: Button? = null
-    private var noButton: Button? = null
-    private var quitText: TextView? = null
-    private var startScreenTitle: TextView? = null
+    private var playButton: MaterialButton? = null
+    private var settingsButton: MaterialButton? = null
+    private var exitButton: MaterialButton? = null
+    private var yesButton: MaterialButton? = null
+    private var noButton: MaterialButton? = null
+    private var quitText: MaterialTextView? = null
+    private var startScreenTitle: MaterialTextView? = null
     private var playImage: ImageView? = null
     private var settingsImage: ImageView? = null
     private var applicationBackgroundColour = -10921639
@@ -51,7 +52,7 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
         playButton = findViewById(R.id.playButton)
         settingsButton = findViewById(R.id.settingsButton)
         exitButton = findViewById(R.id.exitButton)
-        constraintLayout = findViewById(R.id.saveButton)
+        constraintLayout = findViewById(R.id.constraintLayout)
         yesButton = findViewById(R.id.yesButton)
         noButton = findViewById(R.id.noButton)
         quitText = findViewById(R.id.quitText)
@@ -133,10 +134,8 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     override fun onInit(status: Int) {
-        //Get language from SharedPreferences
         if (status == TextToSpeech.SUCCESS) {
-            // set UK English as language for tts
-            val result = textToSpeech!!.setLanguage(Locale.UK)
+            textToSpeech!!.language = Locale.UK
         }
     }
 
@@ -150,12 +149,16 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
             playButton!!.visibility = View.VISIBLE
             settingsButton!!.visibility = View.VISIBLE
             exitButton!!.visibility = View.VISIBLE
+            playImage!!.visibility = View.VISIBLE
+            settingsImage!!.visibility = View.VISIBLE
             exiting = false
         } else {
             quitBox!!.visibility = View.VISIBLE
             playButton!!.visibility = View.INVISIBLE
             settingsButton!!.visibility = View.INVISIBLE
             exitButton!!.visibility = View.INVISIBLE
+            playImage!!.visibility = View.INVISIBLE
+            settingsImage!!.visibility = View.INVISIBLE
             exiting = true
         }
     }
