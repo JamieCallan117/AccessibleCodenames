@@ -30,6 +30,10 @@
             android:screenOrientation="sensorLandscape">
         </activity>
         <activity
+            android:name=".HowToPlay"
+            android:screenOrientation="sensorLandscape">
+        </activity>
+        <activity
             android:name=".Settings"
             android:screenOrientation="sensorLandscape">
         </activity>

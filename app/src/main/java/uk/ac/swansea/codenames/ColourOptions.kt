@@ -7,14 +7,13 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import android.os.Bundle
 import android.content.Intent
 import android.graphics.Color
+import android.speech.tts.TextToSpeech
 import android.widget.Button
 import yuku.ambilwarna.AmbilWarnaDialog
 import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener
+import java.util.*
 
-class ColourOptions : AppCompatActivity() {
-    // TODO: Redesign layout.
-    // TODO: Add confirmation box to the reset button.
-    // TODO: Properly implement TTS.
+class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private var teamAButton: Button? = null
     private var teamBButton: Button? = null
@@ -37,6 +36,7 @@ class ColourOptions : AppCompatActivity() {
     private var applicationBackgroundColour = -10921639
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
+    private var textToSpeech: TextToSpeech? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +54,8 @@ class ColourOptions : AppCompatActivity() {
         resetColoursButton = findViewById(R.id.resetColoursButton)
         colourTitle = findViewById(R.id.colourTitle)
         constraintLayout = findViewById(R.id.constraintLayout)
+
+        textToSpeech = TextToSpeech(this, this)
 
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -93,11 +95,80 @@ class ColourOptions : AppCompatActivity() {
         menuButtonsButton?.setOnClickListener { openColourPicker("menuButton") }
         menuTextButton?.setOnClickListener { openColourPicker("menuText") }
 
+        backButton?.setOnLongClickListener {
+            speakOut(backButton?.text.toString())
+            true
+        }
+
+        resetColoursButton?.setOnLongClickListener {
+            speakOut(resetColoursButton?.text.toString())
+            true
+        }
+
+        colourTitle?.setOnLongClickListener {
+            speakOut(colourTitle?.text.toString())
+            true
+        }
+
+        teamAButton?.setOnLongClickListener {
+            speakOut(teamAButton?.text.toString())
+            true
+        }
+
+        teamBButton?.setOnLongClickListener {
+            speakOut(teamBButton?.text.toString())
+            true
+        }
+
+        bombSquareButton?.setOnLongClickListener {
+            speakOut(bombSquareButton?.text.toString().replace("\n", ""))
+            true
+        }
+
+        neutralSquareButton?.setOnLongClickListener {
+            speakOut(neutralSquareButton?.text.toString().replace("\n", ""))
+            true
+        }
+
+        unmodifiedSquareButton?.setOnLongClickListener {
+            speakOut(unmodifiedSquareButton?.text.toString().replace("\n", ""))
+            true
+        }
+
+        menuButtonsButton?.setOnLongClickListener {
+            speakOut(menuButtonsButton?.text.toString().replace("\n", ""))
+            true
+        }
+
+        menuTextButton?.setOnLongClickListener {
+            speakOut(menuTextButton?.text.toString().replace("\n", ""))
+            true
+        }
+
+        applicationBackgroundButton?.setOnLongClickListener {
+            speakOut(applicationBackgroundButton?.text.toString().replace("\n", ""))
+            true
+        }
+
         updateColours()
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            textToSpeech!!.language = Locale.UK
+        }
     }
 
     override fun onBackPressed() {
         backButton?.performClick()
+    }
+
+    private fun speakOut(message : String) {
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        if (preferences.getBoolean("textToSpeech", true)) {
+            textToSpeech!!.speak(message, TextToSpeech.QUEUE_FLUSH, null, "")
+        }
     }
 
     fun updateColours() {

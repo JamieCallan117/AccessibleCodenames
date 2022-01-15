@@ -6,19 +6,17 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import android.widget.TextView
 import android.os.Bundle
 import android.content.Intent
+import android.speech.tts.TextToSpeech
 import android.widget.Button
 import android.widget.ImageView
-import java.io.File
-import java.io.IOException
+import java.util.*
 
-class MainMenu : AppCompatActivity() {
-    // TODO: Redesign layout.
-    // TODO: Properly implement TTS.
-    // TODO: Add how to play section.
+class MainMenu : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private var constraintLayout: ConstraintLayout? = null
     private var mainMenuTitle: TextView? = null
     private var backButton: Button? = null
+    private var howToPlayButton: Button? = null
     private var playOnline: Button? = null
     private var playLocal: Button? = null
     private var settingsButton: Button? = null
@@ -28,6 +26,7 @@ class MainMenu : AppCompatActivity() {
     private var applicationBackgroundColour = -10921639
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
+    private var textToSpeech: TextToSpeech? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +35,7 @@ class MainMenu : AppCompatActivity() {
         constraintLayout = findViewById(R.id.saveButton)
         mainMenuTitle = findViewById(R.id.mainMenuTitle)
         backButton = findViewById(R.id.backButton)
+        howToPlayButton = findViewById(R.id.howToPlayButton)
         playOnline = findViewById(R.id.playOnline)
         playLocal = findViewById(R.id.playLocal)
         settingsButton = findViewById(R.id.settingsButton)
@@ -43,8 +43,15 @@ class MainMenu : AppCompatActivity() {
         localImage = findViewById(R.id.localImage)
         settingsImage = findViewById(R.id.settingsImage)
 
+        textToSpeech = TextToSpeech(this, this)
+
         backButton?.setOnClickListener {
             val i = Intent(applicationContext, StartScreen::class.java)
+            startActivity(i)
+        }
+
+        howToPlayButton?.setOnClickListener {
+            val i = Intent(applicationContext, HowToPlay::class.java)
             startActivity(i)
         }
 
@@ -66,31 +73,54 @@ class MainMenu : AppCompatActivity() {
         }
 
         mainMenuTitle?.setOnLongClickListener {
-            println(mainMenuTitle?.text)
+            speakOut(mainMenuTitle?.text.toString())
             true
         }
+
         backButton?.setOnLongClickListener {
-            println(backButton?.text)
+            speakOut(backButton?.text.toString())
             true
         }
+
+        howToPlayButton?.setOnLongClickListener {
+            speakOut(howToPlayButton?.text.toString().replace("\n", ""))
+            true
+        }
+
         playOnline?.setOnLongClickListener {
-            println(playOnline?.text)
+            speakOut(playOnline?.text.toString())
             true
         }
+
         playLocal?.setOnLongClickListener {
-            println(playLocal?.text)
+            speakOut(playLocal?.text.toString())
             true
         }
+
         settingsButton?.setOnLongClickListener {
-            println(settingsButton?.text)
+            speakOut(settingsButton?.text.toString())
             true
         }
 
         updateColours()
     }
 
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            textToSpeech!!.language = Locale.UK
+        }
+    }
+
     override fun onBackPressed() {
         backButton?.performClick()
+    }
+
+    private fun speakOut(message : String) {
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        if (preferences.getBoolean("textToSpeech", true)) {
+            textToSpeech!!.speak(message, TextToSpeech.QUEUE_FLUSH, null, "")
+        }
     }
 
     fun updateColours() {
@@ -103,6 +133,7 @@ class MainMenu : AppCompatActivity() {
         constraintLayout?.setBackgroundColor(applicationBackgroundColour)
 
         backButton?.setBackgroundColor(menuButtonsColour)
+        howToPlayButton?.setBackgroundColor(menuButtonsColour)
         playOnline?.setBackgroundColor(menuButtonsColour)
         playLocal?.setBackgroundColor(menuButtonsColour)
         settingsButton?.setBackgroundColor(menuButtonsColour)
@@ -112,6 +143,7 @@ class MainMenu : AppCompatActivity() {
 
         mainMenuTitle?.setTextColor(menuTextColour)
         backButton?.setTextColor(menuTextColour)
+        howToPlayButton?.setTextColor(menuTextColour)
         playOnline?.setTextColor(menuTextColour)
         playLocal?.setTextColor(menuTextColour)
         settingsButton?.setTextColor(menuTextColour)

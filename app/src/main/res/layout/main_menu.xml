@@ -7,17 +7,12 @@
     android:layout_height="match_parent"
     tools:context=".MainMenu">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/mainMenuTitle"
-        android:layout_width="607dp"
-        android:layout_height="95dp"
-        android:layout_marginStart="62dp"
-        android:layout_marginLeft="62dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:layout_marginEnd="62dp"
-        android:layout_marginRight="62dp"
         android:layout_marginBottom="268dp"
-        android:ems="10"
         android:fontFamily="@font/title_font"
         android:gravity="center_horizontal"
         android:text="@string/app_name"
@@ -27,50 +22,78 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/playOnline"
-        android:layout_width="135dp"
-        android:layout_height="65dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="62dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="60dp"
         android:gravity="center"
+        android:paddingLeft="45dp"
+        android:paddingTop="25dp"
+        android:paddingRight="45dp"
+        android:paddingBottom="25dp"
         android:text="@string/online"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/playLocal"
-        android:layout_width="135dp"
-        android:layout_height="65dp"
-        android:layout_marginStart="102dp"
-        android:layout_marginEnd="101dp"
-        android:layout_marginBottom="80dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
         android:gravity="center"
+        android:paddingLeft="50dp"
+        android:paddingTop="25dp"
+        android:paddingRight="50dp"
+        android:paddingBottom="25dp"
         android:text="@string/local"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/settingsButton"
         app:layout_constraintStart_toEndOf="@+id/playOnline" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/settingsButton"
-        android:layout_width="135dp"
-        android:layout_height="65dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="62dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="60dp"
         android:gravity="center"
+        android:paddingLeft="32dp"
+        android:paddingTop="25dp"
+        android:paddingRight="33dp"
+        android:paddingBottom="25dp"
         android:text="@string/settings"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/backButton"
-        android:layout_width="88dp"
-        android:layout_height="88dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
         android:layout_marginTop="1dp"
         android:gravity="center"
+        android:paddingTop="28dp"
+        android:paddingBottom="28dp"
         android:text="@string/back"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/howToPlayButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="1dp"
+        android:gravity="center"
+        android:paddingTop="28dp"
+        android:paddingBottom="28dp"
+        android:text="@string/how_to_play"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
