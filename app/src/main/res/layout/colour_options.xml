@@ -7,17 +7,12 @@
     android:layout_height="match_parent"
     tools:context=".ColourOptions">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/colourTitle"
-        android:layout_width="607dp"
-        android:layout_height="95dp"
-        android:layout_marginStart="62dp"
-        android:layout_marginLeft="62dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:layout_marginEnd="62dp"
-        android:layout_marginRight="62dp"
         android:layout_marginBottom="268dp"
-        android:ems="10"
         android:fontFamily="@font/title_font"
         android:gravity="center_horizontal"
         android:text="@string/colours"
@@ -27,27 +22,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/resetColoursButton"
-        android:layout_width="88dp"
-        android:layout_height="88dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
         android:layout_marginEnd="1dp"
+        android:paddingTop="28dp"
+        android:paddingBottom="28dp"
         android:text="@string/reset"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/backButton"
-        android:layout_width="88dp"
-        android:layout_height="88dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
         android:layout_marginTop="1dp"
+        android:paddingTop="28dp"
+        android:paddingBottom="28dp"
         android:text="@string/back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/teamAButton"
         android:layout_width="137dp"
         android:layout_height="95dp"
@@ -63,7 +62,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/colourTitle" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/neutralSquareButton"
         android:layout_width="137dp"
         android:layout_height="95dp"
@@ -79,7 +78,7 @@
         app:layout_constraintStart_toEndOf="@+id/bombSquareButton"
         app:layout_constraintTop_toBottomOf="@+id/colourTitle" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/bombSquareButton"
         android:layout_width="137dp"
         android:layout_height="95dp"
@@ -95,7 +94,7 @@
         app:layout_constraintStart_toEndOf="@+id/teamBButton"
         app:layout_constraintTop_toBottomOf="@+id/colourTitle" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/teamBButton"
         android:layout_width="137dp"
         android:layout_height="95dp"
@@ -111,7 +110,7 @@
         app:layout_constraintStart_toEndOf="@+id/teamAButton"
         app:layout_constraintTop_toBottomOf="@+id/colourTitle" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/unmodifiedSquareButton"
         android:layout_width="137dp"
         android:layout_height="95dp"
@@ -127,7 +126,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/teamAButton" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/applicationBackgroundButton"
         android:layout_width="137dp"
         android:layout_height="95dp"
@@ -143,7 +142,7 @@
         app:layout_constraintStart_toEndOf="@+id/unmodifiedSquareButton"
         app:layout_constraintTop_toBottomOf="@+id/teamBButton" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/menuButtonsButton"
         android:layout_width="137dp"
         android:layout_height="95dp"
@@ -159,7 +158,7 @@
         app:layout_constraintStart_toEndOf="@+id/applicationBackgroundButton"
         app:layout_constraintTop_toBottomOf="@+id/bombSquareButton" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/menuTextButton"
         android:layout_width="137dp"
         android:layout_height="95dp"

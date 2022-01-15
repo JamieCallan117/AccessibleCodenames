@@ -9,57 +9,77 @@
 
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/quitBox"
-        android:layout_width="405dp"
-        android:layout_height="205dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="149dp"
+        android:layout_marginBottom="100dp"
         android:background="@drawable/background"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startScreenTitle">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/quitText"
-            android:layout_width="406dp"
-            android:layout_height="74dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/general_font"
             android:gravity="center|top"
             android:text="@string/are_you_sure_you_want_to_quit"
             android:textColor="#000000"
-            android:textSize="28sp"
+            android:textSize="40sp"
             app:layout_column="0"
-            app:layout_columnSpan="3"
+            app:layout_columnSpan="5"
             app:layout_row="0" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            app:layout_column="0"
+            app:layout_row="1"
+            app:layout_rowWeight="60" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/noButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="35dp"
+            android:paddingTop="25dp"
+            android:paddingRight="35dp"
+            android:paddingBottom="25dp"
             android:text="@string/no"
-            app:layout_column="2"
+            android:textSize="20sp"
+            app:layout_column="3"
+            app:layout_columnSpan="2"
             app:layout_row="2" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/yesButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="35dp"
+            android:paddingTop="25dp"
+            android:paddingRight="35dp"
+            android:paddingBottom="25dp"
             android:text="@string/yes"
+            android:textSize="20sp"
             app:layout_column="0"
+            app:layout_columnSpan="2"
             app:layout_row="2" />
 
     </androidx.gridlayout.widget.GridLayout>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/startScreenTitle"
-        android:layout_width="607dp"
-        android:layout_height="95dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="62dp"
         android:layout_marginTop="48dp"
         android:layout_marginEnd="62dp"
         android:layout_marginBottom="268dp"
-        android:ems="10"
         android:fontFamily="@font/title_font"
         android:gravity="center_horizontal"
         android:text="@string/app_name"
@@ -71,34 +91,44 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/playButton"
-        android:layout_width="176dp"
-        android:layout_height="88dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="124dp"
         android:layout_marginBottom="70dp"
         android:gravity="center"
+        android:paddingLeft="50dp"
+        android:paddingTop="25dp"
+        android:paddingRight="50dp"
+        android:paddingBottom="25dp"
         android:text="@string/play"
-        android:visibility="visible"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/settingsButton"
-        android:layout_width="176dp"
-        android:layout_height="88dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="124dp"
         android:layout_marginBottom="70dp"
         android:gravity="center"
+        android:paddingLeft="34dp"
+        android:paddingTop="25dp"
+        android:paddingRight="35dp"
+        android:paddingBottom="25dp"
         android:text="@string/settings"
-        android:visibility="visible"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/exitButton"
-        android:layout_width="88dp"
-        android:layout_height="88dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
         android:layout_marginTop="1dp"
+        android:paddingTop="28dp"
+        android:paddingBottom="28dp"
         android:text="@string/exit"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -109,6 +139,7 @@
         android:layout_height="90dp"
         android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="@+id/playButton"
+        app:layout_constraintHorizontal_weight=".10"
         app:layout_constraintStart_toStartOf="@+id/playButton"
         app:layout_constraintTop_toBottomOf="@+id/startScreenTitle"
         app:srcCompat="@drawable/play" />

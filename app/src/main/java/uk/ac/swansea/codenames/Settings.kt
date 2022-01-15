@@ -4,35 +4,34 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.os.Bundle
-import android.widget.SeekBar.OnSeekBarChangeListener
 import android.content.Intent
-import android.widget.*
+import android.speech.tts.TextToSpeech
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.slider.Slider
+import com.google.android.material.switchmaterial.SwitchMaterial
+import com.google.android.material.textview.MaterialTextView
+import java.util.*
 
-class Settings : AppCompatActivity() {
-    // TODO: Redesign layout.
+class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private var constraintLayout: ConstraintLayout? = null
-    private var backButton: Button? = null
-    private var colourButton: Button? = null
-    private var settingsTitle: TextView? = null
-    private var musicVolumeText: TextView? = null
-    private var soundFXVolumeText: TextView? = null
-    private var vibrationText: TextView? = null
-    private var contrastText: TextView? = null
-    private var textToSpeechText: TextView? = null
-    private var musicVolumeSeek: SeekBar? = null
-    private var soundFXVolumeSeek: SeekBar? = null
-    private var vibrationCheck: CheckBox? = null
-    private var contrastCheck: CheckBox? = null
-    private var textToSpeechCheck: CheckBox? = null
+    private var backButton: MaterialButton? = null
+    private var colourButton: MaterialButton? = null
+    private var settingsTitle: MaterialTextView? = null
+    private var musicVolumeText: MaterialTextView? = null
+    private var soundFXVolumeText: MaterialTextView? = null
+    private var musicVolumeSlider: Slider? = null
+    private var soundFXVolumeSlider: Slider? = null
+    private var vibrationSwitch: SwitchMaterial? = null
+    private var ttsSwitch: SwitchMaterial? = null
     private var musicVolume = 0
     private var soundFXVolume = 0
     private var applicationBackgroundColour = -10921639
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
     private var vibration = false
-    private var contrast = false
-    private var textToSpeech = false
+    private var textToSpeechBool = false
+    private var textToSpeech: TextToSpeech? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,16 +41,14 @@ class Settings : AppCompatActivity() {
         settingsTitle = findViewById(R.id.settingsTitle)
         musicVolumeText = findViewById(R.id.musicVolumeText)
         soundFXVolumeText = findViewById(R.id.soundFXVolumeText)
-        vibrationText = findViewById(R.id.vibrationText)
-        contrastText = findViewById(R.id.contrastText)
-        textToSpeechText = findViewById(R.id.textToSpeechText)
         backButton = findViewById(R.id.backButton)
         colourButton = findViewById(R.id.colourButton)
-        musicVolumeSeek = findViewById(R.id.musicVolumeSeek)
-        soundFXVolumeSeek = findViewById(R.id.soundFXVolumeSeek)
-        vibrationCheck = findViewById(R.id.vibrationCheck)
-        contrastCheck = findViewById(R.id.contrastCheck)
-        textToSpeechCheck = findViewById(R.id.textToSpeechCheck)
+        musicVolumeSlider = findViewById(R.id.musicVolumeSlider)
+        soundFXVolumeSlider = findViewById(R.id.soundFXVolumeSlider)
+        vibrationSwitch = findViewById(R.id.vibrationSwitch)
+        ttsSwitch = findViewById(R.id.ttsSwitch)
+
+        textToSpeech = TextToSpeech(this, this)
 
         updateColours()
 
@@ -59,61 +56,45 @@ class Settings : AppCompatActivity() {
 
         musicVolume = preferences.getInt("musicVolume", 100)
 
-        musicVolumeSeek?.progress = musicVolume
+        musicVolumeSlider?.value = musicVolume.toFloat()
 
-        musicVolumeSeek?.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                val editor = preferences!!.edit()
-                editor.putInt("musicVolume", progress)
-                editor.apply()
-            }
+        musicVolumeSlider?.addOnChangeListener { _, value, _ ->
+            val editor = preferences!!.edit()
+            editor.putInt("musicVolume", value.toInt())
+            editor.apply()
+        }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar) {}
-        })
+        musicVolumeSlider?.setLabelFormatter { value -> "${value.toInt()}%" }
 
         soundFXVolume = preferences.getInt("soundFXVolume", 100)
 
-        soundFXVolumeSeek?.progress = soundFXVolume
+        soundFXVolumeSlider?.value = soundFXVolume.toFloat()
 
-        soundFXVolumeSeek?.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                val editor = preferences!!.edit()
-                editor.putInt("soundFXVolume", progress)
-                editor.apply()
-            }
+        soundFXVolumeSlider?.addOnChangeListener { _, value, _ ->
+            val editor = preferences!!.edit()
+            editor.putInt("soundFXVolume", value.toInt())
+            editor.apply()
+        }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar) {}
-        })
+        soundFXVolumeSlider?.setLabelFormatter { value -> "${value.toInt()}%" }
 
         vibration = preferences.getBoolean("vibration", true)
 
-        vibrationCheck?.isChecked = vibration
+        vibrationSwitch?.isChecked = vibration
 
-        vibrationCheck?.setOnCheckedChangeListener { _, _ ->
+        vibrationSwitch?.setOnCheckedChangeListener { _, _ ->
             val editor = preferences!!.edit()
-            editor.putBoolean("vibration", vibrationCheck!!.isChecked)
+            editor.putBoolean("vibration", vibrationSwitch!!.isChecked)
             editor.apply()
         }
 
-        contrast = preferences.getBoolean("contrast", false)
+        textToSpeechBool = preferences.getBoolean("textToSpeech", true)
 
-        contrastCheck?.isChecked = contrast
+        ttsSwitch?.isChecked = textToSpeechBool
 
-        contrastCheck?.setOnCheckedChangeListener { _, _ ->
+        ttsSwitch?.setOnCheckedChangeListener { _, _ ->
             val editor = preferences!!.edit()
-            editor.putBoolean("contrast", contrastCheck!!.isChecked)
-            editor.apply()
-        }
-
-        textToSpeech = preferences.getBoolean("textToSpeech", true)
-
-        textToSpeechCheck?.isChecked = textToSpeech
-
-        textToSpeechCheck?.setOnCheckedChangeListener { _, _ ->
-            val editor = preferences!!.edit()
-            editor.putBoolean("textToSpeech", textToSpeechCheck!!.isChecked)
+            editor.putBoolean("textToSpeech", ttsSwitch!!.isChecked)
             editor.apply()
         }
 
@@ -140,10 +121,69 @@ class Settings : AppCompatActivity() {
 
             startActivity(i)
         }
+
+        backButton?.setOnLongClickListener {
+            speakOut(backButton?.text.toString())
+            true
+        }
+
+        settingsTitle?.setOnLongClickListener {
+            speakOut(settingsTitle?.text.toString())
+            true
+        }
+
+        musicVolumeText?.setOnLongClickListener {
+            speakOut(musicVolumeText?.text.toString() + ", ${musicVolumeSlider?.value?.toInt().toString()}%")
+            true
+        }
+
+        soundFXVolumeText?.setOnLongClickListener {
+            speakOut(soundFXVolumeText?.text.toString() + ", ${soundFXVolumeSlider?.value?.toInt().toString()}%")
+            true
+        }
+
+        ttsSwitch?.setOnLongClickListener {
+            if (ttsSwitch!!.isChecked) {
+                speakOut(ttsSwitch!!.text.toString() + ", enabled.")
+            } else {
+                speakOut(ttsSwitch!!.text.toString() + ", disabled.")
+            }
+
+            true
+        }
+
+        vibrationSwitch?.setOnLongClickListener {
+            if (vibrationSwitch!!.isChecked) {
+                speakOut(vibrationSwitch!!.text.toString() + ", enabled.")
+            } else {
+                speakOut(vibrationSwitch!!.text.toString() + ", disabled.")
+            }
+
+            true
+        }
+
+        colourButton?.setOnLongClickListener {
+            speakOut(colourButton?.text.toString())
+            true
+        }
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            textToSpeech!!.language = Locale.UK
+        }
     }
 
     override fun onBackPressed() {
         backButton?.performClick()
+    }
+
+    private fun speakOut(message : String) {
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        if (preferences.getBoolean("textToSpeech", true)) {
+            textToSpeech!!.speak(message, TextToSpeech.QUEUE_FLUSH, null, "")
+        }
     }
 
     fun updateColours() {
@@ -161,10 +201,9 @@ class Settings : AppCompatActivity() {
         settingsTitle?.setTextColor(menuTextColour)
         musicVolumeText?.setTextColor(menuTextColour)
         soundFXVolumeText?.setTextColor(menuTextColour)
-        vibrationText?.setTextColor(menuTextColour)
-        contrastText?.setTextColor(menuTextColour)
-        textToSpeechText?.setTextColor(menuTextColour)
         backButton?.setTextColor(menuTextColour)
         colourButton?.setTextColor(menuTextColour)
+        ttsSwitch?.setTextColor(menuTextColour)
+        vibrationSwitch?.setTextColor(menuTextColour)
     }
 }

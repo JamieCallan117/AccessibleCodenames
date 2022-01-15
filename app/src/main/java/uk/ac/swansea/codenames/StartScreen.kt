@@ -3,12 +3,10 @@ package uk.ac.swansea.codenames
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import android.widget.TextView
 import android.os.Bundle
 import android.content.Intent
 import android.speech.tts.TextToSpeech
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import androidx.gridlayout.widget.GridLayout
 import com.google.android.material.button.MaterialButton
@@ -20,7 +18,6 @@ import kotlin.system.exitProcess
  * Starting screen, what is seen when the app is launched. Can go to the main menu, or the settings page from here.
  */
 class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
-    // TODO: Properly implement TTS.
 
     private var quitBox: GridLayout? = null
     private var constraintLayout: ConstraintLayout? = null
@@ -37,7 +34,6 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
     private var exiting = false
-
     private var textToSpeech: TextToSpeech? = null
 
     /**
@@ -88,6 +84,9 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
             playButton!!.visibility = View.VISIBLE
             settingsButton!!.visibility = View.VISIBLE
             exitButton!!.visibility = View.VISIBLE
+            playImage!!.visibility = View.VISIBLE
+            settingsImage!!.visibility = View.VISIBLE
+            startScreenTitle!!.visibility = View.VISIBLE
             exiting = false
         }
 
@@ -101,32 +100,32 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         settingsButton!!.setOnLongClickListener {
-            println(settingsButton?.text)
+            speakOut(settingsButton?.text.toString())
             true
         }
 
         exitButton!!.setOnLongClickListener {
-            println(exitButton?.text)
+            speakOut(exitButton?.text.toString())
             true
         }
 
         yesButton!!.setOnLongClickListener {
-            println(yesButton?.text)
+            speakOut(yesButton?.text.toString())
             true
         }
 
         noButton!!.setOnLongClickListener {
-            println(noButton?.text)
+            speakOut(noButton?.text.toString())
             true
         }
 
         quitText!!.setOnLongClickListener {
-            println(quitText?.text)
+            speakOut(quitText?.text.toString().replace("\n",""))
             true
         }
 
         startScreenTitle!!.setOnLongClickListener {
-            println(startScreenTitle?.text)
+            speakOut(startScreenTitle?.text.toString())
             true
         }
 
@@ -151,6 +150,7 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
             exitButton!!.visibility = View.VISIBLE
             playImage!!.visibility = View.VISIBLE
             settingsImage!!.visibility = View.VISIBLE
+            startScreenTitle!!.visibility = View.VISIBLE
             exiting = false
         } else {
             quitBox!!.visibility = View.VISIBLE
@@ -159,12 +159,17 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
             exitButton!!.visibility = View.INVISIBLE
             playImage!!.visibility = View.INVISIBLE
             settingsImage!!.visibility = View.INVISIBLE
+            startScreenTitle!!.visibility = View.INVISIBLE
             exiting = true
         }
     }
 
     private fun speakOut(message : String) {
-        textToSpeech!!.speak(message, TextToSpeech.QUEUE_FLUSH, null, "")
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        if (preferences.getBoolean("textToSpeech", true)) {
+            textToSpeech!!.speak(message, TextToSpeech.QUEUE_FLUSH, null, "")
+        }
     }
 
     /**

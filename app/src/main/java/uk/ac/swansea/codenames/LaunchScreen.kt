@@ -104,8 +104,11 @@ class LaunchScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun speakOut(message : String) {
-        textToSpeech!!.speak(message, TextToSpeech.QUEUE_FLUSH, null, "")
-        println(message)
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        if (preferences.getBoolean("textToSpeech", true)) {
+            textToSpeech!!.speak(message, TextToSpeech.QUEUE_FLUSH, null, "")
+        }
     }
 
     private fun updateColours() {
