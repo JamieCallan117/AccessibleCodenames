@@ -9,28 +9,32 @@ import android.os.Bundle
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.Button
 import androidx.gridlayout.widget.GridLayout
-import io.socket.client.Socket
-import io.socket.emitter.Emitter
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textview.MaterialTextView
+import java.util.*
 
-class OnlineSetup : AppCompatActivity() {
+class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var constraintLayout: ConstraintLayout? = null
     private var messageBox: GridLayout? = null
-    private var gameSetupTitle: TextView? = null
-    private var gameSetupSubtitle: TextView? = null
-    private var messageText: TextView? = null
-    private var usernameText: TextView? = null
-    private var usernameEdit: EditText? = null
-    private var backButton: Button? = null
-    private var joinGameButton: Button? = null
-    private var createGameButton: Button? = null
-    private var okButton: Button? = null
+    private var gameSetupTitle: MaterialTextView? = null
+    private var gameSetupSubtitle: MaterialTextView? = null
+    private var messageText: MaterialTextView? = null
+    private var usernameText: MaterialTextView? = null
+    private var usernameEdit: TextInputEditText? = null
+    private var backButton: MaterialButton? = null
+    private var joinGameButton: MaterialButton? = null
+    private var createGameButton: MaterialButton? = null
+    private var okButton: MaterialButton? = null
     private var applicationBackgroundColour = -10921639
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
     private var connectingBoxOpen = true
+    private var textToSpeech: TextToSpeech? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +51,8 @@ class OnlineSetup : AppCompatActivity() {
         messageBox = findViewById(R.id.messageBox)
         messageText = findViewById(R.id.messageText)
         okButton = findViewById(R.id.okButton)
+
+        textToSpeech = TextToSpeech(this, this)
 
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -88,47 +94,98 @@ class OnlineSetup : AppCompatActivity() {
             startActivity(i)
         }
 
+        backButton?.setOnClickListener {
+            val editor = preferences!!.edit()
+
+            editor.putString("username", usernameEdit?.text.toString())
+            editor.apply()
+
+            val i = Intent(this, MainMenu::class.java)
+            startActivity(i)
+        }
+
+        createGameButton?.setOnClickListener {
+            val editor = preferences!!.edit()
+
+            editor.putString("username", usernameEdit?.text.toString())
+            editor.apply()
+
+            val i = Intent(this, CreateGame::class.java)
+            i.putExtra("hasCustomSettings", false)
+            startActivity(i)
+        }
+
+        joinGameButton?.setOnClickListener {
+            val editor = preferences!!.edit()
+
+            editor.putString("username", usernameEdit?.text.toString())
+            editor.apply()
+
+            val i = Intent(this, JoinGame::class.java)
+            startActivity(i)
+        }
+
+        backButton?.setOnLongClickListener {
+            speakOut(backButton?.text.toString())
+            true
+        }
+
+        gameSetupTitle?.setOnLongClickListener {
+            speakOut(gameSetupTitle?.text.toString() + ", " + gameSetupSubtitle?.text.toString())
+            true
+        }
+
+        gameSetupSubtitle?.setOnLongClickListener {
+            speakOut(gameSetupTitle?.text.toString() + ", " + gameSetupSubtitle?.text.toString())
+            true
+        }
+
+        joinGameButton?.setOnLongClickListener {
+            speakOut(joinGameButton?.text.toString())
+            true
+        }
+
+        createGameButton?.setOnLongClickListener {
+            speakOut(createGameButton?.text.toString())
+            true
+        }
+
+        usernameText?.setOnLongClickListener {
+            speakOut(usernameText?.text.toString())
+            true
+        }
+
+        messageText?.setOnLongClickListener {
+            speakOut(messageText?.text.toString())
+            true
+        }
+
+        okButton?.setOnLongClickListener {
+            speakOut(okButton?.text.toString())
+            true
+        }
+
         updateColours()
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            textToSpeech!!.language = Locale.UK
+        }
     }
 
     override fun onBackPressed() {
         if (!connectingBoxOpen) {
-            backButton(window.decorView)
+            backButton?.performClick()
         }
     }
 
-    fun backButton(view: View) {
+    private fun speakOut(message : String) {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
 
-        editor.putString("username", usernameEdit?.text.toString())
-        editor.apply()
-
-        val i = Intent(view.context, MainMenu::class.java)
-        startActivity(i)
-    }
-
-    fun createGame(view: View) {
-        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
-
-        editor.putString("username", usernameEdit?.text.toString())
-        editor.apply()
-
-        val i = Intent(view.context, CreateGame::class.java)
-        i.putExtra("hasCustomSettings", false)
-        startActivity(i)
-    }
-
-    fun joinGame(view: View) {
-        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
-        val editor = preferences!!.edit()
-
-        editor.putString("username", usernameEdit?.text.toString())
-        editor.apply()
-
-        val i = Intent(view.context, JoinGame::class.java)
-        startActivity(i)
+        if (preferences.getBoolean("textToSpeech", true)) {
+            textToSpeech!!.speak(message, TextToSpeech.QUEUE_FLUSH, null, "")
+        }
     }
 
     fun updateColours() {

@@ -19,60 +19,54 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/messageText"
             android:layout_width="match_parent"
-            android:layout_height="87dp"
+            android:layout_height="wrap_content"
             android:fontFamily="@font/general_font"
             android:gravity="center"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
             android:text="@string/unable_server"
             android:textSize="20sp"
             app:layout_column="0"
             app:layout_columnSpan="3"
             app:layout_row="0" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/okButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="24dp"
+            android:paddingTop="12dp"
+            android:paddingRight="24dp"
+            android:paddingBottom="12dp"
             android:text="@string/ok"
             app:layout_column="1"
-            app:layout_columnWeight="1"
+            app:layout_columnSpan="3"
             app:layout_gravity="center_horizontal|center_vertical"
             app:layout_row="1" />
 
     </androidx.gridlayout.widget.GridLayout>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="627dp"
-        android:layout_marginRight="627dp"
-        android:layout_marginBottom="353dp"
-        android:onClick="backButton"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:paddingTop="28dp"
+        android:paddingBottom="28dp"
         android:text="@string/back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/gameSetupTitle"
-        android:layout_width="607dp"
-        android:layout_height="95dp"
-        android:layout_marginStart="62dp"
-        android:layout_marginLeft="62dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:layout_marginEnd="62dp"
-        android:layout_marginRight="62dp"
         android:layout_marginBottom="268dp"
-        android:ems="10"
         android:fontFamily="@font/title_font"
         android:gravity="center_horizontal"
         android:text="@string/app_name"
@@ -82,79 +76,83 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/gameSetupSubtitle"
-        android:layout_width="175dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="17dp"
-        android:layout_marginTop="17dp"
-        android:layout_marginEnd="36dp"
-        android:layout_marginBottom="241dp"
-        android:ems="10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="450dp"
+        android:layout_marginTop="60dp"
         android:fontFamily="@font/title_font"
         android:gravity="center_horizontal"
         android:text="@string/online"
         android:textSize="36sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.951"
-        app:layout_constraintStart_toEndOf="@+id/gameSetupTitle"
-        app:layout_constraintTop_toBottomOf="@+id/gameSetupTitle"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintStart_toStartOf="@id/gameSetupTitle"
+        app:layout_constraintTop_toTopOf="@id/gameSetupTitle" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/joinGameButton"
-        android:layout_width="144dp"
-        android:layout_height="144dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="104dp"
         android:layout_marginTop="27dp"
         android:layout_marginEnd="80dp"
         android:layout_marginBottom="97dp"
-        android:onClick="joinGame"
+        android:paddingLeft="27dp"
+        android:paddingTop="54dp"
+        android:paddingRight="27dp"
+        android:paddingBottom="55dp"
         android:text="@string/join_game"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/createGameButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gameSetupTitle" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/createGameButton"
-        android:layout_width="144dp"
-        android:layout_height="144dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="80dp"
+        android:layout_marginTop="27dp"
         android:layout_marginEnd="104dp"
         android:layout_marginBottom="97dp"
-        android:onClick="createGame"
+        android:paddingTop="54dp"
+        android:paddingBottom="55dp"
         android:text="@string/create_game"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/joinGameButton"
-        app:layout_constraintTop_toBottomOf="@+id/gameSetupSubtitle" />
+        app:layout_constraintTop_toBottomOf="@id/gameSetupTitle" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/usernameText"
-        android:layout_width="175dp"
-        android:layout_height="44dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="210dp"
         android:layout_marginBottom="16dp"
         android:fontFamily="@font/general_font"
         android:gravity="center"
-        android:text="Username:"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:text="@string/username"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/usernameEdit"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/usernameEdit"
         android:layout_width="wrap_content"
-        android:layout_height="44dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="150dp"
         android:layout_marginBottom="16dp"
         android:ems="10"
-        android:hint="Enter username.."
+        android:hint="@string/enter_username"
+        android:imeOptions="actionDone"
         android:inputType="textPersonName"
         android:textSize="18sp"
-        android:imeOptions="actionDone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/usernameText" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/usernameText"
+        tools:ignore="TouchTargetSizeCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
