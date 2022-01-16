@@ -23,7 +23,7 @@ class LocalGame : AppCompatActivity() {
     private var neutralSquaresCount = 7
     private var teamASquaresCount = 9
     private var teamBSquaresCount = 8
-    private var startingTeam = 1
+    private var startingTeam = "A"
     private var messageBoxOpen = false
     private var ttsOpen = false
     private var customWords: ArrayList<String>? = null
@@ -139,7 +139,7 @@ class LocalGame : AppCompatActivity() {
             neutralSquaresCount = intent.getIntExtra("neutralSquares", 7)
             teamASquaresCount = intent.getIntExtra("teamASquares", 9)
             teamBSquaresCount = intent.getIntExtra("teamBSquares", 8)
-            startingTeam = intent.getIntExtra("startingTeam", 1)
+            startingTeam = intent.getStringExtra("startingTeam").toString()
             customWords = intent.getStringArrayListExtra("customWords")
         }
 
@@ -148,12 +148,12 @@ class LocalGame : AppCompatActivity() {
         teamAWords = ArrayList(teamASquaresCount)
         teamBWords = ArrayList(teamBSquaresCount)
 
-        if (startingTeam == 1) {
-            gamePhase = LocalPhase.TEAM_A_INTERMISSION
-            teamACount?.paintFlags = teamACount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
-        } else {
+        if (startingTeam == "B") {
             gamePhase = LocalPhase.TEAM_B_INTERMISSION
             teamBCount?.paintFlags = teamBCount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
+        } else {
+            gamePhase = LocalPhase.TEAM_A_INTERMISSION
+            teamACount?.paintFlags = teamACount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
         }
 
         teamACount?.text = teamASquaresCount.toString()
