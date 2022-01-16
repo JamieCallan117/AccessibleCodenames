@@ -40,11 +40,6 @@
     <string name="enter_server">Enter server..</string>
     <string name="unable_server">Unable to connect to server.</string>
     <string name="connecting_server">Connecting to server…</string>
-    <string name="bomb_squares">Bomb Squares:</string>
-    <string name="neutral_squares">Neutral Squares:</string>
-    <string name="team_a_squares">Team A Squares:</string>
-    <string name="team_b_squares">Team B Squares:</string>
-    <string name="starting_team">Starting Team:</string>
     <string name="custom_words">Custom Words:</string>
     <string name="reset">Reset</string>
     <string name="menu_text">Menu\nText</string>
@@ -74,4 +69,14 @@
     <string name="playing_help">Once each team has at least 2 members each, the game can begin. For a default game, Team A will start as they have 1 more word to guess than Team B. Team A\'s spymaster must give a hint, then the other members of Team A must guess their words. Their turn can be ended manually, or by finding all plus 1 of the words relating to their hint, or by selecting an incorrect word.\n\nNext comes Team B\'s turn, this will be identical to Team A\'s turn in structure, but relating to Team B instead.\n\nThis will repeat back and forth until a winner is decided.\n\nTo win the game, your team must successfully find all of the words for your team. You may also win by having the opposing team select the bomb word.</string>
     <string name="username">Username:</string>
     <string name="enter_username">Enter username..</string>
+    <string name="password">Password..</string>
+    <string name="room_name">Room name..</string>
+    <string name="private_game">Private Game</string>
+    <string name="bomb_squares">Bomb Squares: %1$d</string>
+    <string name="neutral_squares">Neutral Squares: %1$d</string>
+    <string name="team_a_squares">Team A Squares: %1$d</string>
+    <string name="team_b_squares">Team B Squares: %1$d</string>
+    <string name="starting_team">Starting Team: %1$s</string>
+    <string name="alpha_username">Username must be alphanumeric.</string>
+    <string name="no_username">You must have a username.</string>
 </resources>

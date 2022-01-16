@@ -48,7 +48,7 @@ class LocalSetup : AppCompatActivity() {
                 i.putExtra("neutralSquares", intent.getIntExtra("neutralSquares", 7))
                 i.putExtra("teamASquares", intent.getIntExtra("teamASquares", 9))
                 i.putExtra("teamBSquares", intent.getIntExtra("teamBSquares", 8))
-                i.putExtra("startingTeam", intent.getIntExtra("startingTeam", 1))
+                i.putExtra("startingTeam", intent.getStringExtra("startingTeam"))
                 i.putStringArrayListExtra("customWords", intent.getStringArrayListExtra("customWords"))
             }
 
@@ -64,7 +64,7 @@ class LocalSetup : AppCompatActivity() {
                 i.putExtra("neutralSquares", intent.getIntExtra("neutralSquares", 7))
                 i.putExtra("teamASquares", intent.getIntExtra("teamASquares", 9))
                 i.putExtra("teamBSquares", intent.getIntExtra("teamBSquares", 8))
-                i.putExtra("startingTeam", intent.getIntExtra("startingTeam", 1))
+                i.putExtra("startingTeam", intent.getStringExtra("startingTeam"))
                 i.putStringArrayListExtra("customWords", intent.getStringArrayListExtra("customWords"))
             }
 

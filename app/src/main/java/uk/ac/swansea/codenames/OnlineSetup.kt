@@ -3,15 +3,12 @@ package uk.ac.swansea.codenames
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import android.widget.TextView
-import android.widget.EditText
 import android.os.Bundle
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.speech.tts.TextToSpeech
 import android.view.View
-import android.widget.Button
 import androidx.gridlayout.widget.GridLayout
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
@@ -19,6 +16,7 @@ import com.google.android.material.textview.MaterialTextView
 import java.util.*
 
 class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
+
     private var constraintLayout: ConstraintLayout? = null
     private var messageBox: GridLayout? = null
     private var gameSetupTitle: MaterialTextView? = null
@@ -35,6 +33,7 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var menuTextColour = -1
     private var connectingBoxOpen = true
     private var textToSpeech: TextToSpeech? = null
+    private var messageType = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,48 +55,34 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
-        val username = preferences.getString("username", "")
+        var username = preferences.getString("username", "")
 
         usernameEdit?.setText(username)
 
         SocketConnection.socket.disconnect()
         SocketConnection.socket.connect()
 
-        if (!SocketConnection.socket.connected()) {
-            messageBox?.visibility = View.VISIBLE
-            messageText?.setText(R.string.connecting_server)
-            okButton?.visibility = View.INVISIBLE
-            backButton?.isEnabled = false
-            joinGameButton?.isEnabled = false
-            createGameButton?.isEnabled = false
-            usernameEdit?.isEnabled = false
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                messageBox?.visibility = View.INVISIBLE
-
-                if (!SocketConnection.socket.connected()) {
-                    messageText?.setText(R.string.unable_server)
-                    messageBox?.visibility = View.VISIBLE
-                    okButton?.visibility = View.VISIBLE
-                } else {
-                    connectingBoxOpen = false
-                    backButton?.isEnabled = true
-                    joinGameButton?.isEnabled = true
-                    createGameButton?.isEnabled = true
-                    usernameEdit?.isEnabled = true
-                }
-            }, 3000)
-        }
+        toggleMessageBox()
         
         okButton?.setOnClickListener {
-            val i = Intent(baseContext, MainMenu::class.java)
-            startActivity(i)
+            if (messageType == 0) {
+                val i = Intent(baseContext, MainMenu::class.java)
+                startActivity(i)
+            } else if (messageType >= 1) {
+                messageBox?.visibility = View.INVISIBLE
+
+                connectingBoxOpen = false
+                backButton?.isEnabled = true
+                joinGameButton?.isEnabled = true
+                createGameButton?.isEnabled = true
+                usernameEdit?.isEnabled = true
+            }
         }
 
         backButton?.setOnClickListener {
             val editor = preferences!!.edit()
 
-            editor.putString("username", usernameEdit?.text.toString())
+            editor.putString("username", usernameEdit?.text.toString().replace(" ", ""))
             editor.apply()
 
             val i = Intent(this, MainMenu::class.java)
@@ -105,24 +90,44 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         createGameButton?.setOnClickListener {
-            val editor = preferences!!.edit()
+            username = usernameEdit?.text.toString().replace(" ", "")
 
-            editor.putString("username", usernameEdit?.text.toString())
-            editor.apply()
+            if (username == "") {
+                messageType = 1
+                toggleMessageBox()
+            } else if (!username!!.matches("[A-Za-z0-9]+".toRegex())) {
+                messageType = 2
+                toggleMessageBox()
+            } else {
+                val editor = preferences!!.edit()
 
-            val i = Intent(this, CreateGame::class.java)
-            i.putExtra("hasCustomSettings", false)
-            startActivity(i)
+                editor.putString("username", usernameEdit?.text.toString())
+                editor.apply()
+
+                val i = Intent(this, CreateGame::class.java)
+                i.putExtra("hasCustomSettings", false)
+                startActivity(i)
+            }
         }
 
         joinGameButton?.setOnClickListener {
-            val editor = preferences!!.edit()
+            username = usernameEdit?.text.toString().replace(" ", "")
 
-            editor.putString("username", usernameEdit?.text.toString())
-            editor.apply()
+            if (username == "") {
+                messageType = 1
+                toggleMessageBox()
+            } else if (!username!!.matches("[A-Za-z0-9]+".toRegex())) {
+                messageType = 2
+                toggleMessageBox()
+            } else {
+                val editor = preferences!!.edit()
 
-            val i = Intent(this, JoinGame::class.java)
-            startActivity(i)
+                editor.putString("username", usernameEdit?.text.toString())
+                editor.apply()
+
+                val i = Intent(this, JoinGame::class.java)
+                startActivity(i)
+            }
         }
 
         backButton?.setOnLongClickListener {
@@ -151,7 +156,7 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         usernameText?.setOnLongClickListener {
-            speakOut(usernameText?.text.toString())
+            speakOut(usernameText?.text.toString() + ", " + usernameEdit?.text.toString())
             true
         }
 
@@ -177,6 +182,50 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
     override fun onBackPressed() {
         if (!connectingBoxOpen) {
             backButton?.performClick()
+        }
+    }
+
+    private fun toggleMessageBox() {
+        if (messageType == 0) {
+            if (!SocketConnection.socket.connected()) {
+                messageBox?.visibility = View.VISIBLE
+                messageText?.setText(R.string.connecting_server)
+                okButton?.visibility = View.INVISIBLE
+                backButton?.isEnabled = false
+                joinGameButton?.isEnabled = false
+                createGameButton?.isEnabled = false
+                usernameEdit?.isEnabled = false
+
+                Handler(Looper.getMainLooper()).postDelayed({
+                    messageBox?.visibility = View.INVISIBLE
+
+                    if (!SocketConnection.socket.connected()) {
+                        messageText?.setText(R.string.unable_server)
+                        messageBox?.visibility = View.VISIBLE
+                        okButton?.visibility = View.VISIBLE
+                    } else {
+                        connectingBoxOpen = false
+                        backButton?.isEnabled = true
+                        joinGameButton?.isEnabled = true
+                        createGameButton?.isEnabled = true
+                        usernameEdit?.isEnabled = true
+                    }
+                }, 3000)
+            }
+        } else {
+            messageBox?.visibility = View.VISIBLE
+            okButton?.visibility = View.VISIBLE
+
+            connectingBoxOpen = true
+            backButton?.isEnabled = false
+            joinGameButton?.isEnabled = false
+            createGameButton?.isEnabled = false
+            usernameEdit?.isEnabled = false
+
+            when (messageType) {
+                1 -> messageText?.setText(R.string.no_username)
+                2 ->messageText?.setText(R.string.alpha_username)
+            }
         }
     }
 

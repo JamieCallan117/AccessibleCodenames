@@ -28,7 +28,7 @@ class OnlineGame : AppCompatActivity() {
     private var neutralWords = ArrayList<String>()
     private var teamAWords = ArrayList<String>()
     private var teamBWords = ArrayList<String>()
-    private var startingTeam = 0
+    private var startingTeam = "A"
     private var teamAWordCount = 0
     private var teamBWordCount = 0
     private var teamAColour = -16773377
@@ -364,17 +364,7 @@ class OnlineGame : AppCompatActivity() {
                 e.printStackTrace()
             }
 
-            startingTeam = args[9] as Int
-            println("All words: $allWords")
-            println("Bomb words: $bombWords")
-            println("Neutral words: $neutralWords")
-            println("Team A words: $teamAWords")
-            println("Team B words: $teamBWords")
-            println("Team A Spymaster: $teamASpymaster")
-            println("Team B Spymaster: $teamBSpymaster")
-            println("Team A Users: $teamAUsers")
-            println("Team B Users: $teamBUsers")
-            println("Starting Team: $startingTeam")
+            startingTeam = args[9] as String
 
             for (i in wordButtons.indices) {
                 wordButtons[i]?.text = allWords[i]
@@ -396,7 +386,7 @@ class OnlineGame : AppCompatActivity() {
                 changeTeamButton?.visibility = View.GONE
                 textToSpeechButton?.visibility = View.VISIBLE
 
-                gamePhase = if (startingTeam == 1) {
+                gamePhase = if (startingTeam == "A") {
                     OnlinePhase.TEAM_A_SPY
                 } else {
                     OnlinePhase.TEAM_B_SPY

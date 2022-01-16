@@ -7,180 +7,221 @@
     android:layout_height="match_parent"
     tools:context=".CreateGame">
 
-    <TextView
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/messageBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:elevation="3dp"
+        android:paddingStart="20dp"
+        android:paddingTop="40dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="40dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/messageText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/general_font"
+            android:gravity="center"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:textSize="20sp"
+            app:layout_column="0"
+            app:layout_columnSpan="3"
+            app:layout_row="0" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/okButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="24dp"
+            android:paddingTop="12dp"
+            android:paddingRight="24dp"
+            android:paddingBottom="12dp"
+            android:text="@string/ok"
+            app:layout_column="1"
+            app:layout_columnSpan="3"
+            app:layout_gravity="center_horizontal|center_vertical"
+            app:layout_row="1" />
+
+    </androidx.gridlayout.widget.GridLayout>
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/createGameTitle"
-        android:layout_width="607dp"
-        android:layout_height="95dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:ems="10"
         android:fontFamily="@font/title_font"
-        android:gravity="center_horizontal|left"
+        android:gravity="center_horizontal|start"
         android:text="@string/create_game"
         android:textSize="72sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:paddingTop="28dp"
+        android:paddingBottom="28dp"
         android:text="@string/back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/createButton"
-        android:layout_width="144dp"
-        android:layout_height="144dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="133dp"
         android:layout_marginEnd="35dp"
+        android:paddingLeft="20dp"
+        android:paddingTop="54dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="55dp"
         android:text="@string/create_game"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/gameOptionsButton"
-        android:layout_width="144dp"
-        android:layout_height="144dp"
-        android:layout_marginTop="22dp"
-        android:layout_marginEnd="115dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="133dp"
+        android:layout_marginEnd="100dp"
+        android:paddingTop="54dp"
+        android:paddingBottom="55dp"
         android:text="@string/game_options"
         app:layout_constraintEnd_toStartOf="@+id/createButton"
-        app:layout_constraintTop_toBottomOf="@+id/createGameTitle" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/passwordEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="3dp"
-        android:layout_marginBottom="11dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="10dp"
         android:ems="10"
-        android:hint="Password.."
+        android:hint="@string/password"
+        android:imeOptions="actionDone"
         android:inputType="textPersonName"
         android:visibility="invisible"
-        android:imeOptions="actionDone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <EditText
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/roomNameEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="3dp"
+        android:layout_marginEnd="5dp"
         android:ems="10"
-        android:hint="Room name.."
-        android:inputType="textPersonName"
+        android:hint="@string/room_name"
         android:imeOptions="actionDone"
+        android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/passwordEdit"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <Switch
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/privateSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="272dp"
+        android:layout_marginEnd="50dp"
         android:layout_marginBottom="16dp"
         android:fontFamily="@font/general_font"
-        android:text="Private Game"
+        android:text="@string/private_game"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/passwordEdit"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <LinearLayout
-        android:layout_width="270dp"
-        android:layout_height="299dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="130dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="5dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintEnd_toStartOf="@+id/gameOptionsButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/bombSquaresText"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:fontFamily="@font/general_font"
-            android:text="Bomb Squares: 1"
+            android:text="@string/bomb_squares"
             android:textSize="17sp" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="8dp" />
-
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/neutralSquaresText"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:fontFamily="@font/general_font"
-            android:text="Neutral Squares: 7"
+            android:text="@string/neutral_squares"
             android:textSize="17sp" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="8dp" />
-
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/teamASquaresText"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:fontFamily="@font/general_font"
-            android:text="Team A Squares: 9"
+            android:text="@string/team_a_squares"
             android:textSize="17sp" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="8dp" />
-
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/teamBSquaresText"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:fontFamily="@font/general_font"
-            android:text="Team B Squares: 8"
+            android:text="@string/team_b_squares"
             android:textSize="17sp" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="8dp" />
-
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/startingTeamText"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:fontFamily="@font/general_font"
-            android:text="Starting Team: A"
+            android:text="@string/starting_team"
             android:textSize="17sp" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="8dp" />
-
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/customWordsText"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:fontFamily="@font/general_font"
             android:text="@string/custom_words"
             android:textSize="17sp"
             android:visibility="invisible" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="8dp" />
-
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:fadeScrollbars="false"
+            android:verticalScrollbarPosition="left">
 
             <LinearLayout
                 android:id="@+id/customWordsLinear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingEnd="0dp" />
         </ScrollView>
-
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

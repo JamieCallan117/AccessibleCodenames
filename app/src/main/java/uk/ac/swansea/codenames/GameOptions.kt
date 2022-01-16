@@ -68,7 +68,7 @@ class GameOptions : AppCompatActivity() {
     private var neutralSquares = 7
     private var teamASquares = 9
     private var teamBSquares = 8
-    private var startingTeam = 1
+    private var startingTeam = "A"
     private var totalSquaresInUse = 25
     private val customWords = ArrayList<String>()
     private var hasCustomSettings = false
@@ -148,7 +148,7 @@ class GameOptions : AppCompatActivity() {
             teamBSquares = intent.getIntExtra("teamBSquares", 8)
             teamBSquaresCount?.text = teamBSquares.toString()
 
-            startingTeamButton?.isChecked = intent.getIntExtra("startingTeam", 1) == 1
+            startingTeamButton?.isChecked = intent.getStringExtra("startingTeam") == "A"
 
             val customWordTexts = arrayOf(customWordText1, customWordText2, customWordText3,
                     customWordText4, customWordText5, customWordText6, customWordText7,
@@ -437,9 +437,9 @@ class GameOptions : AppCompatActivity() {
                     i.putExtra("type", "local")
 
                     startingTeam = if (startingTeamButton?.isChecked == true) {
-                        1
+                        "A"
                     } else {
-                        2
+                        "B"
                     }
 
                     i.putExtra("hasCustomSettings", true)
@@ -468,9 +468,9 @@ class GameOptions : AppCompatActivity() {
                     i.putExtra("type", "online")
 
                     startingTeam = if (startingTeamButton?.isChecked == true) {
-                        1
+                        "A"
                     } else {
-                        2
+                        "B"
                     }
 
                     i.putExtra("hasCustomSettings", true)
@@ -526,7 +526,7 @@ class GameOptions : AppCompatActivity() {
                 i.putExtra("neutralSquares", intent.getIntExtra("neutralSquares", 7))
                 i.putExtra("teamASquares", intent.getIntExtra("teamASquares", 9))
                 i.putExtra("teamBSquares", intent.getIntExtra("teamBSquares", 8))
-                i.putExtra("startingTeam", intent.getIntExtra("startingTeam", 1))
+                i.putExtra("startingTeam", intent.getStringExtra("startingTeam"))
 
                 val tempCustomWords = ArrayList<String>()
 
@@ -550,7 +550,7 @@ class GameOptions : AppCompatActivity() {
                 i.putExtra("neutralSquares", intent.getIntExtra("neutralSquares", 7))
                 i.putExtra("teamASquares", intent.getIntExtra("teamASquares", 9))
                 i.putExtra("teamBSquares", intent.getIntExtra("teamBSquares", 8))
-                i.putExtra("startingTeam", intent.getIntExtra("startingTeam", 1))
+                i.putExtra("startingTeam", intent.getStringExtra("startingTeam"))
 
                 val tempCustomWords = ArrayList<String>()
 

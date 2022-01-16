@@ -8,33 +8,45 @@ import androidx.core.content.res.ResourcesCompat
 import org.json.JSONArray
 import android.content.Intent
 import android.os.Handler
+import android.os.Looper
+import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.*
-import androidx.appcompat.widget.SwitchCompat
+import androidx.core.view.children
+import androidx.gridlayout.widget.GridLayout
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.switchmaterial.SwitchMaterial
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textview.MaterialTextView
 import java.io.IOException
 import java.util.*
 
-class CreateGame : AppCompatActivity() {
+class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var constraintLayout: ConstraintLayout? = null
+    private var messageBox: GridLayout? = null
     private var customWordsLinear: LinearLayout? = null
-    private var privateSwitch: Switch? = null
-    private var roomNameEdit: EditText? = null
-    private var passwordEdit: EditText? = null
+    private var privateSwitch: SwitchMaterial? = null
+    private var roomNameEdit: TextInputEditText? = null
+    private var passwordEdit: TextInputEditText? = null
     private val customWordTexts = arrayOfNulls<TextView>(10)
-    private var bombSquaresText: TextView? = null
-    private var neutralSquaresText: TextView? = null
-    private var teamASquaresText: TextView? = null
-    private var teamBSquaresText: TextView? = null
-    private var startingTeamText: TextView? = null
-    private var customWordsText: TextView? = null
-    private var createGameTitle: TextView? = null
-    private var backButton: Button? = null
-    private var gameOptionsButton: Button? = null
-    private var createButton: Button? = null
+    private var bombSquaresText: MaterialTextView? = null
+    private var neutralSquaresText: MaterialTextView? = null
+    private var teamASquaresText: MaterialTextView? = null
+    private var teamBSquaresText: MaterialTextView? = null
+    private var startingTeamText: MaterialTextView? = null
+    private var customWordsText: MaterialTextView? = null
+    private var createGameTitle: MaterialTextView? = null
+    private var messageText: MaterialTextView? = null
+    private var okButton: MaterialButton? = null
+    private var backButton: MaterialButton? = null
+    private var gameOptionsButton: MaterialButton? = null
+    private var createButton: MaterialButton? = null
     private var validGame = true
     private var applicationBackgroundColour = -10921639
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
+    private var textToSpeech: TextToSpeech? = null
+    private var messageBoxOpen = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,41 +67,58 @@ class CreateGame : AppCompatActivity() {
         backButton = findViewById(R.id.backButton)
         gameOptionsButton = findViewById(R.id.gameOptionsButton)
         createButton = findViewById(R.id.createButton)
+        messageBox = findViewById(R.id.messageBox)
+        messageText = findViewById(R.id.messageText)
+        okButton = findViewById(R.id.okButton)
 
-        if (intent.getBooleanExtra("hasCustomSettings", false)) {
+        textToSpeech = TextToSpeech(this, this)
+
+        bombSquaresText?.text = getString(R.string.bomb_squares, intent.getIntExtra("bombSquares", 1))
+        neutralSquaresText?.text = getString(R.string.neutral_squares, intent.getIntExtra("neutralSquares", 7))
+        teamASquaresText?.text = getString(R.string.team_a_squares, intent.getIntExtra("teamASquares", 9))
+        teamBSquaresText?.text = getString(R.string.team_b_squares, intent.getIntExtra("teamBSquares", 8))
+
+        val startingTeam = if (intent.getStringExtra("startingTeam") == "B") {
+            "B"
+        } else {
+            "A"
+        }
+
+        startingTeamText?.text = getString(R.string.starting_team, startingTeam)
+
+        if (intent.getStringArrayListExtra("customWords") != null && intent.getStringArrayListExtra("customWords")!!.isNotEmpty()) {
             customWordsText?.visibility = View.VISIBLE
 
-            bombSquaresText?.text = getString(R.string.bomb_squares) + " " + intent.getIntExtra("bombSquares", 1).toString()
-            neutralSquaresText?.text = getString(R.string.neutral_squares) + " " + intent.getIntExtra("neutralSquares", 7).toString()
-            teamASquaresText?.text = getString(R.string.team_a_squares) + " " + intent.getIntExtra("teamASquares", 9).toString()
-            teamBSquaresText?.text = getString(R.string.team_b_squares) + " " + intent.getIntExtra("teamBSquares", 8).toString()
+            var counter = 0
 
-            val startingTeam: String = if (intent.getIntExtra("startingTeam", 1) == 1) {
-                "A"
-            } else {
-                "B"
-            }
+            while (counter < intent.getStringArrayListExtra("customWords")!!.size) {
+                val newCustomWord = MaterialTextView(this)
 
-            startingTeamText?.text = getString(R.string.starting_team) + " " + startingTeam
+                newCustomWord.text = intent.getStringArrayListExtra("customWords")!![counter]
 
-            if (intent.getStringArrayListExtra("customWords") != null) {
-                var counter = 0
-
-                while (counter < intent.getStringArrayListExtra("customWords")!!.size) {
-                    val newCustomWord = TextView(this)
-
-                    newCustomWord.text = intent.getStringArrayListExtra("customWords")!![counter]
-
-                    val typeface = ResourcesCompat.getFont(this, R.font.general_font)
-
-                    newCustomWord.typeface = typeface
-                    newCustomWord.textSize = 17f
-
-                    customWordTexts[counter] = newCustomWord
-                    customWordsLinear?.addView(newCustomWord)
-
-                    counter++
+                newCustomWord.setOnLongClickListener {
+                    speakOut(newCustomWord.text.toString())
+                    true
                 }
+
+                val params = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+
+                params.bottomMargin = 16
+
+                newCustomWord.layoutParams = params
+
+                val typeface = ResourcesCompat.getFont(this, R.font.general_font)
+
+                newCustomWord.typeface = typeface
+                newCustomWord.textSize = 17f
+
+                customWordTexts[counter] = newCustomWord
+                customWordsLinear?.addView(newCustomWord)
+
+                counter++
             }
         }
 
@@ -109,7 +138,7 @@ class CreateGame : AppCompatActivity() {
                 i.putExtra("neutralSquares", intent.getIntExtra("neutralSquares", 7))
                 i.putExtra("teamASquares", intent.getIntExtra("teamASquares", 9))
                 i.putExtra("teamBSquares", intent.getIntExtra("teamBSquares", 8))
-                i.putExtra("startingTeam", intent.getIntExtra("startingTeam", 1))
+                i.putExtra("startingTeam", intent.getStringExtra("startingTeam"))
                 i.putStringArrayListExtra("customWords", intent.getStringArrayListExtra("customWords"))
             }
 
@@ -119,25 +148,24 @@ class CreateGame : AppCompatActivity() {
         createButton?.setOnClickListener {
             validGame = true
 
+            backButton?.isEnabled = false
+            gameOptionsButton?.isEnabled = false
+            createButton?.isEnabled = false
+            roomNameEdit?.isEnabled = false
+            passwordEdit?.isEnabled = false
+            privateSwitch?.isEnabled = false
+
             val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
             val username = preferences.getString("username", "")
 
-            if (username == "") {
-                toggleNicknameBox()
-                validGame = false
-            } else if (!username!!.matches("[A-Za-z0-9]+".toRegex())) {
-                toggleNicknameBox()
-                validGame = false
-            }
-
             val roomName = roomNameEdit?.text.toString()
 
             if (roomName == "") {
-                toggleMessageBox("Room name cannot be empty.", true)
+                toggleMessageBox("Room name cannot be empty.")
                 validGame = false
             } else if (!roomName.matches("[A-Za-z0-9]+".toRegex())) {
-                toggleMessageBox("Room name must be alphanumerical.", true)
+                toggleMessageBox("Room name must be alphanumerical.")
                 validGame = false
             }
 
@@ -145,10 +173,10 @@ class CreateGame : AppCompatActivity() {
 
             if (privateSwitch?.isChecked == true) {
                 if (password == "") {
-                    toggleMessageBox("Please enter a password.", true)
+                    toggleMessageBox("Please enter a password.")
                     validGame = false
                 } else if (!password.matches("[A-Za-z0-9]+".toRegex())) {
-                    toggleMessageBox("Password must be alphanumerical.", true)
+                    toggleMessageBox("Password must be alphanumerical.")
                     validGame = false
                 }
             }
@@ -170,9 +198,9 @@ class CreateGame : AppCompatActivity() {
 
             val temp = wordsFromFile.split(",").toTypedArray()
             val defaultWords = ArrayList(listOf(*temp))
-            val MAX_WORDS = 25
-            var defaultWordsNeeded = MAX_WORDS
-            val gameWords = arrayOfNulls<String>(MAX_WORDS)
+            val maxWords = 25
+            var defaultWordsNeeded = maxWords
+            val gameWords = arrayOfNulls<String>(maxWords)
             val customWords = intent.getStringArrayListExtra("customWords")
 
             if (customWords != null) {
@@ -191,14 +219,14 @@ class CreateGame : AppCompatActivity() {
             list.shuffle()
 
             for (i in 0 until defaultWordsNeeded) {
-                gameWords[i + (MAX_WORDS - defaultWordsNeeded)] = defaultWords[list[i]!!]
+                gameWords[i + (maxWords - defaultWordsNeeded)] = defaultWords[list[i]!!]
             }
 
-            Collections.shuffle(Arrays.asList(*gameWords))
+            gameWords.shuffle()
 
             list.clear()
 
-            for (i in 0 until MAX_WORDS) {
+            for (i in 0 until maxWords) {
                 list.add(i)
             }
 
@@ -234,7 +262,6 @@ class CreateGame : AppCompatActivity() {
                 counter++
             }
 
-            val startingTeam = intent.getIntExtra("startingTeam", 1)
             val jsonGameWords = JSONArray(listOf(*gameWords))
             val jsonBombWords = JSONArray(listOf(*bombWords))
             val jsonNeutralWords = JSONArray(listOf(*neutralWords))
@@ -245,30 +272,14 @@ class CreateGame : AppCompatActivity() {
                 SocketConnection.socket.emit("createRoom", username, roomName, password, jsonGameWords,
                         jsonBombWords, jsonNeutralWords, jsonTeamAWords, jsonTeamBWords, startingTeam)
             }
-
-            backButton?.isEnabled = false
-            gameOptionsButton?.isEnabled = false
-            createButton?.isEnabled = false
-            roomNameEdit?.isEnabled = false
-            passwordEdit?.isEnabled = false
-            privateSwitch?.isEnabled = false
-
-            val handler = Handler()
-
-            handler.postDelayed({
+            
+            Handler(Looper.getMainLooper()).postDelayed({
                 if (validGame) {
                     val i = Intent(applicationContext, OnlineGame::class.java)
                     i.putExtra("username", username)
                     i.putExtra("roomName", roomName)
                     i.putExtra("isHost", true)
                     startActivity(i)
-                } else {
-                    backButton?.isEnabled = true
-                    gameOptionsButton?.isEnabled = true
-                    createButton?.isEnabled = true
-                    roomNameEdit?.isEnabled = true
-                    passwordEdit?.isEnabled = true
-                    privateSwitch?.isEnabled = true
                 }
             }, 3000)
         }
@@ -282,24 +293,122 @@ class CreateGame : AppCompatActivity() {
             passwordEdit?.setText("")
         }
 
+        okButton?.setOnClickListener {
+            messageBox?.visibility = View.INVISIBLE
+            messageBoxOpen = false
+
+            backButton?.isEnabled = true
+            gameOptionsButton?.isEnabled = true
+            createButton?.isEnabled = true
+            roomNameEdit?.isEnabled = true
+            passwordEdit?.isEnabled = true
+            privateSwitch?.isEnabled = true
+        }
+
         SocketConnection.socket.on("createFail") { args ->
-            toggleMessageBox(args[0] as String, false)
+            toggleMessageBox(args[0] as String)
             validGame = false
+        }
+
+        backButton?.setOnLongClickListener {
+            speakOut(backButton?.text.toString())
+            true
+        }
+
+        createGameTitle?.setOnLongClickListener {
+            speakOut(createGameTitle?.text.toString())
+            true
+        }
+
+        gameOptionsButton?.setOnLongClickListener {
+            speakOut(gameOptionsButton?.text.toString())
+            true
+        }
+
+        createButton?.setOnLongClickListener {
+            speakOut(createButton?.text.toString())
+            true
+        }
+
+        privateSwitch?.setOnLongClickListener {
+            speakOut(privateSwitch?.text.toString() + ", " + privateSwitch?.isChecked.toString())
+            true
+        }
+
+        bombSquaresText?.setOnLongClickListener {
+            speakOut(bombSquaresText?.text.toString())
+            true
+        }
+
+        neutralSquaresText?.setOnLongClickListener {
+            speakOut(neutralSquaresText?.text.toString())
+            true
+        }
+
+        teamASquaresText?.setOnLongClickListener {
+            speakOut(teamASquaresText?.text.toString().replace(" A ", " Ay "))
+            true
+        }
+
+        teamBSquaresText?.setOnLongClickListener {
+            speakOut(teamBSquaresText?.text.toString())
+            true
+        }
+
+        startingTeamText?.setOnLongClickListener {
+            speakOut(startingTeamText?.text.toString())
+            true
+        }
+
+        customWordsText?.setOnLongClickListener {
+            var customWordTTS = customWordsText?.text.toString()
+
+            for (word in customWordsLinear!!.children) {
+                word as MaterialTextView
+                customWordTTS += "\n${word.text}"
+            }
+
+            speakOut(customWordTTS)
+
+            true
         }
 
         updateColours()
     }
 
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            textToSpeech!!.language = Locale.UK
+        }
+    }
+
     override fun onBackPressed() {
-        backButton?.performClick()
+        if (!messageBoxOpen) {
+            backButton?.performClick()
+        }
     }
 
-    private fun toggleMessageBox(message: String, visibleButton: Boolean) {
+    private fun toggleMessageBox(message: String) {
+        messageBoxOpen = true
 
+        messageBox?.visibility = View.VISIBLE
+
+        messageText?.text = message
+
+        backButton?.isEnabled = false
+        gameOptionsButton?.isEnabled = false
+        createButton?.isEnabled = false
+        roomNameEdit?.isEnabled = false
+        passwordEdit?.isEnabled = false
+        privateSwitch?.isEnabled = false
     }
 
-    private fun toggleNicknameBox() {
+    private fun speakOut(message : String) {
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
+        if (preferences.getBoolean("textToSpeech", true)) {
+            textToSpeech!!.speak(message, TextToSpeech.QUEUE_FLUSH, null, "")
+        }
     }
 
     private fun updateColours() {
@@ -310,12 +419,15 @@ class CreateGame : AppCompatActivity() {
         menuTextColour = preferences.getInt("menuText", -1)
 
         constraintLayout!!.setBackgroundColor(applicationBackgroundColour)
+        messageBox!!.setBackgroundColor(applicationBackgroundColour)
 
         backButton!!.setBackgroundColor(menuButtonsColour)
         gameOptionsButton!!.setBackgroundColor(menuButtonsColour)
         createButton!!.setBackgroundColor(menuButtonsColour)
+        okButton!!.setBackgroundColor(menuButtonsColour)
 
         createGameTitle!!.setTextColor(menuTextColour)
+        messageText!!.setTextColor(menuTextColour)
         bombSquaresText!!.setTextColor(menuTextColour)
         neutralSquaresText!!.setTextColor(menuTextColour)
         teamASquaresText!!.setTextColor(menuTextColour)
@@ -325,6 +437,7 @@ class CreateGame : AppCompatActivity() {
         backButton!!.setTextColor(menuTextColour)
         gameOptionsButton!!.setTextColor(menuTextColour)
         createButton!!.setTextColor(menuTextColour)
+        okButton!!.setTextColor(menuTextColour)
         privateSwitch!!.setTextColor(menuTextColour)
 
         for (t in customWordTexts) {
