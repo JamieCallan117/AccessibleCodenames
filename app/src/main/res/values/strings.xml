@@ -79,4 +79,8 @@
     <string name="starting_team">Starting Team: %1$s</string>
     <string name="alpha_username">Username must be alphanumeric.</string>
     <string name="no_username">You must have a username.</string>
+    <string name="refresh">Refresh</string>
+    <string name="public_room">Public Room</string>
+    <string name="private_room">Private Room</string>
+    <string name="join">Join</string>
 </resources>
