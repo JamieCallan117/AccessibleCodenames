@@ -83,4 +83,20 @@
     <string name="public_room">Public Room</string>
     <string name="private_room">Private Room</string>
     <string name="join">Join</string>
+    <string name="save">Save</string>
+    <string name="b">B</string>
+    <string name="a">A</string>
+    <string name="team_options">Team Options</string>
+    <string name="custom_words_str">Custom Words</string>
+    <string name="board_options">Board Options</string>
+    <string name="bomb_squares_str">Bomb Squares</string>
+    <string name="minus">-</string>
+    <string name="plus">+</string>
+    <string name="team_a_squares_str">Team A Squares</string>
+    <string name="squares_in_use">Squares in use</string>
+    <string name="neutral_squares_str">Neutral Squares</string>
+    <string name="square_counter">%1$d/25</string>
+    <string name="team_b_squares_str">Team B Squares</string>
+    <string name="starting_team_str">Starting team</string>
+    <string name="exit_without_save">Are you sure you want\nto exit without\nsaving your settings?</string>
 </resources>

@@ -6,42 +6,44 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.content.Intent
+import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.*
 import androidx.gridlayout.widget.GridLayout
-import java.io.File
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textview.MaterialTextView
 import java.io.IOException
 import java.util.*
 
-class GameOptions : AppCompatActivity() {
-    // TODO: Redesign layout.
-    // TODO: Check for duplicate custom words
+class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
+    // TODO: Verify custom words, no duplicates, maximum length, alphabetical etc
+    // TODO: Implement TTS
 
     private var constraintLayout: ConstraintLayout? = null
     private var messageBox: GridLayout? = null
-    private var gameOptionsTitle: TextView? = null
-    private var gameOptionsSubtitle: TextView? = null
-    private var squaresInUse: TextView? = null
-    private var bombSquareCount: TextView? = null
-    private var neutralSquareCount: TextView? = null
-    private var teamASquaresCount: TextView? = null
-    private var teamBSquaresCount: TextView? = null
-    private var messageBoxText: TextView? = null
-    private var customWordText1: EditText? = null
-    private var customWordText2: EditText? = null
-    private var customWordText3: EditText? = null
-    private var customWordText4: EditText? = null
-    private var customWordText5: EditText? = null
-    private var customWordText6: EditText? = null
-    private var customWordText7: EditText? = null
-    private var customWordText8: EditText? = null
-    private var customWordText9: EditText? = null
-    private var customWordText10: EditText? = null
-    private var backButton: Button? = null
-    private var saveButton: Button? = null
-    private var yesButton: Button? = null
-    private var noButton: Button? = null
-    private var okButton: Button? = null
+    private var gameOptionsTitle: MaterialTextView? = null
+    private var squaresInUse: MaterialTextView? = null
+    private var bombSquareCount: MaterialTextView? = null
+    private var neutralSquareCount: MaterialTextView? = null
+    private var teamASquaresCount: MaterialTextView? = null
+    private var teamBSquaresCount: MaterialTextView? = null
+    private var messageBoxText: MaterialTextView? = null
+    private var customWordText1: TextInputEditText? = null
+    private var customWordText2: TextInputEditText? = null
+    private var customWordText3: TextInputEditText? = null
+    private var customWordText4: TextInputEditText? = null
+    private var customWordText5: TextInputEditText? = null
+    private var customWordText6: TextInputEditText? = null
+    private var customWordText7: TextInputEditText? = null
+    private var customWordText8: TextInputEditText? = null
+    private var customWordText9: TextInputEditText? = null
+    private var customWordText10: TextInputEditText? = null
+    private var backButton: MaterialButton? = null
+    private var saveButton: MaterialButton? = null
+    private var yesButton: MaterialButton? = null
+    private var noButton: MaterialButton? = null
+    private var okButton: MaterialButton? = null
     private var deleteCustomWord1: ImageButton? = null
     private var deleteCustomWord2: ImageButton? = null
     private var deleteCustomWord3: ImageButton? = null
@@ -52,14 +54,14 @@ class GameOptions : AppCompatActivity() {
     private var deleteCustomWord8: ImageButton? = null
     private var deleteCustomWord9: ImageButton? = null
     private var deleteCustomWord10: ImageButton? = null
-    private var addBombsButton: ImageView? = null
-    private var subtractBombsButton: ImageView? = null
-    private var addNeutralsButton: ImageView? = null
-    private var subtractNeutralsButton: ImageView? = null
-    private var teamASqrInc: ImageView? = null
-    private var teamASqrDec: ImageView? = null
-    private var teamBSqrInc: ImageView? = null
-    private var teamBSqrDec: ImageView? = null
+    private var addBombsButton: MaterialButton? = null
+    private var subtractBombsButton: MaterialButton? = null
+    private var addNeutralsButton: MaterialButton? = null
+    private var subtractNeutralsButton: MaterialButton? = null
+    private var teamASqrInc: MaterialButton? = null
+    private var teamASqrDec: MaterialButton? = null
+    private var teamBSqrInc: MaterialButton? = null
+    private var teamBSqrDec: MaterialButton? = null
     private var startingTeamButton: ToggleButton? = null
     private var applicationBackgroundColour = -10921639
     private var menuButtonsColour = -8164501
@@ -74,7 +76,8 @@ class GameOptions : AppCompatActivity() {
     private var hasCustomSettings = false
     private var disabled = false
     private var windowOpen = false
-    private val MAX_SQUARES = 25
+    private val maxSquares = 25
+    private var textToSpeech: TextToSpeech? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,34 +122,30 @@ class GameOptions : AppCompatActivity() {
         teamBSquaresCount = findViewById(R.id.teamBSquaresCount)
         startingTeamButton = findViewById(R.id.startingTeamButton)
         squaresInUse = findViewById(R.id.squaresInUse)
-        gameOptionsSubtitle = findViewById(R.id.gameOptionsSubtitle)
         saveButton = findViewById(R.id.saveButton)
         constraintLayout = findViewById(R.id.constraintLayout)
         messageBox = findViewById(R.id.messageBox)
         gameOptionsTitle = findViewById(R.id.gameOptionsTitle)
-        gameOptionsSubtitle = findViewById(R.id.gameOptionsSubtitle)
         backButton = findViewById(R.id.backButton)
 
-        if (intent.getStringExtra("type") == "local") {
-            gameOptionsSubtitle?.text = getString(R.string.local)
-        } else if (intent.getStringExtra("type") == "online") {
-            gameOptionsSubtitle?.text = getString(R.string.online)
-        }
+        textToSpeech = TextToSpeech(this, this)
+
+        updateTotalSquares()
+
+        bombSquares = intent.getIntExtra("bombSquares", 1)
+        bombSquareCount?.text = bombSquares.toString()
+
+        neutralSquares = intent.getIntExtra("neutralSquares", 7)
+        neutralSquareCount?.text = neutralSquares.toString()
+
+        teamASquares = intent.getIntExtra("teamASquares", 9)
+        teamASquaresCount?.text = teamASquares.toString()
+
+        teamBSquares = intent.getIntExtra("teamBSquares", 8)
+        teamBSquaresCount?.text = teamBSquares.toString()
 
         if (intent.getBooleanExtra("hasCustomSettings", false)) {
             saveButton?.visibility = View.VISIBLE
-
-            bombSquares = intent.getIntExtra("bombSquares", 1)
-            bombSquareCount?.text = bombSquares.toString()
-
-            neutralSquares = intent.getIntExtra("neutralSquares", 7)
-            neutralSquareCount?.text = neutralSquares.toString()
-
-            teamASquares = intent.getIntExtra("teamASquares", 9)
-            teamASquaresCount?.text = teamASquares.toString()
-
-            teamBSquares = intent.getIntExtra("teamBSquares", 8)
-            teamBSquaresCount?.text = teamBSquares.toString()
 
             startingTeamButton?.isChecked = intent.getStringExtra("startingTeam") == "A"
 
@@ -167,7 +166,7 @@ class GameOptions : AppCompatActivity() {
         }
 
         teamASqrInc?.setOnClickListener {
-            if (totalSquaresInUse != MAX_SQUARES) {
+            if (totalSquaresInUse != maxSquares) {
                 saveButton?.visibility = View.VISIBLE
                 hasCustomSettings = true
                 totalSquaresInUse++
@@ -191,7 +190,7 @@ class GameOptions : AppCompatActivity() {
         }
 
         teamBSqrInc?.setOnClickListener {
-            if (totalSquaresInUse != MAX_SQUARES) {
+            if (totalSquaresInUse != maxSquares) {
                 saveButton?.visibility = View.VISIBLE
                 hasCustomSettings = true
                 totalSquaresInUse++
@@ -215,7 +214,7 @@ class GameOptions : AppCompatActivity() {
         }
 
         addBombsButton?.setOnClickListener {
-            if (totalSquaresInUse != MAX_SQUARES) {
+            if (totalSquaresInUse != maxSquares) {
                 saveButton?.visibility = View.VISIBLE
                 hasCustomSettings = true
                 totalSquaresInUse++
@@ -239,7 +238,7 @@ class GameOptions : AppCompatActivity() {
         }
 
         addNeutralsButton?.setOnClickListener {
-            if (totalSquaresInUse != MAX_SQUARES) {
+            if (totalSquaresInUse != maxSquares) {
                 saveButton?.visibility = View.VISIBLE
                 hasCustomSettings = true
                 totalSquaresInUse++
@@ -374,7 +373,7 @@ class GameOptions : AppCompatActivity() {
 
                 swapEnableStates()
 
-                messageBoxText?.text = "Are you sure you want to exit without saving your settings?"
+                messageBoxText?.text = getString(R.string.exit_without_save)
                 yesButton?.visibility = View.VISIBLE
                 noButton?.visibility = View.VISIBLE
                 okButton?.visibility = View.INVISIBLE
@@ -420,14 +419,14 @@ class GameOptions : AppCompatActivity() {
             for (s in customWordsTemp) {
                 if (defaultWords.contains(s.uppercase(Locale.getDefault()))) {
                     validSave = false
-                    error = s.uppercase(Locale.getDefault()) + " already exists as a default word."
+                    error = s.uppercase(Locale.getDefault()) + " already exists\nas a default word."
                     break
                 }
             }
 
-            if (totalSquaresInUse != MAX_SQUARES) {
+            if (totalSquaresInUse != maxSquares) {
                 validSave = false
-                error = "You do not have the required number of squares assigned."
+                error = "You do not have the\nrequired number of\nsquares assigned."
             }
 
             if (validSave) {
@@ -577,6 +576,12 @@ class GameOptions : AppCompatActivity() {
         updateColours()
     }
 
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            textToSpeech!!.language = Locale.UK
+        }
+    }
+
     override fun onBackPressed() {
         if (windowOpen) {
             noButton?.performClick()
@@ -622,8 +627,15 @@ class GameOptions : AppCompatActivity() {
     }
 
     private fun updateTotalSquares() {
-        val text = "$totalSquaresInUse/$MAX_SQUARES"
-        squaresInUse?.text = text
+        squaresInUse?.text = getString(R.string.square_counter, totalSquaresInUse)
+    }
+
+    private fun speakOut(message: String) {
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        if (preferences.getBoolean("textToSpeech", true)) {
+            textToSpeech!!.speak(message, TextToSpeech.QUEUE_FLUSH, null, "")
+        }
     }
 
     fun updateColours() {
@@ -641,14 +653,14 @@ class GameOptions : AppCompatActivity() {
         yesButton?.setBackgroundColor(menuButtonsColour)
         noButton?.setBackgroundColor(menuButtonsColour)
         okButton?.setBackgroundColor(menuButtonsColour)
-        addBombsButton?.setColorFilter(menuButtonsColour)
-        subtractBombsButton?.setColorFilter(menuButtonsColour)
-        addNeutralsButton?.setColorFilter(menuButtonsColour)
-        subtractNeutralsButton?.setColorFilter(menuButtonsColour)
-        teamASqrInc?.setColorFilter(menuButtonsColour)
-        teamASqrDec?.setColorFilter(menuButtonsColour)
-        teamBSqrInc?.setColorFilter(menuButtonsColour)
-        teamBSqrDec?.setColorFilter(menuButtonsColour)
+        addBombsButton?.setBackgroundColor(menuButtonsColour)
+        subtractBombsButton?.setBackgroundColor(menuButtonsColour)
+        addNeutralsButton?.setBackgroundColor(menuButtonsColour)
+        subtractNeutralsButton?.setBackgroundColor(menuButtonsColour)
+        teamASqrInc?.setBackgroundColor(menuButtonsColour)
+        teamASqrDec?.setBackgroundColor(menuButtonsColour)
+        teamBSqrInc?.setBackgroundColor(menuButtonsColour)
+        teamBSqrDec?.setBackgroundColor(menuButtonsColour)
         deleteCustomWord1?.setBackgroundColor(menuButtonsColour)
         deleteCustomWord2?.setBackgroundColor(menuButtonsColour)
         deleteCustomWord3?.setBackgroundColor(menuButtonsColour)
@@ -661,7 +673,6 @@ class GameOptions : AppCompatActivity() {
         deleteCustomWord10?.setBackgroundColor(menuButtonsColour)
         
         gameOptionsTitle?.setTextColor(menuTextColour)
-        gameOptionsSubtitle?.setTextColor(menuTextColour)
         backButton?.setTextColor(menuTextColour)
         saveButton?.setTextColor(menuTextColour)
         yesButton?.setTextColor(menuTextColour)

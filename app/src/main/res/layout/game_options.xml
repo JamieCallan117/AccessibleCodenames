@@ -7,119 +7,86 @@
     android:layout_height="match_parent"
     tools:context=".GameOptions">
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="627dp"
-        android:layout_marginRight="627dp"
-        android:layout_marginBottom="353dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:paddingTop="28dp"
+        android:paddingBottom="28dp"
         android:text="@string/back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/gameOptionsTitle"
-        android:layout_width="667dp"
-        android:layout_height="101dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginLeft="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginRight="40dp"
         android:layout_marginBottom="268dp"
-        android:ems="10"
         android:fontFamily="@font/title_font"
         android:gravity="center_horizontal"
-        android:text="Game Options"
+        android:text="@string/game_options"
         android:textSize="74sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/gameOptionsSubtitle"
-        android:layout_width="175dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="17dp"
-        android:layout_marginLeft="17dp"
-        android:layout_marginTop="17dp"
-        android:layout_marginEnd="36dp"
-        android:layout_marginRight="36dp"
-        android:layout_marginBottom="241dp"
-        android:ems="10"
-        android:fontFamily="@font/title_font"
-        android:gravity="center_horizontal"
-        android:text=""
-        android:textSize="36sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.951"
-        app:layout_constraintStart_toEndOf="@+id/gameOptionsTitle"
-        app:layout_constraintTop_toBottomOf="@+id/gameOptionsTitle"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/boardOptionsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginLeft="48dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
         android:layout_marginTop="40dp"
-        android:layout_marginEnd="184dp"
-        android:layout_marginRight="184dp"
-        android:text="Board Options"
-        app:layout_constraintEnd_toStartOf="@+id/teamOptionsText"
-        app:layout_constraintStart_toStartOf="parent"
+        android:paddingStart="2dp"
+        android:paddingEnd="2dp"
+        android:text="@string/board_options"
+        app:layout_constraintStart_toStartOf="@id/boardOptionsLinear"
+        app:layout_constraintEnd_toEndOf="@id/boardOptionsLinear"
         app:layout_constraintTop_toBottomOf="@+id/gameOptionsTitle" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/teamOptionsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="184dp"
-        android:layout_marginLeft="184dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
         android:layout_marginTop="40dp"
-        android:text="Team Options"
-        app:layout_constraintStart_toEndOf="@+id/boardOptionsText"
+        android:paddingStart="3dp"
+        android:paddingEnd="3dp"
+        android:text="@string/team_options"
+        app:layout_constraintStart_toStartOf="@id/teamOptionsLinear"
+        app:layout_constraintEnd_toEndOf="@id/teamOptionsLinear"
         app:layout_constraintTop_toBottomOf="@+id/gameOptionsTitle" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/customWordsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="184dp"
-        android:layout_marginLeft="184dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="48dp"
-        android:layout_marginRight="48dp"
-        android:text="Custom Words"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/teamOptionsText"
-        app:layout_constraintTop_toBottomOf="@+id/gameOptionsSubtitle" />
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginTop="40dp"
+        android:text="@string/custom_words_str"
+        app:layout_constraintStart_toStartOf="@id/scrollView"
+        app:layout_constraintEnd_toEndOf="@id/scrollView"
+        app:layout_constraintTop_toBottomOf="@id/gameOptionsTitle" />
 
     <ScrollView
         android:id="@+id/scrollView"
-        android:layout_width="150dp"
-        android:layout_height="187dp"
-        android:layout_marginStart="555dp"
-        android:layout_marginLeft="555dp"
-        android:layout_marginEnd="26dp"
-        android:layout_marginRight="26dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="1dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/customWordsText"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintStart_toEndOf="@+id/teamOptionsLinear"
+        app:layout_constraintTop_toBottomOf="@+id/customWordsText">
 
         <LinearLayout
             android:id="@+id/scrollLinear"
@@ -131,9 +98,10 @@
                 android:id="@+id/customWordLinear1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="2dp"
                 android:orientation="horizontal">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/customWordText1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -155,9 +123,10 @@
                 android:id="@+id/customWordLinear2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="2dp"
                 android:orientation="horizontal">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/customWordText2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -178,9 +147,10 @@
                 android:id="@+id/customWordLinear3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="2dp"
                 android:orientation="horizontal">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/customWordText3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -201,9 +171,10 @@
                 android:id="@+id/customWordLinear4"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="2dp"
                 android:orientation="horizontal">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/customWordText4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -224,9 +195,10 @@
                 android:id="@+id/customWordLinear5"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="2dp"
                 android:orientation="horizontal">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/customWordText5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -247,9 +219,10 @@
                 android:id="@+id/customWordLinear6"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="2dp"
                 android:orientation="horizontal">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/customWordText6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -270,9 +243,10 @@
                 android:id="@+id/customWordLinear7"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="2dp"
                 android:orientation="horizontal">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/customWordText7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -293,9 +267,10 @@
                 android:id="@+id/customWordLinear8"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="2dp"
                 android:orientation="horizontal">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/customWordText8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -316,9 +291,10 @@
                 android:id="@+id/customWordLinear9"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="2dp"
                 android:orientation="horizontal">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/customWordText9"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -341,7 +317,7 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/customWordText10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -361,206 +337,233 @@
         </LinearLayout>
     </ScrollView>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="13dp"
-        android:layout_marginLeft="13dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="13dp"
-        android:text="Save"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="1dp"
+        android:paddingTop="28dp"
+        android:paddingBottom="28dp"
+        android:text="@string/save"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/gameOptionsTitle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/gameOptionsTitle"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/boardOptionsLinear"
-        android:layout_width="173dp"
-        android:layout_height="191dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="1dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/teamOptionsLinear"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/boardOptionsText">
+        app:layout_constraintTop_toBottomOf="@+id/boardOptionsText" >
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/bombSquaresText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Bomb Squares" />
+            android:layout_marginBottom="2dp"
+            android:layout_marginStart="4dp"
+            android:text="@string/bomb_squares_str" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:orientation="horizontal">
 
-            <ImageView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/subtractBombsButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/subtract" />
+                android:minWidth="44dip"
+                android:text="@string/minus"
+                android:textSize="18sp" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/bombSquareCount"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:text="1" />
+                android:textSize="18sp" />
 
-            <ImageView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/addBombsButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/add" />
+                android:minWidth="44dip"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:text="@string/plus"
+                android:textSize="18sp" />
 
         </LinearLayout>
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/neutralSquaresText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Neutral Squares" />
+            android:layout_marginBottom="2dp"
+            android:layout_marginStart="4dp"
+            android:text="@string/neutral_squares_str" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:orientation="horizontal">
 
-            <ImageView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/subtractNeutralsButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/subtract" />
+                android:minWidth="44dip"
+                android:text="@string/minus"
+                android:textSize="18sp" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/neutralSquareCount"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:text="7" />
+                android:textSize="18sp" />
 
-            <ImageView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/addNeutralsButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/add" />
+                android:minWidth="44dip"
+                android:text="@string/plus"
+                android:textSize="18sp" />
 
         </LinearLayout>
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/squaresInUseText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Squares in use" />
+            android:layout_marginBottom="2dp"
+            android:layout_marginStart="4dp"
+            android:text="@string/squares_in_use" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/squaresInUse"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="25/25"
+            android:text="@string/square_counter"
             android:textSize="40sp" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/teamOptionsLinear"
-        android:layout_width="173dp"
-        android:layout_height="191dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginRight="100dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="1dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/scrollView"
-        app:layout_constraintTop_toBottomOf="@+id/teamOptionsText"
-        app:layout_constraintVertical_bias="0.533">
+        app:layout_constraintStart_toEndOf="@+id/boardOptionsLinear"
+        app:layout_constraintTop_toBottomOf="@+id/teamOptionsText" >
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/teamASquaresText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Team A Squares" />
+            android:layout_marginBottom="2dp"
+            android:layout_marginStart="4dp"
+            android:text="@string/team_a_squares_str" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:orientation="horizontal">
 
-            <ImageView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/teamASqrDec"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/subtract" />
+                android:minWidth="44dip"
+                android:text="@string/minus"
+                android:textSize="18sp" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/teamASquaresCount"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:text="9" />
+                android:textSize="18sp" />
 
-            <ImageView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/teamASqrInc"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/add" />
+                android:minWidth="44dip"
+                android:text="@string/plus"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/teamBSquaresText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Team B Squares" />
+            android:layout_marginBottom="2dp"
+            android:layout_marginStart="4dp"
+            android:text="@string/team_b_squares_str" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:orientation="horizontal">
 
-            <ImageView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/teamBSqrDec"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/subtract" />
+                android:minWidth="44dip"
+                android:text="@string/minus"
+                android:textSize="18sp" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/teamBSquaresCount"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:text="8" />
+                android:textSize="18sp" />
 
-            <ImageView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/teamBSqrInc"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/add" />
+                android:minWidth="44dip"
+                android:text="@string/plus"
+                android:textSize="18sp" />
         </LinearLayout>
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/startingTeamText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Starting team" />
+            android:layout_marginBottom="2dp"
+            android:layout_marginStart="4dp"
+            android:text="@string/starting_team_str" />
 
         <ToggleButton
             android:id="@+id/startingTeamButton"
@@ -568,68 +571,83 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:checked="true"
-            android:textOff="B"
-            android:textOn="A" />
+            android:textOff="@string/b"
+            android:textOn="@string/a" />
     </LinearLayout>
 
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/messageBox"
-        android:layout_width="405dp"
-        android:layout_height="205dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginLeft="1dp"
-        android:layout_marginTop="33dp"
-        android:layout_marginEnd="7dp"
-        android:layout_marginRight="7dp"
-        android:layout_marginBottom="6dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="#FFFFFF"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView"
-        app:layout_constraintEnd_toStartOf="@+id/scrollView"
-        app:layout_constraintHorizontal_bias="0.62"
-        app:layout_constraintStart_toEndOf="@+id/boardOptionsText"
-        app:layout_constraintTop_toBottomOf="@+id/gameOptionsTitle"
-        app:layout_constraintVertical_bias="0.3">
+        android:elevation="3dp"
+        android:paddingStart="20dp"
+        android:paddingTop="40dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="40dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/messageBoxText"
             android:layout_width="match_parent"
-            android:layout_height="93dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="16dp"
             android:fontFamily="@font/general_font"
             android:gravity="center|top"
-            android:text="Default"
             android:textSize="24sp"
             app:layout_column="0"
             app:layout_columnSpan="3"
             app:layout_row="0" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/okButton"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="OK"
-            app:layout_column="1"
-            app:layout_columnWeight="1"
+            android:paddingLeft="24dp"
+            android:paddingTop="12dp"
+            android:paddingRight="24dp"
+            android:paddingBottom="12dp"
+            android:text="@string/ok"
+            android:textSize="20sp"
+            app:layout_column="0"
+            app:layout_columnSpan="2"
+            app:layout_columnWeight="2"
+            app:layout_gravity="center"
             app:layout_row="1" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/yesButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="24dp"
+            android:paddingTop="12dp"
+            android:paddingRight="24dp"
+            android:paddingBottom="12dp"
             android:text="@string/yes"
+            android:textSize="20sp"
             app:layout_column="0"
-            app:layout_columnWeight="1"
-            app:layout_row="2" />
+            app:layout_gravity="center|start|center_horizontal|center_vertical"
+            app:layout_row="1" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/noButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="24dp"
+            android:paddingTop="12dp"
+            android:paddingRight="24dp"
+            android:paddingBottom="12dp"
             android:text="@string/no"
-            app:layout_column="2"
-            app:layout_columnWeight="1"
-            app:layout_row="2" />
+            android:textSize="20sp"
+            app:layout_column="1"
+            app:layout_columnWeight="2"
+            app:layout_gravity="end"
+            app:layout_row="1" />
     </androidx.gridlayout.widget.GridLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
