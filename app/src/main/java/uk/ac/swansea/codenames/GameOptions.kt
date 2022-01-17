@@ -774,7 +774,7 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         messageBoxText?.setOnLongClickListener {
-            speakOut(messageBoxText?.text.toString().replace("\n", " "))
+            speakOut(messageBoxText?.text.toString().replace("\n", ""))
             true
         }
 

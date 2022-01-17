@@ -6,6 +6,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import android.os.Bundle
 import android.content.Intent
 import android.graphics.Paint
+import android.os.Handler
+import android.os.Looper
+import android.speech.tts.TextToSpeech
 import android.view.Gravity
 import android.view.View
 import android.widget.*
@@ -15,9 +18,7 @@ import com.google.android.material.textview.MaterialTextView
 import java.io.IOException
 import java.util.*
 
-class LocalGame : AppCompatActivity() {
-    // TODO: Implement TTS
-
+class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var gamePhase: LocalPhase? = null
     private var bombSquaresCount = 1
     private var neutralSquaresCount = 7
@@ -63,6 +64,7 @@ class LocalGame : AppCompatActivity() {
     private var outline: ConstraintLayout? = null
     private var gameOperationsLinear: LinearLayout? = null
     private var previousHintsLinear: LinearLayout? = null
+    private var scoreLinear: LinearLayout? = null
     private var squareOne: WordButton? = null
     private var squareTwo: WordButton? = null
     private var squareThree: WordButton? = null
@@ -99,6 +101,9 @@ class LocalGame : AppCompatActivity() {
     private var applicationBackgroundColour = -10921639
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
+    private var wordCounter = 0
+    private var maxTurns = 0
+    private var textToSpeech: TextToSpeech? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -137,6 +142,9 @@ class LocalGame : AppCompatActivity() {
         previousHintsScroll = findViewById(R.id.previousHintsScroll)
         previousHintsLinear = findViewById(R.id.previousHintsLinear)
         hidePreviousHints = findViewById(R.id.hidePreviousHints)
+        scoreLinear = findViewById(R.id.scoreLinear)
+
+        textToSpeech = TextToSpeech(this, this)
 
         val gameOpWidth = gameOperations?.width?.toFloat()
         hintText?.visibility = View.GONE
@@ -215,7 +223,9 @@ class LocalGame : AppCompatActivity() {
 
         messageText?.text = getString(R.string.spymaster_confirmation)
 
-        toggleMessageBox(true, 0)
+        Handler(Looper.getMainLooper()).postDelayed({
+            toggleMessageBox(true, 0)
+        }, 1000)
 
         //Reads words from the text file to store in the defaultWords array
         var wordsFromFile = ""
@@ -235,8 +245,8 @@ class LocalGame : AppCompatActivity() {
 
         val temp = wordsFromFile.split(",").toTypedArray()
         val defaultWords = ArrayList(listOf(*temp))
-        val MAX_WORDS = 25
-        var defaultWordsNeeded = MAX_WORDS
+        val maxWords = 25
+        var defaultWordsNeeded = maxWords
 
         if (customWords != null) {
             for (i in customWords?.indices!!) {
@@ -254,18 +264,18 @@ class LocalGame : AppCompatActivity() {
         list.shuffle()
 
         for (i in 0 until defaultWordsNeeded) {
-            words[i + (MAX_WORDS - defaultWordsNeeded)] = defaultWords[list[i]!!]
+            words[i + (maxWords - defaultWordsNeeded)] = defaultWords[list[i]!!]
         }
 
-        Collections.shuffle(Arrays.asList(*words))
+        words.shuffle()
 
-        for (i in 0 until MAX_WORDS) {
+        for (i in 0 until maxWords) {
             wordButtons[i]?.text = words[i]
         }
 
         list.clear()
 
-        for (i in 0 until MAX_WORDS) {
+        for (i in 0 until maxWords) {
             list.add(i)
         }
 
@@ -319,6 +329,131 @@ class LocalGame : AppCompatActivity() {
         squareTwentyFour?.setOnClickListener { wordButtonPress(squareTwentyFour) }
         squareTwentyFive?.setOnClickListener { wordButtonPress(squareTwentyFive) }
 
+        squareOne?.setOnLongClickListener {
+            speakOut(squareOne?.text.toString())
+            true
+        }
+
+        squareTwo?.setOnLongClickListener {
+            speakOut(squareTwo?.text.toString())
+            true
+        }
+
+        squareThree?.setOnLongClickListener {
+            speakOut(squareThree?.text.toString())
+            true
+        }
+
+        squareFour?.setOnLongClickListener {
+            speakOut(squareFour?.text.toString())
+            true
+        }
+
+        squareFive?.setOnLongClickListener {
+            speakOut(squareFive?.text.toString())
+            true
+        }
+
+        squareSix?.setOnLongClickListener {
+            speakOut(squareSix?.text.toString())
+            true
+        }
+
+        squareSeven?.setOnLongClickListener {
+            speakOut(squareSeven?.text.toString())
+            true
+        }
+
+        squareEight?.setOnLongClickListener {
+            speakOut(squareEight?.text.toString())
+            true
+        }
+
+        squareNine?.setOnLongClickListener {
+            speakOut(squareNine?.text.toString())
+            true
+        }
+
+        squareTen?.setOnLongClickListener {
+            speakOut(squareTen?.text.toString())
+            true
+        }
+
+        squareEleven?.setOnLongClickListener {
+            speakOut(squareEleven?.text.toString())
+            true
+        }
+
+        squareTwelve?.setOnLongClickListener {
+            speakOut(squareTwelve?.text.toString())
+            true
+        }
+
+        squareThirteen?.setOnLongClickListener {
+            speakOut(squareThirteen?.text.toString())
+            true
+        }
+
+        squareFourteen?.setOnLongClickListener {
+            speakOut(squareFourteen?.text.toString())
+            true
+        }
+
+        squareFifteen?.setOnLongClickListener {
+            speakOut(squareFifteen?.text.toString())
+            true
+        }
+
+        squareSixteen?.setOnLongClickListener {
+            speakOut(squareSixteen?.text.toString())
+            true
+        }
+
+        squareSeventeen?.setOnLongClickListener {
+            speakOut(squareSeventeen?.text.toString())
+            true
+        }
+
+        squareEighteen?.setOnLongClickListener {
+            speakOut(squareEighteen?.text.toString())
+            true
+        }
+
+        squareNineteen?.setOnLongClickListener {
+            speakOut(squareNineteen?.text.toString())
+            true
+        }
+
+        squareTwenty?.setOnLongClickListener {
+            speakOut(squareTwenty?.text.toString())
+            true
+        }
+
+        squareTwentyOne?.setOnLongClickListener {
+            speakOut(squareTwentyOne?.text.toString())
+            true
+        }
+
+        squareTwentyTwo?.setOnLongClickListener {
+            speakOut(squareTwentyTwo?.text.toString())
+            true
+        }
+
+        squareTwentyThree?.setOnLongClickListener {
+            speakOut(squareTwentyThree?.text.toString())
+            true
+        }
+
+        squareTwentyFour?.setOnLongClickListener {
+            speakOut(squareTwentyFour?.text.toString())
+            true
+        }
+
+        squareTwentyFive?.setOnLongClickListener {
+            speakOut(squareTwentyFive?.text.toString())
+            true
+        }
+
         gameOpOpenButton?.setOnClickListener {
             gameOpOpenButton?.visibility = View.GONE
             gameOperations?.visibility = View.VISIBLE
@@ -345,13 +480,21 @@ class LocalGame : AppCompatActivity() {
         }
 
         confirmButton?.setOnClickListener {
-            if (gamePhase != LocalPhase.TEAM_A_WIN && gamePhase != LocalPhase.TEAM_B_WIN) {
+            textToSpeech?.stop()
+
+            if (gamePhase == LocalPhase.TEAM_A || gamePhase == LocalPhase.TEAM_B || gamePhase == LocalPhase.TEAM_A_SPY || gamePhase == LocalPhase.TEAM_B_SPY) {
+                toggleMessageBox(false, 0)
+            } else if (gamePhase != LocalPhase.TEAM_A_WIN && gamePhase != LocalPhase.TEAM_B_WIN) {
                 when (gamePhase) {
                     LocalPhase.TEAM_A_INTERMISSION -> gamePhase = LocalPhase.TEAM_A_SPY
                     LocalPhase.TEAM_B_INTERMISSION -> gamePhase = LocalPhase.TEAM_B_SPY
+                    else -> {
+                        val i = Intent(this, MainMenu::class.java)
+                        startActivity(i)
+                    }
                 }
 
-                hintText?.text = ""
+                hintText?.visibility = View.GONE
                 turnAction?.setText(R.string.give_hint)
                 editHint?.visibility = View.VISIBLE
                 hintNumber?.visibility = View.VISIBLE
@@ -362,7 +505,7 @@ class LocalGame : AppCompatActivity() {
             } else {
                 teamACount?.paintFlags = teamACount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
                 teamBCount?.paintFlags = teamBCount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
-                hintText?.text = ""
+                hintText?.visibility = View.GONE
                 gameOperationsLinear?.removeView(editHint)
                 gameOperationsLinear?.removeView(hintNumber)
                 gameOperationsLinear?.removeView(turnAction)
@@ -378,41 +521,61 @@ class LocalGame : AppCompatActivity() {
 
             when (gamePhase) {
                 LocalPhase.TEAM_A -> {
-                    gamePhase = LocalPhase.TEAM_B_INTERMISSION
-                    teamBCount?.paintFlags = teamBCount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
-                    teamACount?.paintFlags = teamACount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
-                    messageText?.setText(R.string.spymaster_confirmation)
-                    confirmButton?.setText(R.string.confirm)
+                    if (wordCounter == 0) {
+                        messageText?.text = getString(R.string.minimum_turn)
 
-                    val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+                        confirmButton?.text = getString(R.string.ok)
 
-                    teamBColour = preferences.getInt("teamB", -65536)
+                        toggleMessageBox(true, 0)
+                    } else {
+                        gamePhase = LocalPhase.TEAM_B_INTERMISSION
+                        teamBCount?.paintFlags = teamBCount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
+                        teamACount?.paintFlags = teamACount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
+                        messageText?.setText(R.string.spymaster_confirmation)
+                        confirmButton?.setText(R.string.confirm)
 
-                    outline?.setBackgroundColor(teamBColour)
+                        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
-                    toggleMessageBox(true, 0)
+                        teamBColour = preferences.getInt("teamB", -65536)
+
+                        outline?.setBackgroundColor(teamBColour)
+
+                        toggleMessageBox(true, 0)
+                    }
                 }
 
                 LocalPhase.TEAM_B -> {
-                    gamePhase = LocalPhase.TEAM_A_INTERMISSION
-                    teamACount?.paintFlags = teamACount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
-                    teamBCount?.paintFlags = teamBCount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
-                    messageText?.setText(R.string.spymaster_confirmation)
-                    confirmButton?.setText(R.string.confirm)
+                    if (wordCounter == 0) {
+                        messageText?.text = getString(R.string.minimum_turn)
 
-                    val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+                        confirmButton?.text = getString(R.string.ok)
 
-                    teamAColour = preferences.getInt("teamA", -16773377)
+                        toggleMessageBox(true, 0)
+                    } else {
+                        gamePhase = LocalPhase.TEAM_A_INTERMISSION
+                        teamACount?.paintFlags = teamACount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
+                        teamBCount?.paintFlags = teamBCount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
+                        messageText?.setText(R.string.spymaster_confirmation)
+                        confirmButton?.setText(R.string.confirm)
 
-                    outline?.setBackgroundColor(teamAColour)
+                        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
-                    toggleMessageBox(true, 0)
+                        teamAColour = preferences.getInt("teamA", -16773377)
+
+                        outline?.setBackgroundColor(teamAColour)
+
+                        toggleMessageBox(true, 0)
+                    }
                 }
 
                 LocalPhase.TEAM_A_SPY -> {
                     if (editHint?.text.toString() == "") {
                         validHint = false
-                    } else if (editHint?.text.toString().contains(" ")) {
+                    } else if (editHint?.text.toString().trim().contains(" ")) {
+                        validHint = false
+                    } else if (!editHint?.text.toString().matches("[A-Za-z]+".toRegex())) {
+                        validHint = false
+                    } else if (editHint?.text.toString().length < 3) {
                         validHint = false
                     }
 
@@ -427,13 +590,22 @@ class LocalGame : AppCompatActivity() {
 
                         viewPreviousHints?.visibility = View.VISIBLE
 
+                        wordCounter = 0
+
+                        maxTurns = if (hintNumber?.selectedItem.toString() == "Infinite") {
+                            24
+                        } else {
+                            hintNumber?.selectedItem.toString().toInt() + 1
+                        }
+
                         gamePhase = LocalPhase.TEAM_A
 
                         val hint = editHint?.text.toString() + ": " + hintNumber?.selectedItem.toString()
 
                         hintText?.text = hint
-                        editHint?.visibility = View.INVISIBLE
-                        hintNumber?.visibility = View.INVISIBLE
+                        hintText?.visibility = View.VISIBLE
+                        editHint?.visibility = View.GONE
+                        hintNumber?.visibility = View.GONE
 
                         addHint(hint)
                     } else {
@@ -447,7 +619,11 @@ class LocalGame : AppCompatActivity() {
                 LocalPhase.TEAM_B_SPY -> {
                     if (editHint?.text.toString() == "") {
                         validHint = false
-                    } else if (editHint?.text.toString().contains(" ")) {
+                    } else if (editHint?.text.toString().trim().contains(" ")) {
+                        validHint = false
+                    } else if (!editHint?.text.toString().matches("[A-Za-z]+".toRegex())) {
+                        validHint = false
+                    } else if (editHint?.text.toString().length < 3) {
                         validHint = false
                     }
 
@@ -462,13 +638,22 @@ class LocalGame : AppCompatActivity() {
 
                         viewPreviousHints?.visibility = View.VISIBLE
 
+                        wordCounter = 0
+
+                        maxTurns = if (hintNumber?.selectedItem.toString() == "Infinite") {
+                            24
+                        } else {
+                            hintNumber?.selectedItem.toString().toInt() + 1
+                        }
+
                         gamePhase = LocalPhase.TEAM_B
 
                         val hint = editHint?.text.toString() + ": " + hintNumber?.selectedItem.toString()
 
                         hintText?.text = hint
-                        editHint?.visibility = View.INVISIBLE
-                        hintNumber?.visibility = View.INVISIBLE
+                        hintText?.visibility = View.VISIBLE
+                        editHint?.visibility = View.GONE
+                        hintNumber?.visibility = View.GONE
 
                         addHint(hint)
                     } else {
@@ -487,87 +672,173 @@ class LocalGame : AppCompatActivity() {
             updateColours()
         }
 
-        noButton?.setOnClickListener { toggleMessageBox(false, 1) }
+        noButton?.setOnClickListener {
+            textToSpeech?.stop()
+            toggleMessageBox(false, 1)
+        }
 
-        ttsButton?.setOnClickListener { toggleTtsBox(true) }
+        ttsButton?.setOnClickListener {
+            toggleTtsBox(true)
+        }
 
         ttsAll?.setOnClickListener {
+            var message = ""
+
             for (wb in wordButtons) {
-                //Uncomment if needing a delay between tts.
-//                try {
-//                    TimeUnit.MILLISECONDS.sleep(1500);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-                println(wb?.text.toString())
+                message += wb?.text.toString() + "\n"
             }
+
+            speakOut(message)
 
             toggleTtsBox(false)
         }
 
         ttsA?.setOnClickListener {
-            for (wb in wordButtons) {
-                if (teamAWords?.contains(wb?.text.toString()) == true) {
-                    if (wb != null) {
-                        println(wb.text.toString())
+            var message = ""
+
+            if (gamePhase != LocalPhase.TEAM_A && gamePhase != LocalPhase.TEAM_B) {
+                for (wb in wordButtons) {
+                    if (teamAWords?.contains(wb?.text.toString()) == true) {
+                        if (wb != null) {
+                            message += wb.text.toString() + "\n"
+                        }
                     }
                 }
+            } else {
+                for (wb in wordButtons) {
+                    if (wb?.hasBeenClicked() == true) {
+                        if (teamAWords?.contains(wb.text.toString()) == true) {
+                            message += wb.text.toString() + "\n"
+                        }
+                    }
+                }
+            }
+
+            if (message == "") {
+                speakOut(getString(R.string.none_found))
+            } else {
+                speakOut(message)
             }
 
             toggleTtsBox(false)
         }
 
         ttsB?.setOnClickListener {
-            for (wb in wordButtons) {
-                if (teamBWords?.contains(wb?.text.toString()) == true) {
-                    if (wb != null) {
-                        println(wb.text.toString())
+            var message = ""
+
+            if (gamePhase != LocalPhase.TEAM_A && gamePhase != LocalPhase.TEAM_B) {
+                for (wb in wordButtons) {
+                    if (teamBWords?.contains(wb?.text.toString()) == true) {
+                        if (wb != null) {
+                            message += wb.text.toString() + "\n"
+                        }
                     }
                 }
+            } else {
+                for (wb in wordButtons) {
+                    if (wb?.hasBeenClicked() == true) {
+                        if (teamBWords?.contains(wb.text.toString()) == true) {
+                            message += wb.text.toString() + "\n"
+                        }
+                    }
+                }
+            }
+
+            if (message == "") {
+                speakOut(getString(R.string.none_found))
+            } else {
+                speakOut(message)
             }
 
             toggleTtsBox(false)
         }
 
         ttsNeutral?.setOnClickListener {
-            for (wb in wordButtons) {
-                if (neutralWords?.contains(wb?.text.toString()) == true) {
-                    if (wb != null) {
-                        println(wb.text.toString())
+            var message = ""
+            if (gamePhase != LocalPhase.TEAM_A && gamePhase != LocalPhase.TEAM_B) {
+                for (wb in wordButtons) {
+                    if (neutralWords?.contains(wb?.text.toString()) == true) {
+                        if (wb != null) {
+                            message += wb.text.toString() + "\n"
+                        }
                     }
                 }
+            } else {
+                for (wb in wordButtons) {
+                    if (wb?.hasBeenClicked() == true) {
+                        if (neutralWords?.contains(wb.text.toString()) == true) {
+                            message += wb.text.toString() + "\n"
+                        }
+                    }
+                }
+            }
+
+            if (message == "") {
+                speakOut(getString(R.string.none_found))
+            } else {
+                speakOut(message)
             }
 
             toggleTtsBox(false)
         }
 
         ttsBomb?.setOnClickListener {
-            for (wb in wordButtons) {
-                if (bombWords?.contains(wb?.text.toString()) == true) {
-                    if (wb != null) {
-                        println(wb.text.toString())
+            var message = ""
+
+            if (gamePhase != LocalPhase.TEAM_A && gamePhase != LocalPhase.TEAM_B) {
+                for (wb in wordButtons) {
+                    if (bombWords?.contains(wb?.text.toString()) == true) {
+                        if (wb != null) {
+                            message += wb.text.toString() + "\n"
+                        }
                     }
                 }
+            } else {
+                for (wb in wordButtons) {
+                    if (wb?.hasBeenClicked() == true) {
+                        if (bombWords?.contains(wb.text.toString()) == true) {
+                            message += wb.text.toString() + "\n"
+                        }
+                    }
+                }
+            }
+
+            if (message == "") {
+                speakOut(getString(R.string.none_found))
+            } else {
+                speakOut(message)
             }
 
             toggleTtsBox(false)
         }
 
         ttsUnclicked?.setOnClickListener {
+            var message = ""
+
             for (wb in wordButtons) {
                 if (!wb?.hasBeenClicked()!!) {
-                    println(wb.text.toString())
+                    message += wb.text.toString() + "\n"
                 }
             }
+
+            speakOut(message)
 
             toggleTtsBox(false)
         }
 
         ttsClicked?.setOnClickListener {
+            var message = ""
+
             for (wb in wordButtons) {
                 if (wb?.hasBeenClicked() == true) {
-                    println(wb.text.toString())
+                    message += wb.text.toString() + "\n"
                 }
+            }
+
+            if (message == "") {
+                speakOut(getString(R.string.none_found))
+            } else {
+                speakOut(message)
             }
 
             toggleTtsBox(false)
@@ -600,11 +871,133 @@ class LocalGame : AppCompatActivity() {
         }
 
         yesButton?.setOnClickListener {
+            textToSpeech?.stop()
+
             val i = Intent(applicationContext, MainMenu::class.java)
             startActivity(i)
         }
 
+        exitButton?.setOnLongClickListener {
+            speakOut(exitButton?.text.toString())
+            true
+        }
+
+        scoreLinear?.setOnLongClickListener {
+            var message = getString(R.string.remaining_words_a, teamASquaresCount).replace(" A ", " Ay ")
+
+            message += "\n" + getString(R.string.remaining_words_b, teamBSquaresCount)
+
+            speakOut(message)
+            true
+        }
+
+        hintText?.setOnLongClickListener {
+            speakOut(hintText?.text.toString())
+            true
+        }
+
+        hintNumber?.setOnLongClickListener {
+            speakOut(hintNumber?.selectedItem.toString())
+            true
+        }
+
+        turnAction?.setOnLongClickListener {
+            speakOut(turnAction?.text.toString())
+            true
+        }
+
+        ttsButton?.setOnLongClickListener {
+            speakOut(getString(R.string.text_to_speech))
+            true
+        }
+
+        viewPreviousHints?.setOnLongClickListener {
+            speakOut(viewPreviousHints?.text.toString().replace("\n", ""))
+            true
+        }
+
+        hidePreviousHints?.setOnLongClickListener {
+            speakOut(hidePreviousHints?.text.toString())
+            true
+        }
+
+        messageText?.setOnLongClickListener {
+            speakOut(messageText?.text.toString())
+            true
+        }
+
+        yesButton?.setOnLongClickListener {
+            speakOut(yesButton?.text.toString())
+            true
+        }
+
+        confirmButton?.setOnLongClickListener {
+            speakOut(confirmButton?.text.toString())
+            true
+        }
+
+        noButton?.setOnLongClickListener {
+            speakOut(noButton?.text.toString())
+            true
+        }
+
+        gameOpOpenButton?.setOnLongClickListener {
+            speakOut(getString(R.string.open_game_op))
+            true
+        }
+
+        gameOpCloseButton?.setOnLongClickListener {
+            speakOut(getString(R.string.close_game_op))
+            true
+        }
+
+        ttsAll?.setOnLongClickListener {
+            speakOut(ttsAll?.text.toString().replace("\n", ""))
+            true
+        }
+
+        ttsA?.setOnLongClickListener {
+            speakOut(ttsA?.text.toString().replace("\n", "").replace(" A ", " Ay "))
+            true
+        }
+
+        ttsB?.setOnLongClickListener {
+            speakOut(ttsB?.text.toString().replace("\n", ""))
+            true
+        }
+
+        ttsNeutral?.setOnLongClickListener {
+            speakOut(ttsNeutral?.text.toString().replace("\n", ""))
+            true
+        }
+
+        ttsBomb?.setOnLongClickListener {
+            speakOut(ttsBomb?.text.toString().replace("\n", ""))
+            true
+        }
+
+        ttsUnclicked?.setOnLongClickListener {
+            speakOut(ttsUnclicked?.text.toString().replace("\n", ""))
+            true
+        }
+
+        ttsClicked?.setOnLongClickListener {
+            speakOut(ttsClicked?.text.toString().replace("\n", ""))
+            true
+        }
+
+        closeTts?.setOnLongClickListener {
+            speakOut(closeTts?.text.toString())
+            true
+        }
+
         updateColours()
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            textToSpeech!!.language = Locale.UK
+        }
     }
 
     override fun onBackPressed() {
@@ -616,6 +1009,8 @@ class LocalGame : AppCompatActivity() {
     private fun wordButtonPress(buttonPressed: WordButton?) {
         if (!buttonPressed?.hasBeenClicked()!! && gamePhase != LocalPhase.TEAM_A_SPY && gamePhase != LocalPhase.TEAM_B_SPY && gamePhase != LocalPhase.TEAM_A_INTERMISSION && gamePhase != LocalPhase.TEAM_B_INTERMISSION && gamePhase != LocalPhase.TEAM_A_WIN && gamePhase != LocalPhase.TEAM_B_WIN) {
             buttonPressed.setHasBeenClicked(true)
+
+            wordCounter++
 
             var buttonType = ""
 
@@ -710,6 +1105,7 @@ class LocalGame : AppCompatActivity() {
 
                         toggleMessageBox(true, 0)
                     }
+
                     teamASquaresCount--
                     teamACount?.text = teamASquaresCount.toString()
 
@@ -717,6 +1113,22 @@ class LocalGame : AppCompatActivity() {
                         gamePhase = LocalPhase.TEAM_A_WIN
 
                         gameWin()
+                    } else if (maxTurns == wordCounter) {
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            gamePhase = LocalPhase.TEAM_B_INTERMISSION
+                            teamBCount?.paintFlags = teamBCount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
+                            teamACount?.paintFlags = teamACount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
+                            messageText?.setText(R.string.spymaster_confirmation)
+                            confirmButton?.setText(R.string.confirm)
+
+                            val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+                            teamBColour = preferences.getInt("teamB", -65536)
+
+                            outline?.setBackgroundColor(teamBColour)
+
+                            toggleMessageBox(true, 0)
+                        }, 1000)
                     }
                 }
 
@@ -744,6 +1156,22 @@ class LocalGame : AppCompatActivity() {
                         gamePhase = LocalPhase.TEAM_B_WIN
 
                         gameWin()
+                    } else if (maxTurns == wordCounter) {
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            gamePhase = LocalPhase.TEAM_A_INTERMISSION
+                            teamACount?.paintFlags = teamACount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
+                            teamBCount?.paintFlags = teamBCount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
+                            messageText?.setText(R.string.spymaster_confirmation)
+                            confirmButton?.setText(R.string.confirm)
+
+                            val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+                            teamAColour = preferences.getInt("teamA", -16773377)
+
+                            outline?.setBackgroundColor(teamAColour)
+
+                            toggleMessageBox(true, 0)
+                        }, 1000)
                     }
                 }
             }
@@ -768,6 +1196,8 @@ class LocalGame : AppCompatActivity() {
             outline?.setBackgroundColor(teamBColour)
         }
 
+        turnAction?.visibility = View.GONE
+
         confirmButton?.setText(R.string.ok)
         
         toggleMessageBox(true, 0)
@@ -778,6 +1208,8 @@ class LocalGame : AppCompatActivity() {
 
         if (enabled) {
             messageBox?.visibility = View.VISIBLE
+
+            speakOut(messageText?.text.toString().replace("\n", ""))
         } else {
             messageBox?.visibility = View.INVISIBLE
         }
@@ -786,6 +1218,8 @@ class LocalGame : AppCompatActivity() {
             wb?.isEnabled = !enabled
         }
 
+        gameOpOpenButton?.isEnabled = !enabled
+        gameOpCloseButton?.isEnabled = !enabled
         exitButton?.isEnabled = !enabled
         editHint?.isEnabled = !enabled
         hintNumber?.isEnabled = !enabled
@@ -838,36 +1272,67 @@ class LocalGame : AppCompatActivity() {
 
         if (gamePhase == LocalPhase.TEAM_A) {
             newHint.setTextColor(teamAColour)
+
+            newHint.setOnLongClickListener {
+                speakOut(getString(R.string.team_a_hint, newHint.text.toString()).replace(" A ", " Ay "))
+                true
+            }
+
+            speakOut(getString(R.string.team_a_new_hint, newHint.text.toString()).replace(" A ", " Ay "))
         } else {
             newHint.setTextColor(teamBColour)
+
+            newHint.setOnLongClickListener {
+                speakOut(getString(R.string.team_b_hint, newHint.text.toString()))
+                true
+            }
+
+            speakOut(getString(R.string.team_b_new_hint, newHint.text.toString()))
         }
 
-        newHint.gravity = Gravity.CENTER
-        newHint.textSize = 16f
+        newHint.textSize = 20f
 
-        //Use this for TTS
-        newHint.setOnClickListener { println(newHint.text.toString()) }
+        val params = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+
+        params.bottomMargin = 8
+        params.gravity = Gravity.CENTER
+
+        newHint.layoutParams = params
+
+
     }
 
     private fun updateSpinner() {
         val spinnerArray: MutableList<String> = ArrayList()
 
-        spinnerArray.add("∞")
-
         if (gamePhase == LocalPhase.TEAM_A_SPY) {
-            for (i in 0 until teamASquaresCount + 1) {
+            for (i in 1 until teamASquaresCount + 1) {
                 spinnerArray.add(i.toString())
             }
         } else {
-            for (i in 0 until teamBSquaresCount + 1) {
+            for (i in 1 until teamBSquaresCount + 1) {
                 spinnerArray.add(i.toString())
             }
         }
+
+        spinnerArray.add("0")
+        spinnerArray.add("Infinite")
 
         val adapter = ArrayAdapter(this,
                 android.R.layout.simple_spinner_item, spinnerArray)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         hintNumber?.adapter = adapter
+    }
+
+    private fun speakOut(message : String) {
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        if (preferences.getBoolean("textToSpeech", true)) {
+            textToSpeech!!.speak(message, TextToSpeech.QUEUE_FLUSH, null, "")
+        }
     }
 
     fun updateColours() {
@@ -1018,6 +1483,10 @@ class LocalGame : AppCompatActivity() {
                         wb.background.alpha = 128
                     }
                 }
+            }
+            else -> {
+                val i = Intent(this, MainMenu::class.java)
+                startActivity(i)
             }
         }
     }

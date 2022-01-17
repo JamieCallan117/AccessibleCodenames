@@ -224,11 +224,12 @@
 
         <ScrollView
             android:id="@+id/gameOperations"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:elevation="2dp"
-            android:scrollbars="none"
             android:overScrollMode="never"
+            android:scrollbars="none"
+            app:layout_constraintWidth_percent="0.2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -244,9 +245,11 @@
                     android:id="@+id/exitButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
                     android:text="@string/exit" />
 
                 <LinearLayout
+                    android:id="@+id/scoreLinear"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -282,8 +285,8 @@
                     android:id="@+id/hintText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:layout_marginTop="8dp"
+                    android:gravity="center"
                     android:textSize="16sp" />
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -291,19 +294,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:hint="@string/enter_hint" />
+                    android:enabled="false"
+                    android:hint="@string/enter_hint"
+                    android:maxLength="12"
+                    android:maxLines="1" />
 
                 <Spinner
                     android:id="@+id/hintNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp" />
+                    android:layout_marginTop="8dp"
+                    android:hapticFeedbackEnabled="false" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/turnAction"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:enabled="false"
                     android:text="@string/give_hint" />
 
                 <com.google.android.material.button.MaterialButton
@@ -311,6 +319,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:enabled="false"
                     android:text="@string/text_to_speech_btn" />
 
                 <com.google.android.material.button.MaterialButton
@@ -324,13 +333,14 @@
 
         <ScrollView
             android:id="@+id/previousHintsScroll"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="#FFF306"
             android:elevation="2dp"
             android:scrollbars="none"
             android:overScrollMode="never"
             android:visibility="gone"
+            app:layout_constraintWidth_percent="0.2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -371,6 +381,7 @@
             android:id="@+id/gameOpCloseButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:minWidth="22dip"
             android:paddingLeft="4dp"
             android:paddingTop="8dp"
@@ -411,7 +422,8 @@
                     android:layout_marginTop="0dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareSix"
@@ -421,7 +433,8 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareEleven"
@@ -431,7 +444,8 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareSixteen"
@@ -441,7 +455,8 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareTwentyOne"
@@ -451,7 +466,8 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="0dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
             </LinearLayout>
 
             <LinearLayout
@@ -469,7 +485,8 @@
                     android:layout_marginTop="0dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareSeven"
@@ -479,7 +496,8 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareTwelve"
@@ -489,7 +507,8 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareSeventeen"
@@ -499,7 +518,8 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareTwentyTwo"
@@ -509,7 +529,8 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="0dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
             </LinearLayout>
 
             <LinearLayout
@@ -527,7 +548,8 @@
                     android:layout_marginTop="0dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareEight"
@@ -537,7 +559,8 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareThirteen"
@@ -547,7 +570,8 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareEighteen"
@@ -557,7 +581,8 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareTwentyThree"
@@ -567,7 +592,8 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="0dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
             </LinearLayout>
 
             <LinearLayout
@@ -585,7 +611,8 @@
                     android:layout_marginTop="0dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareNine"
@@ -595,7 +622,8 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareFourteen"
@@ -605,7 +633,8 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareNineteen"
@@ -615,7 +644,8 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareTwentyFour"
@@ -625,7 +655,8 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="0dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
             </LinearLayout>
 
             <LinearLayout
@@ -643,7 +674,8 @@
                     android:layout_marginTop="0dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareTen"
@@ -653,7 +685,8 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareFifteen"
@@ -663,7 +696,8 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareTwenty"
@@ -673,7 +707,8 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareTwentyFive"
@@ -683,7 +718,8 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="0dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
             </LinearLayout>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

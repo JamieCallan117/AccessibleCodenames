@@ -121,32 +121,32 @@ class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         bombSquareButton?.setOnLongClickListener {
-            speakOut(bombSquareButton?.text.toString().replace("\n", " "))
+            speakOut(bombSquareButton?.text.toString().replace("\n", ""))
             true
         }
 
         neutralSquareButton?.setOnLongClickListener {
-            speakOut(neutralSquareButton?.text.toString().replace("\n", " "))
+            speakOut(neutralSquareButton?.text.toString().replace("\n", ""))
             true
         }
 
         unmodifiedSquareButton?.setOnLongClickListener {
-            speakOut(unmodifiedSquareButton?.text.toString().replace("\n", " "))
+            speakOut(unmodifiedSquareButton?.text.toString().replace("\n", ""))
             true
         }
 
         menuButtonsButton?.setOnLongClickListener {
-            speakOut(menuButtonsButton?.text.toString().replace("\n", " "))
+            speakOut(menuButtonsButton?.text.toString().replace("\n", ""))
             true
         }
 
         menuTextButton?.setOnLongClickListener {
-            speakOut(menuTextButton?.text.toString().replace("\n", " "))
+            speakOut(menuTextButton?.text.toString().replace("\n", ""))
             true
         }
 
         applicationBackgroundButton?.setOnLongClickListener {
-            speakOut(applicationBackgroundButton?.text.toString().replace("\n", " "))
+            speakOut(applicationBackgroundButton?.text.toString().replace("\n", ""))
             true
         }
 
