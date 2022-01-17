@@ -103,12 +103,12 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/customWordText1"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:ems="10"
                     android:imeOptions="actionDone"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:maxLength="12" />
 
                 <ImageButton
                     android:id="@+id/deleteCustomWord1"
@@ -128,10 +128,10 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/customWordText2"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:ems="10"
+                    android:maxLength="12"
                     android:imeOptions="actionDone"
                     android:inputType="textPersonName" />
 
@@ -152,10 +152,10 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/customWordText3"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:ems="10"
+                    android:maxLength="12"
                     android:imeOptions="actionDone"
                     android:inputType="textPersonName" />
 
@@ -176,10 +176,10 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/customWordText4"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:ems="10"
+                    android:maxLength="12"
                     android:imeOptions="actionDone"
                     android:inputType="textPersonName" />
 
@@ -200,10 +200,10 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/customWordText5"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:ems="10"
+                    android:maxLength="12"
                     android:imeOptions="actionDone"
                     android:inputType="textPersonName" />
 
@@ -224,10 +224,10 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/customWordText6"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:ems="10"
+                    android:maxLength="12"
                     android:imeOptions="actionDone"
                     android:inputType="textPersonName" />
 
@@ -248,10 +248,10 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/customWordText7"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:ems="10"
+                    android:maxLength="12"
                     android:imeOptions="actionDone"
                     android:inputType="textPersonName" />
 
@@ -272,10 +272,10 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/customWordText8"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:ems="10"
+                    android:maxLength="12"
                     android:imeOptions="actionDone"
                     android:inputType="textPersonName" />
 
@@ -296,10 +296,10 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/customWordText9"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:ems="10"
+                    android:maxLength="12"
                     android:imeOptions="actionDone"
                     android:inputType="textPersonName" />
 
@@ -319,10 +319,10 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/customWordText10"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:ems="10"
+                    android:maxLength="12"
                     android:imeOptions="actionDone"
                     android:inputType="textPersonName" />
 

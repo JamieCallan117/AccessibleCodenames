@@ -120,7 +120,7 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         quitText!!.setOnLongClickListener {
-            speakOut(quitText?.text.toString().replace("\n",""))
+            speakOut(quitText?.text.toString().replace("\n"," "))
             true
         }
 

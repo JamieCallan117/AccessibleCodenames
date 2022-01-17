@@ -99,4 +99,9 @@
     <string name="team_b_squares_str">Team B Squares</string>
     <string name="starting_team_str">Starting team</string>
     <string name="exit_without_save">Are you sure you want\nto exit without\nsaving your settings?</string>
+    <string name="repeated_custom_word">Repeated custom word.</string>
+    <string name="default_word_exists">%1$s already exists\nas a default word.</string>
+    <string name="required_squares">You do not have the\nrequired number of\nsquares assigned.</string>
+    <string name="custom_word_alpha">%1$s must only contain letters.</string>
+    <string name="out_of"> out of </string>
 </resources>

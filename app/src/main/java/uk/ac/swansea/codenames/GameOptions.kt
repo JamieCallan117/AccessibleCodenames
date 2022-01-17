@@ -17,9 +17,6 @@ import java.io.IOException
 import java.util.*
 
 class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
-    // TODO: Verify custom words, no duplicates, maximum length, alphabetical etc
-    // TODO: Implement TTS
-
     private var constraintLayout: ConstraintLayout? = null
     private var messageBox: GridLayout? = null
     private var gameOptionsTitle: MaterialTextView? = null
@@ -28,7 +25,16 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var neutralSquareCount: MaterialTextView? = null
     private var teamASquaresCount: MaterialTextView? = null
     private var teamBSquaresCount: MaterialTextView? = null
+    private var boardOptionsText: MaterialTextView? = null
+    private var teamOptionsText: MaterialTextView? = null
+    private var customWordsText: MaterialTextView? = null
     private var messageBoxText: MaterialTextView? = null
+    private var bombSquaresText: MaterialTextView? = null
+    private var neutralSquaresText: MaterialTextView? = null
+    private var squaresInUseText: MaterialTextView? = null
+    private var teamASquaresText: MaterialTextView? = null
+    private var teamBSquaresText: MaterialTextView? = null
+    private var startingTeamText: MaterialTextView? = null
     private var customWordText1: TextInputEditText? = null
     private var customWordText2: TextInputEditText? = null
     private var customWordText3: TextInputEditText? = null
@@ -88,6 +94,15 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         yesButton = findViewById(R.id.yesButton)
         noButton = findViewById(R.id.noButton)
         okButton = findViewById(R.id.okButton)
+        boardOptionsText = findViewById(R.id.boardOptionsText)
+        teamOptionsText = findViewById(R.id.teamOptionsText)
+        customWordsText = findViewById(R.id.customWordsText)
+        bombSquaresText = findViewById(R.id.bombSquaresText)
+        neutralSquaresText = findViewById(R.id.neutralSquaresText)
+        squaresInUseText = findViewById(R.id.squaresInUseText)
+        teamASquaresText = findViewById(R.id.teamASquaresText)
+        teamBSquaresText = findViewById(R.id.teamBSquaresText)
+        startingTeamText = findViewById(R.id.startingTeamText)
         customWordText1 = findViewById(R.id.customWordText1)
         customWordText2 = findViewById(R.id.customWordText2)
         customWordText3 = findViewById(R.id.customWordText3)
@@ -132,6 +147,10 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         updateTotalSquares()
 
+        val customWordTexts = arrayOf(customWordText1, customWordText2, customWordText3,
+            customWordText4, customWordText5, customWordText6, customWordText7,
+            customWordText8, customWordText9, customWordText10)
+
         bombSquares = intent.getIntExtra("bombSquares", 1)
         bombSquareCount?.text = bombSquares.toString()
 
@@ -148,10 +167,6 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
             saveButton?.visibility = View.VISIBLE
 
             startingTeamButton?.isChecked = intent.getStringExtra("startingTeam") == "A"
-
-            val customWordTexts = arrayOf(customWordText1, customWordText2, customWordText3,
-                    customWordText4, customWordText5, customWordText6, customWordText7,
-                    customWordText8, customWordText9, customWordText10)
 
             if (intent.getStringArrayListExtra("customWords") != null) {
                 var counter = 0
@@ -368,15 +383,7 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         backButton?.setOnClickListener {
             if (hasCustomSettings) {
-                windowOpen = true
-                messageBox?.visibility = View.VISIBLE
-
-                swapEnableStates()
-
-                messageBoxText?.text = getString(R.string.exit_without_save)
-                yesButton?.visibility = View.VISIBLE
-                noButton?.visibility = View.VISIBLE
-                okButton?.visibility = View.INVISIBLE
+                toggleMessageBox(getString(R.string.exit_without_save), 1)
             } else {
                 yesButton?.performClick()
             }
@@ -419,14 +426,38 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
             for (s in customWordsTemp) {
                 if (defaultWords.contains(s.uppercase(Locale.getDefault()))) {
                     validSave = false
-                    error = s.uppercase(Locale.getDefault()) + " already exists\nas a default word."
+                    error = getString(R.string.default_word_exists, s.uppercase(Locale.getDefault()))
+                    break
+                }
+            }
+
+            for (s in customWordsTemp) {
+                var count = 0
+
+                for (t in customWordsTemp) {
+                    if (s == t) {
+                        count++
+
+                        if (count > 1) {
+                            validSave = false
+                            error = getString(R.string.repeated_custom_word)
+                            break
+                        }
+                    }
+                }
+            }
+
+            for (s in customWordsTemp) {
+                if (!s.matches("[A-Za-z]+".toRegex())) {
+                    validSave = false
+                    error = getString(R.string.custom_word_alpha, s.uppercase(Locale.getDefault()))
                     break
                 }
             }
 
             if (totalSquaresInUse != maxSquares) {
                 validSave = false
-                error = "You do not have the\nrequired number of\nsquares assigned."
+                error = getString(R.string.required_squares)
             }
 
             if (validSave) {
@@ -447,10 +478,6 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
                     i.putExtra("teamASquares", teamASquares)
                     i.putExtra("teamBSquares", teamBSquares)
                     i.putExtra("startingTeam", startingTeam)
-
-                    val customWordTexts = arrayOf(customWordText1, customWordText2, customWordText3,
-                            customWordText4, customWordText5, customWordText6, customWordText7,
-                            customWordText8, customWordText9, customWordText10)
 
                     for (customWordText in customWordTexts) {
                         if (customWordText?.text.toString() != "") {
@@ -479,10 +506,6 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
                     i.putExtra("teamBSquares", teamBSquares)
                     i.putExtra("startingTeam", startingTeam)
 
-                    val customWordTexts = arrayOf(customWordText1, customWordText2, customWordText3,
-                            customWordText4, customWordText5, customWordText6, customWordText7,
-                            customWordText8, customWordText9, customWordText10)
-
                     for (customWordText in customWordTexts) {
                         if (customWordText?.text.toString() != "") {
                             customWords.add(customWordText?.text.toString())
@@ -495,22 +518,12 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
                     startActivity(i)
                 }
             } else {
-                windowOpen = true
-                messageBox?.visibility = View.VISIBLE
-                yesButton?.visibility = View.INVISIBLE
-                noButton?.visibility = View.INVISIBLE
-                okButton?.visibility = View.VISIBLE
-
-                swapEnableStates()
-
-                messageBoxText?.text = error
+                toggleMessageBox(error, 0)
             }
         }
 
         okButton?.setOnClickListener {
-            messageBox?.visibility = View.INVISIBLE
-
-            swapEnableStates()
+            toggleMessageBox("", 0)
         }
 
         yesButton?.setOnClickListener {
@@ -568,9 +581,216 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         noButton?.setOnClickListener {
-            swapEnableStates()
-            windowOpen = false
-            messageBox?.visibility = View.INVISIBLE
+            toggleMessageBox("", 0)
+        }
+
+        backButton?.setOnLongClickListener {
+            speakOut(backButton?.text.toString())
+            true
+        }
+
+        gameOptionsTitle?.setOnLongClickListener {
+            speakOut(gameOptionsTitle?.text.toString())
+            true
+        }
+
+        saveButton?.setOnLongClickListener {
+            speakOut(saveButton?.text.toString())
+            true
+        }
+
+        boardOptionsText?.setOnLongClickListener {
+            speakOut(boardOptionsText?.text.toString())
+            true
+        }
+
+        teamOptionsText?.setOnLongClickListener {
+            speakOut(teamOptionsText?.text.toString())
+            true
+        }
+
+        customWordsText?.setOnLongClickListener {
+            var message = customWordsText?.text.toString()
+
+            for (s in customWordTexts) {
+                message += "\n${s?.text.toString()}"
+            }
+
+            speakOut(message)
+            true
+        }
+
+        bombSquaresText?.setOnLongClickListener {
+            var message = bombSquaresText?.text.toString()
+
+            message += bombSquareCount?.text.toString()
+
+            speakOut(message)
+            true
+        }
+
+        subtractBombsButton?.setOnLongClickListener {
+            var message = bombSquaresText?.text.toString()
+
+            message += subtractBombsButton?.text.toString().replace("-", " count, Decrease")
+
+            speakOut(message)
+            true
+        }
+
+        bombSquareCount?.setOnLongClickListener {
+            speakOut(bombSquareCount?.text.toString())
+            true
+        }
+
+        addBombsButton?.setOnLongClickListener {
+            var message = bombSquaresText?.text.toString()
+
+            message += addBombsButton?.text.toString().replace("+", " count, Increase")
+
+            speakOut(message)
+            true
+        }
+
+        neutralSquaresText?.setOnLongClickListener {
+            var message = neutralSquaresText?.text.toString()
+
+            message += neutralSquareCount?.text.toString()
+
+            speakOut(message)
+            true
+        }
+
+        subtractNeutralsButton?.setOnLongClickListener {
+            var message = neutralSquaresText?.text.toString()
+
+            message += subtractNeutralsButton?.text.toString().replace("-", " count, Decrease")
+
+            speakOut(message)
+            true
+        }
+
+        neutralSquareCount?.setOnLongClickListener {
+            speakOut(neutralSquareCount?.text.toString())
+            true
+        }
+
+        addNeutralsButton?.setOnLongClickListener {
+            var message = neutralSquaresText?.text.toString()
+
+            message += addNeutralsButton?.text.toString().replace("+", " count, Increase")
+
+            speakOut(message)
+            true
+        }
+
+        squaresInUseText?.setOnLongClickListener {
+            speakOut(squaresInUseText?.text.toString() + ", " + squaresInUse?.text.toString().replace("/", getString(R.string.out_of)))
+            true
+        }
+
+        squaresInUse?.setOnLongClickListener {
+            speakOut(squaresInUse?.text.toString().replace("/", getString(R.string.out_of)))
+            true
+        }
+
+        teamASquaresText?.setOnLongClickListener {
+            var message = teamASquaresText?.text.toString().replace(" A ", " Ay ")
+
+            message += teamASquaresCount?.text.toString()
+
+            speakOut(message)
+
+            true
+        }
+
+        teamASqrDec?.setOnLongClickListener {
+            var message = teamASquaresText?.text.toString().replace(" A ", " Ay ")
+
+            message += teamASqrDec?.text.toString().replace("-", " count, Decrease")
+
+            speakOut(message)
+            true
+        }
+
+        teamASquaresCount?.setOnLongClickListener {
+            speakOut(teamASquaresCount?.text.toString())
+            true
+        }
+
+        teamASqrInc?.setOnLongClickListener {
+            var message = teamASquaresText?.text.toString().replace(" A ", " Ay ")
+
+            message += teamASqrInc?.text.toString().replace("+", " count, Increase")
+
+            speakOut(message)
+            true
+        }
+
+        teamBSquaresText?.setOnLongClickListener {
+            var message = teamBSquaresText?.text.toString()
+
+            message += teamBSquaresCount?.text.toString()
+
+            speakOut(message)
+            true
+        }
+
+        teamBSqrDec?.setOnLongClickListener {
+            var message = teamBSquaresText?.text.toString()
+
+            message += teamBSqrDec?.text.toString().replace("-", " count, Decrease")
+
+            speakOut(message)
+            true
+        }
+
+        teamBSquaresCount?.setOnLongClickListener {
+            speakOut(teamBSquaresCount?.text.toString())
+            true
+        }
+
+        teamBSqrInc?.setOnLongClickListener {
+            var message = teamBSquaresText?.text.toString()
+
+            message += teamBSqrInc?.text.toString().replace("+", " count, Increase")
+
+            speakOut(message)
+            true
+        }
+
+        startingTeamText?.setOnLongClickListener {
+            var message = startingTeamText?.text.toString()
+
+            message += ", " + startingTeamButton?.text.toString()
+
+            speakOut(message)
+            true
+        }
+
+        startingTeamButton?.setOnLongClickListener {
+            speakOut(startingTeamButton?.text.toString())
+            true
+        }
+
+        messageBoxText?.setOnLongClickListener {
+            speakOut(messageBoxText?.text.toString().replace("\n", " "))
+            true
+        }
+
+        okButton?.setOnLongClickListener {
+            speakOut(okButton?.text.toString())
+            true
+        }
+
+        yesButton?.setOnLongClickListener {
+            speakOut(yesButton?.text.toString())
+            true
+        }
+
+        noButton?.setOnLongClickListener {
+            speakOut(noButton?.text.toString())
+            true
         }
 
         updateColours()
@@ -590,7 +810,24 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
-    private fun swapEnableStates() {
+    private fun toggleMessageBox(message: String, type: Int) {
+        if (windowOpen) {
+            messageBox?.visibility = View.GONE
+        } else {
+            messageBox?.visibility = View.VISIBLE
+            messageBoxText?.text = message
+        }
+
+        if (type == 0) {
+            okButton?.visibility = View.VISIBLE
+            yesButton?.visibility = View.GONE
+            noButton?.visibility = View.GONE
+        } else {
+            okButton?.visibility = View.GONE
+            yesButton?.visibility = View.VISIBLE
+            noButton?.visibility = View.VISIBLE
+        }
+
         backButton?.isEnabled = disabled
         saveButton?.isEnabled = disabled
         addBombsButton?.isEnabled = disabled
@@ -624,6 +861,7 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         deleteCustomWord10?.isEnabled = disabled
 
         disabled = !disabled
+        windowOpen = !windowOpen
     }
 
     private fun updateTotalSquares() {

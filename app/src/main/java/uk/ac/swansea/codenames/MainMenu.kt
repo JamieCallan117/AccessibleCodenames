@@ -83,7 +83,7 @@ class MainMenu : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         howToPlayButton?.setOnLongClickListener {
-            speakOut(howToPlayButton?.text.toString().replace("\n", ""))
+            speakOut(howToPlayButton?.text.toString().replace("\n", " "))
             true
         }
 
