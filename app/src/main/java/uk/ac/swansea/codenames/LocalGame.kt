@@ -9,13 +9,13 @@ import android.graphics.Paint
 import android.view.Gravity
 import android.view.View
 import android.widget.*
-import androidx.gridlayout.widget.GridLayout
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textview.MaterialTextView
 import java.io.IOException
 import java.util.*
 
 class LocalGame : AppCompatActivity() {
-    // TODO: Redesign layout.
-    // TODO: Redo the game operations visibility to use GONE
     // TODO: Implement TTS
 
     private var gamePhase: LocalPhase? = null
@@ -33,33 +33,36 @@ class LocalGame : AppCompatActivity() {
     private var teamBWords: ArrayList<String?>? = null
     private val words = arrayOfNulls<String>(25)
     private var wordButtons = arrayOfNulls<WordButton>(25)
-    private var exitButton: Button? = null
-    private var confirmButton: Button? = null
-    private var turnAction: Button? = null
-    private var textToSpeechButton: Button? = null
-    private var viewPreviousHints: Button? = null
-    private var hidePreviousHints: Button? = null
-    private var yesMessage: Button? = null
-    private var noMessage: Button? = null
-    private var ttsAll: Button? = null
-    private var ttsA: Button? = null
-    private var ttsB: Button? = null
-    private var ttsNeutral: Button? = null
-    private var ttsBomb: Button? = null
-    private var ttsUnclicked: Button? = null
-    private var ttsClicked: Button? = null
-    private var closeTts: Button? = null
-    private var teamACount: TextView? = null
-    private var teamBCount: TextView? = null
-    private var teamCounterLine: TextView? = null
-    private var messageText: TextView? = null
-    private var hintText: TextView? = null
-    private var editHint: EditText? = null
-    private var messageBox: GridLayout? = null
-    private var ttsBox: GridLayout? = null
+    private var exitButton: MaterialButton? = null
+    private var confirmButton: MaterialButton? = null
+    private var turnAction: MaterialButton? = null
+    private var ttsButton: MaterialButton? = null
+    private var viewPreviousHints: MaterialButton? = null
+    private var hidePreviousHints: MaterialButton? = null
+    private var yesButton: MaterialButton? = null
+    private var noButton: MaterialButton? = null
+    private var gameOpOpenButton: MaterialButton? = null
+    private var gameOpCloseButton: MaterialButton? = null
+    private var ttsAll: MaterialButton? = null
+    private var ttsA: MaterialButton? = null
+    private var ttsB: MaterialButton? = null
+    private var ttsNeutral: MaterialButton? = null
+    private var ttsBomb: MaterialButton? = null
+    private var ttsUnclicked: MaterialButton? = null
+    private var ttsClicked: MaterialButton? = null
+    private var closeTts: MaterialButton? = null
+    private var teamACount: MaterialTextView? = null
+    private var teamBCount: MaterialTextView? = null
+    private var teamCounterLine: MaterialTextView? = null
+    private var messageText: MaterialTextView? = null
+    private var hintText: MaterialTextView? = null
+    private var editHint: TextInputEditText? = null
+    private var messageBox: ConstraintLayout? = null
+    private var ttsBox: ConstraintLayout? = null
     private var constraintLayout: ConstraintLayout? = null
+    private var outline: ConstraintLayout? = null
     private var gameOperationsLinear: LinearLayout? = null
-    private var previousHints: LinearLayout? = null
+    private var previousHintsLinear: LinearLayout? = null
     private var squareOne: WordButton? = null
     private var squareTwo: WordButton? = null
     private var squareThree: WordButton? = null
@@ -101,14 +104,17 @@ class LocalGame : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.local_game)
 
+        outline = findViewById(R.id.outline)
         constraintLayout = findViewById(R.id.constraintLayout)
         exitButton = findViewById(R.id.exitButton)
         messageBox = findViewById(R.id.messageBox)
         ttsBox = findViewById(R.id.ttsBox)
         messageText = findViewById(R.id.messageText)
         confirmButton = findViewById(R.id.confirmButton)
-        yesMessage = findViewById(R.id.yesMessage)
-        noMessage = findViewById(R.id.noMessage)
+        yesButton = findViewById(R.id.yesButton)
+        noButton = findViewById(R.id.noButton)
+        gameOpOpenButton = findViewById(R.id.gameOpOpenButton)
+        gameOpCloseButton = findViewById(R.id.gameOpCloseButton)
         ttsAll = findViewById(R.id.ttsAll)
         ttsA = findViewById(R.id.ttsA)
         ttsB = findViewById(R.id.ttsB)
@@ -116,7 +122,7 @@ class LocalGame : AppCompatActivity() {
         ttsBomb = findViewById(R.id.ttsBomb)
         ttsUnclicked = findViewById(R.id.ttsUnclicked)
         ttsClicked = findViewById(R.id.ttsClicked)
-        closeTts = findViewById(R.id.closeTts)
+        closeTts = findViewById(R.id.closeTTS)
         teamACount = findViewById(R.id.teamACount)
         teamBCount = findViewById(R.id.teamBCount)
         teamCounterLine = findViewById(R.id.teamCounterLine)
@@ -124,13 +130,17 @@ class LocalGame : AppCompatActivity() {
         editHint = findViewById(R.id.editHint)
         hintNumber = findViewById(R.id.hintNumber)
         turnAction = findViewById(R.id.turnAction)
-        textToSpeechButton = findViewById(R.id.textToSpeechButton)
+        ttsButton = findViewById(R.id.ttsButton)
         viewPreviousHints = findViewById(R.id.viewPreviousHints)
         gameOperations = findViewById(R.id.gameOperations)
         gameOperationsLinear = findViewById(R.id.gameOperationsLinear)
         previousHintsScroll = findViewById(R.id.previousHintsScroll)
-        previousHints = findViewById(R.id.previousHints)
+        previousHintsLinear = findViewById(R.id.previousHintsLinear)
         hidePreviousHints = findViewById(R.id.hidePreviousHints)
+
+        val gameOpWidth = gameOperations?.width?.toFloat()
+        hintText?.visibility = View.GONE
+        viewPreviousHints?.visibility = View.GONE
 
         gamePhase = LocalPhase.START
 
@@ -151,9 +161,21 @@ class LocalGame : AppCompatActivity() {
         if (startingTeam == "B") {
             gamePhase = LocalPhase.TEAM_B_INTERMISSION
             teamBCount?.paintFlags = teamBCount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
+
+            val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+            teamBColour = preferences.getInt("teamB", -65536)
+
+            outline?.setBackgroundColor(teamBColour)
         } else {
             gamePhase = LocalPhase.TEAM_A_INTERMISSION
             teamACount?.paintFlags = teamACount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
+
+            val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+            teamAColour = preferences.getInt("teamA", -16773377)
+
+            outline?.setBackgroundColor(teamAColour)
         }
 
         teamACount?.text = teamASquaresCount.toString()
@@ -190,6 +212,8 @@ class LocalGame : AppCompatActivity() {
                 squareTwelve, squareThirteen, squareFourteen, squareFifteen, squareSixteen,
                 squareSeventeen, squareEighteen, squareNineteen, squareTwenty, squareTwentyOne,
                 squareTwentyTwo, squareTwentyThree, squareTwentyFour, squareTwentyFive)
+
+        messageText?.text = getString(R.string.spymaster_confirmation)
 
         toggleMessageBox(true, 0)
 
@@ -295,6 +319,31 @@ class LocalGame : AppCompatActivity() {
         squareTwentyFour?.setOnClickListener { wordButtonPress(squareTwentyFour) }
         squareTwentyFive?.setOnClickListener { wordButtonPress(squareTwentyFive) }
 
+        gameOpOpenButton?.setOnClickListener {
+            gameOpOpenButton?.visibility = View.GONE
+            gameOperations?.visibility = View.VISIBLE
+            gameOpCloseButton?.visibility = View.VISIBLE
+            gameOperations?.alpha = 0.0f
+            gameOpCloseButton?.alpha = 0.0f
+
+            if (gameOpWidth != null) {
+                gameOperations?.animate()?.translationX(gameOpWidth)?.alpha(1.0f)
+            }
+
+            gameOpCloseButton?.animate()?.translationX(0.0f)?.alpha(1.0f)
+        }
+
+        gameOpCloseButton?.setOnClickListener {
+            gameOperations?.animate()?.translationX(0.0f)?.alpha(0.0f)?.withEndAction {
+                gameOperations?.visibility = View.GONE
+            }
+
+            gameOpCloseButton?.animate()?.translationX(0.0f)?.alpha(0.0f)?.withEndAction {
+                gameOpCloseButton?.visibility = View.GONE
+                gameOpOpenButton?.visibility = View.VISIBLE
+            }
+        }
+
         confirmButton?.setOnClickListener {
             if (gamePhase != LocalPhase.TEAM_A_WIN && gamePhase != LocalPhase.TEAM_B_WIN) {
                 when (gamePhase) {
@@ -335,6 +384,12 @@ class LocalGame : AppCompatActivity() {
                     messageText?.setText(R.string.spymaster_confirmation)
                     confirmButton?.setText(R.string.confirm)
 
+                    val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+                    teamBColour = preferences.getInt("teamB", -65536)
+
+                    outline?.setBackgroundColor(teamBColour)
+
                     toggleMessageBox(true, 0)
                 }
 
@@ -344,6 +399,12 @@ class LocalGame : AppCompatActivity() {
                     teamBCount?.paintFlags = teamBCount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
                     messageText?.setText(R.string.spymaster_confirmation)
                     confirmButton?.setText(R.string.confirm)
+
+                    val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+                    teamAColour = preferences.getInt("teamA", -16773377)
+
+                    outline?.setBackgroundColor(teamAColour)
 
                     toggleMessageBox(true, 0)
                 }
@@ -363,6 +424,8 @@ class LocalGame : AppCompatActivity() {
 
                     if (validHint) {
                         turnAction?.setText(R.string.end_turn)
+
+                        viewPreviousHints?.visibility = View.VISIBLE
 
                         gamePhase = LocalPhase.TEAM_A
 
@@ -397,6 +460,8 @@ class LocalGame : AppCompatActivity() {
                     if (validHint) {
                         turnAction?.setText(R.string.end_turn)
 
+                        viewPreviousHints?.visibility = View.VISIBLE
+
                         gamePhase = LocalPhase.TEAM_B
 
                         val hint = editHint?.text.toString() + ": " + hintNumber?.selectedItem.toString()
@@ -413,14 +478,18 @@ class LocalGame : AppCompatActivity() {
                         toggleMessageBox(true, 0)
                     }
                 }
+                else -> {
+                    val i = Intent(this, MainMenu::class.java)
+                    startActivity(i)
+                }
             }
 
             updateColours()
         }
 
-        noMessage?.setOnClickListener { toggleMessageBox(false, 1) }
+        noButton?.setOnClickListener { toggleMessageBox(false, 1) }
 
-        textToSpeechButton?.setOnClickListener { toggleTtsBox(true) }
+        ttsButton?.setOnClickListener { toggleTtsBox(true) }
 
         ttsAll?.setOnClickListener {
             for (wb in wordButtons) {
@@ -508,12 +577,14 @@ class LocalGame : AppCompatActivity() {
 
         viewPreviousHints?.setOnClickListener {
             previousHintsScroll?.visibility = View.VISIBLE
+            gameOpCloseButton?.visibility = View.INVISIBLE
             gameOperations?.visibility = View.INVISIBLE
         }
 
         hidePreviousHints?.setOnClickListener {
             previousHintsScroll?.visibility = View.INVISIBLE
             gameOperations?.visibility = View.VISIBLE
+            gameOpCloseButton?.visibility = View.VISIBLE
         }
 
         exitButton?.setOnClickListener {
@@ -528,7 +599,7 @@ class LocalGame : AppCompatActivity() {
             }
         }
 
-        yesMessage?.setOnClickListener {
+        yesButton?.setOnClickListener {
             val i = Intent(applicationContext, MainMenu::class.java)
             startActivity(i)
         }
@@ -599,10 +670,22 @@ class LocalGame : AppCompatActivity() {
                         gamePhase = LocalPhase.TEAM_B_INTERMISSION
                         teamBCount?.paintFlags = teamBCount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
                         teamACount?.paintFlags = teamACount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
+
+                        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+                        teamBColour = preferences.getInt("teamB", -65536)
+
+                        outline?.setBackgroundColor(teamBColour)
                     } else {
                         gamePhase = LocalPhase.TEAM_A_INTERMISSION
                         teamACount?.paintFlags = teamACount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
                         teamBCount?.paintFlags = teamBCount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
+
+                        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+                        teamAColour = preferences.getInt("teamA", -16773377)
+
+                        outline?.setBackgroundColor(teamAColour)
                     }
 
                     messageText?.setText(R.string.spymaster_confirmation)
@@ -618,6 +701,12 @@ class LocalGame : AppCompatActivity() {
                         teamBCount?.paintFlags = teamBCount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
                         messageText?.setText(R.string.spymaster_confirmation)
                         confirmButton?.setText(R.string.confirm)
+
+                        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+                        teamAColour = preferences.getInt("teamA", -16773377)
+
+                        outline?.setBackgroundColor(teamAColour)
 
                         toggleMessageBox(true, 0)
                     }
@@ -639,6 +728,12 @@ class LocalGame : AppCompatActivity() {
                         messageText?.setText(R.string.spymaster_confirmation)
                         confirmButton?.setText(R.string.confirm)
 
+                        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+                        teamBColour = preferences.getInt("teamB", -65536)
+
+                        outline?.setBackgroundColor(teamBColour)
+
                         toggleMessageBox(true, 0)
                     }
 
@@ -656,12 +751,23 @@ class LocalGame : AppCompatActivity() {
     }
 
     private fun gameWin() {
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        teamAColour = preferences.getInt("teamA", -16773377)
+        teamBColour = preferences.getInt("teamB", -65536)
+
+        outline?.setBackgroundColor(teamAColour)
+
         if (gamePhase == LocalPhase.TEAM_A_WIN) {
             messageText?.setText(R.string.team_a_win)
+
+            outline?.setBackgroundColor(teamAColour)
         } else {
             messageText?.setText(R.string.team_b_win)
+
+            outline?.setBackgroundColor(teamBColour)
         }
-        
+
         confirmButton?.setText(R.string.ok)
         
         toggleMessageBox(true, 0)
@@ -684,17 +790,17 @@ class LocalGame : AppCompatActivity() {
         editHint?.isEnabled = !enabled
         hintNumber?.isEnabled = !enabled
         turnAction?.isEnabled = !enabled
-        textToSpeechButton?.isEnabled = !enabled
+        ttsButton?.isEnabled = !enabled
         viewPreviousHints?.isEnabled = !enabled
 
         if (type == 0) {
             confirmButton?.visibility = View.VISIBLE
-            yesMessage?.visibility = View.INVISIBLE
-            noMessage?.visibility = View.INVISIBLE
+            yesButton?.visibility = View.INVISIBLE
+            noButton?.visibility = View.INVISIBLE
         } else {
             confirmButton?.visibility = View.INVISIBLE
-            yesMessage?.visibility = View.VISIBLE
-            noMessage?.visibility = View.VISIBLE
+            yesButton?.visibility = View.VISIBLE
+            noButton?.visibility = View.VISIBLE
         }
     }
 
@@ -715,7 +821,7 @@ class LocalGame : AppCompatActivity() {
         editHint?.isEnabled = !enabled
         hintNumber?.isEnabled = !enabled
         turnAction?.isEnabled = !enabled
-        textToSpeechButton?.isEnabled = !enabled
+        ttsButton?.isEnabled = !enabled
         viewPreviousHints?.isEnabled = !enabled
     }
 
@@ -723,7 +829,7 @@ class LocalGame : AppCompatActivity() {
         val newHint = TextView(this)
 
         newHint.text = hint
-        previousHints?.addView(newHint)
+        previousHintsLinear?.addView(newHint)
 
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -789,15 +895,19 @@ class LocalGame : AppCompatActivity() {
         ttsUnclicked?.setBackgroundColor(unmodifiedColour)
 
         constraintLayout?.setBackgroundColor(applicationBackgroundColour)
+        gameOperations?.setBackgroundColor(applicationBackgroundColour)
+        previousHintsScroll?.setBackgroundColor(applicationBackgroundColour)
         messageBox?.setBackgroundColor(applicationBackgroundColour)
         ttsBox?.setBackgroundColor(applicationBackgroundColour)
 
         exitButton?.setBackgroundColor(menuButtonsColour)
         confirmButton?.setBackgroundColor(menuButtonsColour)
-        yesMessage?.setBackgroundColor(menuButtonsColour)
-        noMessage?.setBackgroundColor(menuButtonsColour)
+        yesButton?.setBackgroundColor(menuButtonsColour)
+        noButton?.setBackgroundColor(menuButtonsColour)
+        gameOpOpenButton?.setBackgroundColor(menuButtonsColour)
+        gameOpCloseButton?.setBackgroundColor(menuButtonsColour)
         turnAction?.setBackgroundColor(menuButtonsColour)
-        textToSpeechButton?.setBackgroundColor(menuButtonsColour)
+        ttsButton?.setBackgroundColor(menuButtonsColour)
         viewPreviousHints?.setBackgroundColor(menuButtonsColour)
         hidePreviousHints?.setBackgroundColor(menuButtonsColour)
         ttsAll?.setBackgroundColor(menuButtonsColour)
@@ -806,12 +916,14 @@ class LocalGame : AppCompatActivity() {
 
         exitButton?.setTextColor(menuTextColour)
         confirmButton?.setTextColor(menuTextColour)
-        yesMessage?.setTextColor(menuTextColour)
-        noMessage?.setTextColor(menuTextColour)
+        yesButton?.setTextColor(menuTextColour)
+        noButton?.setTextColor(menuTextColour)
+        gameOpOpenButton?.setTextColor(menuTextColour)
+        gameOpCloseButton?.setTextColor(menuTextColour)
         teamCounterLine?.setTextColor(menuTextColour)
         messageText?.setTextColor(menuTextColour)
         turnAction?.setTextColor(menuTextColour)
-        textToSpeechButton?.setTextColor(menuTextColour)
+        ttsButton?.setTextColor(menuTextColour)
         viewPreviousHints?.setTextColor(menuTextColour)
         hidePreviousHints?.setTextColor(menuTextColour)
 

@@ -2,9 +2,9 @@ package uk.ac.swansea.codenames
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.appcompat.widget.AppCompatButton
+import com.google.android.material.button.MaterialButton
 
-class WordButton(context: Context?, attrs: AttributeSet?) : AppCompatButton(context!!, attrs) {
+class WordButton(context: Context?, attrs: AttributeSet?) : MaterialButton(context!!, attrs) {
     private var hasBeenClicked = false
 
     fun hasBeenClicked(): Boolean {

@@ -9,6 +9,7 @@
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="text_to_speech">Text-to-Speech</string>
+    <string name="text_to_speech_btn">Text-to-\nSpeech</string>
     <string name="high_contrast">High Contrast</string>
     <string name="vibration">Vibration</string>
     <string name="sound_effects">Sound Effects</string>
@@ -19,8 +20,8 @@
     <string name="confirm">Confirm</string>
     <string name="scoreBorder">|</string>
     <string name="hide_hints">Hide Hints</string>
-    <string name="previous_hints">Previous Hints</string>
-    <string name="enter_hint">Enter hint</string>
+    <string name="previous_hints">Previous\nHints</string>
+    <string name="enter_hint">Enter hint..</string>
     <string name="give_hint">Give Hint</string>
     <string name="spymaster_confirmation">Ensure that only the spymasters can see the screen before proceeding.</string>
     <string name="ok">OK</string>
@@ -104,4 +105,14 @@
     <string name="required_squares">You do not have the\nrequired number of\nsquares assigned.</string>
     <string name="custom_word_alpha">%1$s must only contain letters.</string>
     <string name="out_of"> out of </string>
+    <string name="open">&gt;\n&gt;\n&gt;</string>
+    <string name="close">&lt;\n&lt;\n&lt;</string>
+    <string name="close_str">Close</string>
+    <string name="all_words">All\n Words</string>
+    <string name="team_a_words">Team A\n words</string>
+    <string name="team_b_words">Team B\n words</string>
+    <string name="neutral_words">Neutral\n words</string>
+    <string name="bomb_words">Bomb\n words</string>
+    <string name="unclicked_words">Unclicked \n words</string>
+    <string name="clicked_words">Clicked \n words</string>
 </resources>
