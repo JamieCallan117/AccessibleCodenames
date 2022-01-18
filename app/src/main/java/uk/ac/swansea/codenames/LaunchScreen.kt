@@ -114,9 +114,9 @@ class LaunchScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
     private fun updateColours() {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
-        applicationBackgroundColour = preferences.getInt("applicationBackgroundColour", -10921639)
-        menuButtonsColour = preferences.getInt("menuButtonsColour", -8164501)
-        menuTextColour = preferences.getInt("menuTextColour", -1)
+        applicationBackgroundColour = preferences.getInt("applicationBackground", -10921639)
+        menuButtonsColour = preferences.getInt("menuButtons", -8164501)
+        menuTextColour = preferences.getInt("menuText", -1)
 
         constraintLayout!!.setBackgroundColor(applicationBackgroundColour)
 

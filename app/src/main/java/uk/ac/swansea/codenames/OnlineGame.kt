@@ -34,7 +34,7 @@ class OnlineGame : AppCompatActivity() {
     private var teamAColour = -16773377
     private var teamBColour = -65536
     private var bombColour = -14342875
-    private var neutralColour = -908
+    private var neutralColour = -11731092
     private var unmodifiedColour = -3684409
     private var applicationBackgroundColour = -10921639
     private var menuButtonsColour = -8164501
@@ -1047,7 +1047,7 @@ class OnlineGame : AppCompatActivity() {
         teamAColour = preferences.getInt("teamA", -16773377)
         teamBColour = preferences.getInt("teamB", -65536)
         bombColour = preferences.getInt("bomb", -14342875)
-        neutralColour = preferences.getInt("neutral", -908)
+        neutralColour = preferences.getInt("neutral", -11731092)
         unmodifiedColour = preferences.getInt("unmodified", -3684409)
         applicationBackgroundColour = preferences.getInt("applicationBackground", -10921639)
         menuButtonsColour = preferences.getInt("menuButton", -8164501)
