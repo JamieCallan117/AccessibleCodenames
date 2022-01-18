@@ -19,6 +19,9 @@ import java.io.IOException
 import java.util.*
 
 class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
+
+    //TODO: Still need to check for substring hints
+
     private var gamePhase: LocalPhase? = null
     private var bombSquaresCount = 1
     private var neutralSquaresCount = 7
@@ -27,8 +30,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var startingTeam = "A"
     private var messageBoxOpen = false
     private var ttsOpen = false
-    //Not working
-    //private var gameOpOpen = true
+    private var gameOpOpen = true
     private var customWords: ArrayList<String>? = null
     private var bombWords: ArrayList<String?>? = null
     private var neutralWords: ArrayList<String?>? = null
@@ -44,10 +46,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var hidePreviousHints: MaterialButton? = null
     private var yesButton: MaterialButton? = null
     private var noButton: MaterialButton? = null
-    private var gameOpOpenButton: MaterialButton? = null
-    private var gameOpCloseButton: MaterialButton? = null
-    //Not working
-//    private var gameOpToggleButton: MaterialButton? = null
+    private var gameOpToggleButton: MaterialButton? = null
     private var ttsAll: MaterialButton? = null
     private var ttsA: MaterialButton? = null
     private var ttsB: MaterialButton? = null
@@ -122,10 +121,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         confirmButton = findViewById(R.id.confirmButton)
         yesButton = findViewById(R.id.yesButton)
         noButton = findViewById(R.id.noButton)
-        //Not working
-//        gameOpToggleButton = findViewById(R.id.gameOpToggleButton)
-        gameOpOpenButton = findViewById(R.id.gameOpOpenButton)
-        gameOpCloseButton = findViewById(R.id.gameOpCloseButton)
+        gameOpToggleButton = findViewById(R.id.gameOpToggleButton)
         ttsAll = findViewById(R.id.ttsAll)
         ttsA = findViewById(R.id.ttsA)
         ttsB = findViewById(R.id.ttsB)
@@ -152,14 +148,10 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         textToSpeech = TextToSpeech(this, this)
 
-        //Not working
-//        val wrapSpec: Int = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-//        gameOperations?.measure(wrapSpec, wrapSpec)
-//
-//        val gameOpWidth = (gameOperations?.measuredWidth?.times(-1.0f))
+        val wrapSpec: Int = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        gameOperations?.measure(wrapSpec, wrapSpec)
 
-        //Replace when above works
-        val gameOpWidth = gameOperations?.width?.toFloat()
+        val gameOpWidth = (gameOperations?.measuredWidth?.times(-1.0f))
 
         hintText?.visibility = View.GONE
         viewPreviousHints?.visibility = View.GONE
@@ -468,47 +460,21 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             true
         }
 
-        //Not working
-//        gameOpToggleButton?.setOnClickListener {
-//            if (gameOpOpen) {
-//                gameOpWidth?.let { it1 -> gameOperations?.animate()?.translationX(it1)?.duration = 500}
-//                gameOpWidth?.let { it2 -> gameOpToggleButton?.animate()?.translationX(it2)?.duration = 500}
-//
-//                gameOpToggleButton?.text = getString(R.string.open)
-//
-//                gameOpOpen = false
-//            } else {
-//                gameOperations?.animate()?.translationX(0.0f)?.duration = 500
-//                gameOpToggleButton?.animate()?.translationX(0.0f)?.duration = 500
-//
-//                gameOpToggleButton?.text = getString(R.string.close)
-//
-//                gameOpOpen = true
-//            }
-//        }
+        gameOpToggleButton?.setOnClickListener {
+            if (gameOpOpen) {
+                gameOpWidth?.let { it1 -> gameOperations?.animate()?.translationX(it1)?.duration = 500}
+                gameOpWidth?.let { it2 -> gameOpToggleButton?.animate()?.translationX(it2)?.duration = 500}
 
-        gameOpOpenButton?.setOnClickListener {
-            gameOpOpenButton?.visibility = View.GONE
-            gameOperations?.visibility = View.VISIBLE
-            gameOpCloseButton?.visibility = View.VISIBLE
-            gameOperations?.alpha = 0.0f
-            gameOpCloseButton?.alpha = 0.0f
+                gameOpToggleButton?.text = getString(R.string.open)
 
-            if (gameOpWidth != null) {
-                gameOperations?.animate()?.translationX(gameOpWidth)?.alpha(1.0f)
-            }
+                gameOpOpen = false
+            } else {
+                gameOperations?.animate()?.translationX(0.0f)?.duration = 500
+                gameOpToggleButton?.animate()?.translationX(0.0f)?.duration = 500
 
-            gameOpCloseButton?.animate()?.translationX(0.0f)?.alpha(1.0f)
-        }
+                gameOpToggleButton?.text = getString(R.string.close)
 
-        gameOpCloseButton?.setOnClickListener {
-            gameOperations?.animate()?.translationX(0.0f)?.alpha(0.0f)?.withEndAction {
-                gameOperations?.visibility = View.GONE
-            }
-
-            gameOpCloseButton?.animate()?.translationX(0.0f)?.alpha(0.0f)?.withEndAction {
-                gameOpCloseButton?.visibility = View.GONE
-                gameOpOpenButton?.visibility = View.VISIBLE
+                gameOpOpen = true
             }
         }
 
@@ -881,18 +847,14 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         viewPreviousHints?.setOnClickListener {
             previousHintsScroll?.visibility = View.VISIBLE
-            //Not working
-//            gameOpToggleButton?.visibility = View.INVISIBLE
-            gameOpCloseButton?.visibility = View.INVISIBLE
+            gameOpToggleButton?.visibility = View.INVISIBLE
             gameOperations?.visibility = View.INVISIBLE
         }
 
         hidePreviousHints?.setOnClickListener {
             previousHintsScroll?.visibility = View.INVISIBLE
             gameOperations?.visibility = View.VISIBLE
-            //Not working
-//            gameOpToggleButton?.visibility = View.VISIBLE
-            gameOpCloseButton?.visibility = View.VISIBLE
+            gameOpToggleButton?.visibility = View.VISIBLE
         }
 
         exitButton?.setOnClickListener {
@@ -978,24 +940,13 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             true
         }
 
-        //Not working
-//        gameOpToggleButton?.setOnLongClickListener {
-//            if (gameOpOpen) {
-//                speakOut(getString(R.string.close_game_op))
-//            } else {
-//                speakOut(getString(R.string.open_game_op))
-//            }
-//
-//            true
-//        }
+        gameOpToggleButton?.setOnLongClickListener {
+            if (gameOpOpen) {
+                speakOut(getString(R.string.close_game_op))
+            } else {
+                speakOut(getString(R.string.open_game_op))
+            }
 
-        gameOpOpenButton?.setOnLongClickListener {
-            speakOut(getString(R.string.open_game_op))
-            true
-        }
-
-        gameOpCloseButton?.setOnLongClickListener {
-            speakOut(getString(R.string.close_game_op))
             true
         }
 
@@ -1266,10 +1217,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             wb?.isEnabled = !enabled
         }
 
-        //Not working
-//        gameOpToggleButton?.isEnabled = !enabled
-        gameOpOpenButton?.isEnabled = !enabled
-        gameOpCloseButton?.isEnabled = !enabled
+        gameOpToggleButton?.isEnabled = !enabled
         exitButton?.isEnabled = !enabled
         editHint?.isEnabled = !enabled
         hintNumber?.isEnabled = !enabled
@@ -1419,10 +1367,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         confirmButton?.setBackgroundColor(menuButtonsColour)
         yesButton?.setBackgroundColor(menuButtonsColour)
         noButton?.setBackgroundColor(menuButtonsColour)
-        //Not working
-//        gameOpToggleButton?.setBackgroundColor(menuButtonsColour)
-        gameOpOpenButton?.setBackgroundColor(menuButtonsColour)
-        gameOpCloseButton?.setBackgroundColor(menuButtonsColour)
+        gameOpToggleButton?.setBackgroundColor(menuButtonsColour)
         turnAction?.setBackgroundColor(menuButtonsColour)
         ttsButton?.setBackgroundColor(menuButtonsColour)
         viewPreviousHints?.setBackgroundColor(menuButtonsColour)
@@ -1435,10 +1380,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         confirmButton?.setTextColor(menuTextColour)
         yesButton?.setTextColor(menuTextColour)
         noButton?.setTextColor(menuTextColour)
-        //Not working
-//        gameOpToggleButton?.setTextColor(menuTextColour)
-        gameOpOpenButton?.setTextColor(menuTextColour)
-        gameOpCloseButton?.setTextColor(menuTextColour)
+        gameOpToggleButton?.setTextColor(menuTextColour)
         teamCounterLine?.setTextColor(menuTextColour)
         messageText?.setTextColor(menuTextColour)
         turnAction?.setTextColor(menuTextColour)
