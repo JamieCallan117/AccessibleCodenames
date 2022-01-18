@@ -59,27 +59,37 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
         textToSpeech = TextToSpeech(this, this)
 
         playButton!!.setOnClickListener {
+            textToSpeech?.stop()
+
             val i = Intent(this, MainMenu::class.java)
             startActivity(i)
         }
 
         settingsButton!!.setOnClickListener {
+            textToSpeech?.stop()
+
             val i = Intent(this, Settings::class.java)
             i.putExtra("from", "start_screen")
             startActivity(i)
         }
 
         exitButton!!.setOnClickListener {
+            textToSpeech?.stop()
+
             onBackPressed()
         }
 
         yesButton!!.setOnClickListener {
+            textToSpeech?.stop()
+
             //Closes the app.
             finishAffinity()
             exitProcess(0)
         }
 
         noButton!!.setOnClickListener {
+            textToSpeech?.stop()
+
             quitBox!!.visibility = View.INVISIBLE
             playButton!!.visibility = View.VISIBLE
             settingsButton!!.visibility = View.VISIBLE
@@ -90,10 +100,6 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
             exiting = false
         }
 
-        //This is how TTS will work. Pressing the button quickly performs it's default action. Holding it
-        //with a return true in this listener, will cause it to run the code in here, and not run the code
-        //for a regular click.
-        //For actual TTS it won't print out the word, it'll obviously read it aloud
         playButton!!.setOnLongClickListener {
             speakOut(playButton?.text.toString())
             true
@@ -143,6 +149,8 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
      * completely or not.
      */
     override fun onBackPressed() {
+        textToSpeech?.stop()
+
         if (exiting) {
             quitBox!!.visibility = View.INVISIBLE
             playButton!!.visibility = View.VISIBLE

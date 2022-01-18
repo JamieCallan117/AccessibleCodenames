@@ -49,31 +49,45 @@ class HowToPlay : AppCompatActivity(), TextToSpeech.OnInitListener {
         updateColours()
 
         backButton?.setOnClickListener {
+            textToSpeech?.stop()
+
             val i = Intent(applicationContext, MainMenu::class.java)
             startActivity(i)
         }
 
         teamsHelp?.setOnClickListener {
+            textToSpeech?.stop()
+
             helpText?.setText(R.string.teams_help)
         }
 
         spymasterHelp?.setOnClickListener {
+            textToSpeech?.stop()
+
             helpText?.setText(R.string.spymaster_help)
         }
 
         hintsHelp?.setOnClickListener {
+            textToSpeech?.stop()
+
             helpText?.setText(R.string.hints_help)
         }
 
         guessHelp?.setOnClickListener {
+            textToSpeech?.stop()
+
             helpText?.setText(R.string.guessing_help)
         }
 
         squaresHelp?.setOnClickListener {
+            textToSpeech?.stop()
+
             helpText?.setText(R.string.squares_help)
         }
 
         playingHelp?.setOnClickListener {
+            textToSpeech?.stop()
+
             helpText?.setText(R.string.playing_help)
         }
 

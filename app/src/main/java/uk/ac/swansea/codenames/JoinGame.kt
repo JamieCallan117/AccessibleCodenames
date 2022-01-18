@@ -97,6 +97,8 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             Handler(Looper.getMainLooper()).postDelayed({
                 if (validJoin) {
+                    textToSpeech?.stop()
+
                     val i = Intent(applicationContext, OnlineGame::class.java)
                     i.putExtra("username", username)
                     i.putExtra("roomName", roomNameEdit?.text.toString())
@@ -120,12 +122,16 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         backButton?.setOnClickListener {
             if (!messageBoxOpen) {
+                textToSpeech?.stop()
+
                 val i = Intent(applicationContext, OnlineSetup::class.java)
                 startActivity(i)
             }
         }
 
         okButton?.setOnClickListener {
+            textToSpeech?.stop()
+
             messageBoxOpen = false
 
             messageBox?.visibility = View.INVISIBLE
@@ -139,6 +145,8 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             editor.putString("username", nicknameEdit?.text.toString())
 
             editor.apply()
+
+            username = preferences.getString("username", "")
         }
 
         SocketConnection.socket.on("joinFail") { args ->
@@ -229,6 +237,8 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                             Handler(Looper.getMainLooper()).postDelayed({
                                 if (validJoin) {
+                                    textToSpeech?.stop()
+
                                     val i = Intent(applicationContext, OnlineGame::class.java)
                                     i.putExtra("username", username)
                                     i.putExtra("roomName", name)

@@ -60,6 +60,8 @@ class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
         backButton?.setOnClickListener {
+            textToSpeech?.stop()
+
             val i = Intent(applicationContext, Settings::class.java)
 
             if (intent.getStringExtra("from") == "start_screen") {

@@ -123,11 +123,15 @@ class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         backButton?.setOnClickListener {
+            textToSpeech?.stop()
+
             val i = Intent(applicationContext, OnlineSetup::class.java)
             startActivity(i)
         }
 
         gameOptionsButton?.setOnClickListener {
+            textToSpeech?.stop()
+
             val i = Intent(applicationContext, GameOptions::class.java)
 
             i.putExtra("type", "online")
@@ -275,6 +279,8 @@ class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             
             Handler(Looper.getMainLooper()).postDelayed({
                 if (validGame) {
+                    textToSpeech?.stop()
+
                     val i = Intent(applicationContext, OnlineGame::class.java)
                     i.putExtra("username", username)
                     i.putExtra("roomName", roomName)
@@ -294,6 +300,7 @@ class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         okButton?.setOnClickListener {
+            textToSpeech?.stop()
             messageBox?.visibility = View.INVISIBLE
             messageBoxOpen = false
 

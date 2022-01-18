@@ -46,16 +46,22 @@ class MainMenu : AppCompatActivity(), TextToSpeech.OnInitListener {
         textToSpeech = TextToSpeech(this, this)
 
         backButton?.setOnClickListener {
+            textToSpeech?.stop()
+
             val i = Intent(applicationContext, StartScreen::class.java)
             startActivity(i)
         }
 
         howToPlayButton?.setOnClickListener {
+            textToSpeech?.stop()
+
             val i = Intent(applicationContext, HowToPlay::class.java)
             startActivity(i)
         }
 
         settingsButton?.setOnClickListener {
+            textToSpeech?.stop()
+
             val i = Intent(this, Settings::class.java)
 
             i.putExtra("from", "main_menu")
@@ -63,11 +69,15 @@ class MainMenu : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
         
         playLocal?.setOnClickListener {
+            textToSpeech?.stop()
+
             val i = Intent(applicationContext, LocalSetup::class.java)
             startActivity(i)
         }
         
         playOnline?.setOnClickListener {
+            textToSpeech?.stop()
+
             val i = Intent(applicationContext, OnlineSetup::class.java)
             startActivity(i)
         }

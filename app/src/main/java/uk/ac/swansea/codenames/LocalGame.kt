@@ -19,9 +19,6 @@ import java.io.IOException
 import java.util.*
 
 class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
-
-    //TODO: Still need to check for substring hints
-
     private var gamePhase: LocalPhase? = null
     private var bombSquaresCount = 1
     private var neutralSquaresCount = 7
@@ -582,6 +579,10 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                         if (editHint?.text.toString().uppercase(Locale.getDefault()).contains(wb?.text.toString().uppercase(Locale.getDefault()))) {
                             validHint = false
                         }
+
+                        if (wb?.text.toString().uppercase(Locale.getDefault()).contains(editHint?.text.toString().uppercase(Locale.getDefault()))) {
+                            validHint = false
+                        }
                     }
 
                     if (validHint) {
@@ -628,6 +629,10 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                     for (wb in wordButtons) {
                         if (editHint?.text.toString().uppercase(Locale.getDefault()).contains(wb?.text.toString().uppercase(Locale.getDefault()))) {
+                            validHint = false
+                        }
+
+                        if (wb?.text.toString().uppercase(Locale.getDefault()).contains(editHint?.text.toString().uppercase(Locale.getDefault()))) {
                             validHint = false
                         }
                     }
@@ -1325,7 +1330,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         hintNumber?.adapter = adapter
     }
 
-    private fun speakOut(message : String) {
+    private fun speakOut(message: String) {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
         if (preferences.getBoolean("textToSpeech", true)) {

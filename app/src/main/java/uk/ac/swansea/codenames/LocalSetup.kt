@@ -105,6 +105,8 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         backButton?.setOnClickListener {
+            textToSpeech?.stop()
+
             val i = Intent(applicationContext, MainMenu::class.java)
             startActivity(i)
         }
@@ -115,6 +117,8 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
             i.putExtra("type", "local")
 
             if (intent.getBooleanExtra("hasCustomSettings", false)) {
+                textToSpeech?.stop()
+
                 i.putExtra("hasCustomSettings", true)
                 i.putExtra("bombSquares", intent.getIntExtra("bombSquares", 1))
                 i.putExtra("neutralSquares", intent.getIntExtra("neutralSquares", 7))
@@ -131,6 +135,8 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
             val i = Intent(applicationContext, LocalGame::class.java)
 
             if (intent.getBooleanExtra("hasCustomSettings", false)) {
+                textToSpeech?.stop()
+
                 i.putExtra("hasCustomSettings", true)
                 i.putExtra("bombSquares", intent.getIntExtra("bombSquares", 1))
                 i.putExtra("neutralSquares", intent.getIntExtra("neutralSquares", 7))

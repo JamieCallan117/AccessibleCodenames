@@ -462,6 +462,8 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             if (validSave) {
                 if (intent.getStringExtra("type") == "local") {
+                    textToSpeech?.stop()
+
                     i = Intent(applicationContext, LocalSetup::class.java)
 
                     i.putExtra("type", "local")
@@ -489,6 +491,8 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                     startActivity(i)
                 } else if (intent.getStringExtra("type") == "online") {
+                    textToSpeech?.stop()
+
                     i = Intent(applicationContext, CreateGame::class.java)
 
                     i.putExtra("type", "online")
@@ -523,6 +527,8 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         okButton?.setOnClickListener {
+            textToSpeech?.stop()
+
             toggleMessageBox("", 0)
         }
 
@@ -530,6 +536,8 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
             val i: Intent
 
             if (intent.getStringExtra("type") == "local") {
+                textToSpeech?.stop()
+
                 i = Intent(applicationContext, LocalSetup::class.java)
 
                 i.putExtra("hasCustomSettings", hasCustomSettings)
@@ -554,6 +562,8 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                 startActivity(i)
             } else if (intent.getStringExtra("type") == "online") {
+                textToSpeech?.stop()
+
                 i = Intent(applicationContext, CreateGame::class.java)
 
                 i.putExtra("hasCustomSettings", hasCustomSettings)

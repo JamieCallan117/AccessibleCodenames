@@ -99,6 +99,8 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         backButton?.setOnClickListener {
+            textToSpeech?.stop()
+
             val i: Intent
 
             if (intent.getStringExtra("from") == "start_screen") {
@@ -111,6 +113,8 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         colourButton?.setOnClickListener {
+            textToSpeech?.stop()
+
             val i = Intent(applicationContext, ColourOptions::class.java)
 
             if (intent.getStringExtra("from") == "start_screen") {

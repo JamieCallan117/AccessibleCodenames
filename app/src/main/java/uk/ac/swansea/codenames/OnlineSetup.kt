@@ -65,6 +65,8 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         toggleMessageBox()
         
         okButton?.setOnClickListener {
+            textToSpeech?.stop()
+
             if (messageType == 0) {
                 val i = Intent(baseContext, MainMenu::class.java)
                 startActivity(i)
@@ -80,6 +82,8 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         backButton?.setOnClickListener {
+            textToSpeech?.stop()
+
             val editor = preferences!!.edit()
 
             editor.putString("username", usernameEdit?.text.toString().replace(" ", ""))
@@ -99,6 +103,8 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
                 messageType = 2
                 toggleMessageBox()
             } else {
+                textToSpeech?.stop()
+
                 val editor = preferences!!.edit()
 
                 editor.putString("username", usernameEdit?.text.toString())
@@ -120,6 +126,8 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
                 messageType = 2
                 toggleMessageBox()
             } else {
+                textToSpeech?.stop()
+
                 val editor = preferences!!.edit()
 
                 editor.putString("username", usernameEdit?.text.toString())
