@@ -229,12 +229,13 @@
             android:elevation="2dp"
             android:overScrollMode="never"
             android:scrollbars="none"
-            app:layout_constraintWidth_percent="0.2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.2">
 
             <LinearLayout
+                android:id="@+id/gameOperationsLinear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -362,6 +363,23 @@
             </LinearLayout>
         </ScrollView>
 
+<!--        Not working-->
+<!--        <com.google.android.material.button.MaterialButton-->
+<!--            android:id="@+id/gameOpToggleButton"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:enabled="false"-->
+<!--            android:minWidth="22dip"-->
+<!--            android:paddingLeft="8dp"-->
+<!--            android:paddingTop="12dp"-->
+<!--            android:paddingRight="8dp"-->
+<!--            android:paddingBottom="12dp"-->
+<!--            android:text="@string/close"-->
+<!--            android:visibility="visible"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintStart_toEndOf="@id/gameOperations"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/gameOpOpenButton"
             android:layout_width="wrap_content"
@@ -408,7 +426,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:baselineAligned="false">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -417,310 +435,331 @@
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareOne"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="0dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    app:layout_constraintBottom_toTopOf="@id/squareSix"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareSix"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    app:layout_constraintBottom_toTopOf="@id/squareEleven"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/squareOne" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareEleven"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    app:layout_constraintBottom_toTopOf="@id/squareSixteen"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/squareSix" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareSixteen"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    app:layout_constraintBottom_toTopOf="@id/squareTwentyOne"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/squareEleven" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareTwentyOne"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="0dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
-            </LinearLayout>
+                    android:enabled="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/squareSixteen" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:weightSum="5">
+                android:orientation="vertical" >
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareTwo"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="0dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    app:layout_constraintBottom_toTopOf="@id/squareSeven"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareSeven"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    app:layout_constraintBottom_toTopOf="@id/squareTwelve"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/squareTwo" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareTwelve"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    app:layout_constraintBottom_toTopOf="@id/squareSeventeen"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/squareSeven" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareSeventeen"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    app:layout_constraintBottom_toTopOf="@id/squareTwentyTwo"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/squareTwelve" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareTwentyTwo"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="0dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
-            </LinearLayout>
+                    android:enabled="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/squareSeventeen" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:weightSum="5">
+                android:orientation="vertical" >
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareThree"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="0dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    app:layout_constraintBottom_toTopOf="@id/squareEight"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareEight"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    app:layout_constraintBottom_toTopOf="@id/squareThirteen"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/squareThree" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareThirteen"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    app:layout_constraintBottom_toTopOf="@id/squareEighteen"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/squareEight" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareEighteen"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    app:layout_constraintBottom_toTopOf="@id/squareTwentyThree"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/squareThirteen" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareTwentyThree"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="0dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
-            </LinearLayout>
+                    android:enabled="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/squareEighteen" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:weightSum="5">
+                android:orientation="vertical" >
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareFour"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="0dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    app:layout_constraintBottom_toTopOf="@id/squareNine"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareNine"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    app:layout_constraintBottom_toTopOf="@id/squareFourteen"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/squareFour" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareFourteen"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    app:layout_constraintBottom_toTopOf="@id/squareNineteen"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/squareNine" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareNineteen"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    app:layout_constraintBottom_toTopOf="@id/squareTwentyFour"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/squareFourteen" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareTwentyFour"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="0dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
-            </LinearLayout>
+                    android:enabled="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/squareNineteen" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:weightSum="5">
+                android:orientation="vertical" >
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareFive"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="0dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    app:layout_constraintBottom_toTopOf="@id/squareTen"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareTen"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    app:layout_constraintBottom_toTopOf="@id/squareFifteen"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/squareFive" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareFifteen"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    app:layout_constraintBottom_toTopOf="@id/squareTwenty"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/squareTen" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareTwenty"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    app:layout_constraintBottom_toTopOf="@id/squareTwentyFive"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/squareFifteen" />
 
                 <uk.ac.swansea.codenames.WordButton
                     android:id="@+id/squareTwentyFive"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="0dp"
-                    android:layout_weight="1"
-                    android:enabled="false" />
-            </LinearLayout>
+                    android:enabled="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/squareTwenty" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

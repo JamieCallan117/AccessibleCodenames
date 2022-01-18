@@ -27,6 +27,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var startingTeam = "A"
     private var messageBoxOpen = false
     private var ttsOpen = false
+    //Not working
+    //private var gameOpOpen = true
     private var customWords: ArrayList<String>? = null
     private var bombWords: ArrayList<String?>? = null
     private var neutralWords: ArrayList<String?>? = null
@@ -44,6 +46,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var noButton: MaterialButton? = null
     private var gameOpOpenButton: MaterialButton? = null
     private var gameOpCloseButton: MaterialButton? = null
+    //Not working
+//    private var gameOpToggleButton: MaterialButton? = null
     private var ttsAll: MaterialButton? = null
     private var ttsA: MaterialButton? = null
     private var ttsB: MaterialButton? = null
@@ -118,6 +122,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         confirmButton = findViewById(R.id.confirmButton)
         yesButton = findViewById(R.id.yesButton)
         noButton = findViewById(R.id.noButton)
+        //Not working
+//        gameOpToggleButton = findViewById(R.id.gameOpToggleButton)
         gameOpOpenButton = findViewById(R.id.gameOpOpenButton)
         gameOpCloseButton = findViewById(R.id.gameOpCloseButton)
         ttsAll = findViewById(R.id.ttsAll)
@@ -146,7 +152,15 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         textToSpeech = TextToSpeech(this, this)
 
+        //Not working
+//        val wrapSpec: Int = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+//        gameOperations?.measure(wrapSpec, wrapSpec)
+//
+//        val gameOpWidth = (gameOperations?.measuredWidth?.times(-1.0f))
+
+        //Replace when above works
         val gameOpWidth = gameOperations?.width?.toFloat()
+
         hintText?.visibility = View.GONE
         viewPreviousHints?.visibility = View.GONE
 
@@ -453,6 +467,25 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             speakOut(squareTwentyFive?.text.toString())
             true
         }
+
+        //Not working
+//        gameOpToggleButton?.setOnClickListener {
+//            if (gameOpOpen) {
+//                gameOpWidth?.let { it1 -> gameOperations?.animate()?.translationX(it1)?.duration = 500}
+//                gameOpWidth?.let { it2 -> gameOpToggleButton?.animate()?.translationX(it2)?.duration = 500}
+//
+//                gameOpToggleButton?.text = getString(R.string.open)
+//
+//                gameOpOpen = false
+//            } else {
+//                gameOperations?.animate()?.translationX(0.0f)?.duration = 500
+//                gameOpToggleButton?.animate()?.translationX(0.0f)?.duration = 500
+//
+//                gameOpToggleButton?.text = getString(R.string.close)
+//
+//                gameOpOpen = true
+//            }
+//        }
 
         gameOpOpenButton?.setOnClickListener {
             gameOpOpenButton?.visibility = View.GONE
@@ -848,6 +881,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         viewPreviousHints?.setOnClickListener {
             previousHintsScroll?.visibility = View.VISIBLE
+            //Not working
+//            gameOpToggleButton?.visibility = View.INVISIBLE
             gameOpCloseButton?.visibility = View.INVISIBLE
             gameOperations?.visibility = View.INVISIBLE
         }
@@ -855,6 +890,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         hidePreviousHints?.setOnClickListener {
             previousHintsScroll?.visibility = View.INVISIBLE
             gameOperations?.visibility = View.VISIBLE
+            //Not working
+//            gameOpToggleButton?.visibility = View.VISIBLE
             gameOpCloseButton?.visibility = View.VISIBLE
         }
 
@@ -940,6 +977,17 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             speakOut(noButton?.text.toString())
             true
         }
+
+        //Not working
+//        gameOpToggleButton?.setOnLongClickListener {
+//            if (gameOpOpen) {
+//                speakOut(getString(R.string.close_game_op))
+//            } else {
+//                speakOut(getString(R.string.open_game_op))
+//            }
+//
+//            true
+//        }
 
         gameOpOpenButton?.setOnLongClickListener {
             speakOut(getString(R.string.open_game_op))
@@ -1218,6 +1266,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             wb?.isEnabled = !enabled
         }
 
+        //Not working
+//        gameOpToggleButton?.isEnabled = !enabled
         gameOpOpenButton?.isEnabled = !enabled
         gameOpCloseButton?.isEnabled = !enabled
         exitButton?.isEnabled = !enabled
@@ -1369,6 +1419,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         confirmButton?.setBackgroundColor(menuButtonsColour)
         yesButton?.setBackgroundColor(menuButtonsColour)
         noButton?.setBackgroundColor(menuButtonsColour)
+        //Not working
+//        gameOpToggleButton?.setBackgroundColor(menuButtonsColour)
         gameOpOpenButton?.setBackgroundColor(menuButtonsColour)
         gameOpCloseButton?.setBackgroundColor(menuButtonsColour)
         turnAction?.setBackgroundColor(menuButtonsColour)
@@ -1383,6 +1435,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         confirmButton?.setTextColor(menuTextColour)
         yesButton?.setTextColor(menuTextColour)
         noButton?.setTextColor(menuTextColour)
+        //Not working
+//        gameOpToggleButton?.setTextColor(menuTextColour)
         gameOpOpenButton?.setTextColor(menuTextColour)
         gameOpCloseButton?.setTextColor(menuTextColour)
         teamCounterLine?.setTextColor(menuTextColour)
