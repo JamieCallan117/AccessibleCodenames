@@ -214,6 +214,8 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                         val buttonParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
 
+                        buttonParams.bottomMargin = 8
+
                         joinButton.layoutParams = buttonParams
 
                         joinButton.setOnClickListener {
