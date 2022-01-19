@@ -150,6 +150,12 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         val gameOpWidth = (gameOperations?.measuredWidth?.times(-1.0f))
 
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        if (preferences.getBoolean("textToSpeech", true)) {
+            ttsButton?.visibility = View.GONE
+        }
+
         hintText?.visibility = View.GONE
         viewPreviousHints?.visibility = View.GONE
 
@@ -173,16 +179,12 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             gamePhase = LocalPhase.TEAM_B_INTERMISSION
             teamBCount?.paintFlags = teamBCount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
 
-            val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
-
             teamBColour = preferences.getInt("teamB", -65536)
 
             outline?.setBackgroundColor(teamBColour)
         } else {
             gamePhase = LocalPhase.TEAM_A_INTERMISSION
             teamACount?.paintFlags = teamACount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
-
-            val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
             teamAColour = preferences.getInt("teamA", -16773377)
 
@@ -530,8 +532,6 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                         messageText?.setText(R.string.spymaster_confirmation)
                         confirmButton?.setText(R.string.confirm)
 
-                        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
-
                         teamBColour = preferences.getInt("teamB", -65536)
 
                         outline?.setBackgroundColor(teamBColour)
@@ -553,8 +553,6 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                         teamBCount?.paintFlags = teamBCount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
                         messageText?.setText(R.string.spymaster_confirmation)
                         confirmButton?.setText(R.string.confirm)
-
-                        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
                         teamAColour = preferences.getInt("teamA", -16773377)
 

@@ -19,7 +19,7 @@ import kotlin.system.exitProcess
  */
 class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
 
-    private var quitBox: GridLayout? = null
+    private var quitBox: ConstraintLayout? = null
     private var constraintLayout: ConstraintLayout? = null
     private var playButton: MaterialButton? = null
     private var settingsButton: MaterialButton? = null
@@ -161,6 +161,8 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
             startScreenTitle!!.visibility = View.VISIBLE
             exiting = false
         } else {
+            speakOut(quitText?.text.toString().replace("\n",""))
+
             quitBox!!.visibility = View.VISIBLE
             playButton!!.visibility = View.INVISIBLE
             settingsButton!!.visibility = View.INVISIBLE

@@ -18,7 +18,7 @@ import java.util.*
 
 class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var constraintLayout: ConstraintLayout? = null
-    private var messageBox: GridLayout? = null
+    private var messageBox: ConstraintLayout? = null
     private var gameOptionsTitle: MaterialTextView? = null
     private var squaresInUse: MaterialTextView? = null
     private var bombSquareCount: MaterialTextView? = null
@@ -591,6 +591,8 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         noButton?.setOnClickListener {
+            textToSpeech?.stop()
+
             toggleMessageBox("", 0)
         }
 
@@ -826,6 +828,7 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         } else {
             messageBox?.visibility = View.VISIBLE
             messageBoxText?.text = message
+            speakOut(messageBoxText?.text.toString().replace("\n", ""))
         }
 
         if (type == 0) {

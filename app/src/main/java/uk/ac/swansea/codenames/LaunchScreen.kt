@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.speech.tts.TextToSpeech
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.button.MaterialButton
@@ -52,6 +53,8 @@ class LaunchScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
                 if (ttsSwitch!!.isChecked) {
                     speakOut(ttsInfo!!.text.toString())
                 }
+
+                continueButton?.visibility = View.VISIBLE
             }, 2000)
         }
 

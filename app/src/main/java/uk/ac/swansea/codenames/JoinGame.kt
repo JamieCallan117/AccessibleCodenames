@@ -14,7 +14,6 @@ import org.json.JSONObject
 import org.json.JSONArray
 import org.json.JSONException
 import android.widget.Button
-import androidx.gridlayout.widget.GridLayout
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
@@ -25,7 +24,7 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     //TODO: Sort problems with joining with same nickname. May be a server or client problem. Sometimes the joinFailNick isn't triggered
 
     private var constraintLayout: ConstraintLayout? = null
-    private var messageBox: GridLayout? = null
+    private var messageBox: ConstraintLayout? = null
     private var scrollLinear: LinearLayout? = null
     private var backButton: MaterialButton? = null
     private var refreshButton: MaterialButton? = null
@@ -325,6 +324,8 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         messageBoxOpen = true
 
         runOnUiThread {
+            speakOut(messageText?.text.toString())
+
             messageBox?.visibility = View.VISIBLE
             messageText?.text = message
             nicknameEdit?.visibility = View.GONE
@@ -339,6 +340,8 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         messageBoxOpen = true
 
         runOnUiThread {
+            speakOut(messageText?.text.toString())
+
             messageBox?.visibility = View.VISIBLE
             messageText?.text = message
             nicknameEdit?.visibility = View.VISIBLE

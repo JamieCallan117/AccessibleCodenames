@@ -13,7 +13,6 @@ import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.*
 import androidx.core.view.children
-import androidx.gridlayout.widget.GridLayout
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
@@ -23,7 +22,7 @@ import java.util.*
 
 class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var constraintLayout: ConstraintLayout? = null
-    private var messageBox: GridLayout? = null
+    private var messageBox: ConstraintLayout? = null
     private var customWordsLinear: LinearLayout? = null
     private var privateSwitch: SwitchMaterial? = null
     private var roomNameEdit: TextInputEditText? = null
@@ -380,6 +379,16 @@ class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             true
         }
 
+        messageText?.setOnLongClickListener {
+            speakOut(messageText?.text.toString())
+            true
+        }
+
+        okButton?.setOnLongClickListener {
+            speakOut(okButton?.text.toString())
+            true
+        }
+
         updateColours()
     }
 
@@ -397,6 +406,8 @@ class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private fun toggleMessageBox(message: String) {
         messageBoxOpen = true
+
+        speakOut(messageText?.text.toString())
 
         messageBox?.visibility = View.VISIBLE
 

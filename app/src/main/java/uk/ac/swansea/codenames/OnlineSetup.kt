@@ -9,7 +9,6 @@ import android.os.Handler
 import android.os.Looper
 import android.speech.tts.TextToSpeech
 import android.view.View
-import androidx.gridlayout.widget.GridLayout
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
@@ -18,7 +17,7 @@ import java.util.*
 class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private var constraintLayout: ConstraintLayout? = null
-    private var messageBox: GridLayout? = null
+    private var messageBox: ConstraintLayout? = null
     private var gameSetupTitle: MaterialTextView? = null
     private var gameSetupSubtitle: MaterialTextView? = null
     private var messageText: MaterialTextView? = null
@@ -211,6 +210,8 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
                         messageText?.setText(R.string.unable_server)
                         messageBox?.visibility = View.VISIBLE
                         okButton?.visibility = View.VISIBLE
+
+                        speakOut(messageText?.text.toString())
                     } else {
                         connectingBoxOpen = false
                         backButton?.isEnabled = true
@@ -234,6 +235,8 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
                 1 -> messageText?.setText(R.string.no_username)
                 2 ->messageText?.setText(R.string.alpha_username)
             }
+
+            speakOut(messageText?.text.toString())
         }
     }
 

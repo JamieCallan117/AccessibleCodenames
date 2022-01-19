@@ -7,16 +7,15 @@
     android:layout_height="match_parent"
     tools:context=".OnlineSetup">
 
-    <androidx.gridlayout.widget.GridLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/messageBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#FFFFFF"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginBottom="100dp"
         android:elevation="3dp"
-        android:paddingStart="20dp"
-        android:paddingTop="40dp"
-        android:paddingEnd="20dp"
-        android:paddingBottom="40dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,33 +24,35 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/messageText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="80dp"
             android:fontFamily="@font/general_font"
             android:gravity="center"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
             android:text="@string/unable_server"
             android:textSize="20sp"
-            app:layout_column="0"
-            app:layout_columnSpan="3"
-            app:layout_row="0" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/okButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="24dp"
-            android:paddingTop="12dp"
-            android:paddingRight="24dp"
-            android:paddingBottom="12dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="120dp"
+            android:layout_marginTop="150dp"
+            android:layout_marginEnd="120dp"
             android:text="@string/ok"
-            app:layout_column="1"
-            app:layout_columnSpan="3"
-            app:layout_gravity="center_horizontal|center_vertical"
-            app:layout_row="1" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.gridlayout.widget.GridLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/backButton"
