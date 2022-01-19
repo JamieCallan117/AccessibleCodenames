@@ -124,4 +124,16 @@
     <string name="remaining_words_a">Team A remaining words. %1$d</string>
     <string name="remaining_words_b">Team B remaining words. %1$d</string>
     <string name="none_found">None found.</string>
+    <string name="loading">Loading…</string>
+    <string name="join_a_team">Please select a team to join.</string>
+    <string name="start_game">Start Game</string>
+    <string name="request_spymaster">Request\nSpymaster</string>
+    <string name="change_team">Change Team</string>
+    <string name="view_teams">View Teams</string>
+    <string name="chat">Chat</string>
+    <string name="enter_message_hint">Enter message here..</string>
+    <string name="send">Send</string>
+    <string name="end_game">End Game</string>
+    <string name="exit_online_host">Are you sure you want\n to end the game?</string>
+    <string name="exit_online">Are you sure you want\n to quit the game?</string>
 </resources>

@@ -145,14 +145,9 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         textToSpeech = TextToSpeech(this, this)
 
-        val wrapSpec: Int = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-        gameOperations?.measure(wrapSpec, wrapSpec)
-
-        val gameOpWidth = (gameOperations?.measuredWidth?.times(-1.0f))
-
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
-        if (preferences.getBoolean("textToSpeech", true)) {
+        if (!preferences.getBoolean("textToSpeech", true)) {
             ttsButton?.visibility = View.GONE
         }
 
@@ -460,6 +455,11 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         gameOpToggleButton?.setOnClickListener {
+            val wrapSpec: Int = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+            gameOperations?.measure(wrapSpec, wrapSpec)
+
+            val gameOpWidth = (gameOperations?.measuredWidth?.times(-1.0f))
+
             if (gameOpOpen) {
                 gameOpWidth?.let { it1 -> gameOperations?.animate()?.translationX(it1)?.duration = 500}
                 gameOpWidth?.let { it2 -> gameOpToggleButton?.animate()?.translationX(it2)?.duration = 500}
