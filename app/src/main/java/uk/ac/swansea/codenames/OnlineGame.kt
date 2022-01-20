@@ -2,6 +2,7 @@ package uk.ac.swansea.codenames
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Paint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -16,6 +17,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
+import org.json.JSONArray
+import org.json.JSONException
 import java.util.*
 
 class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
@@ -279,7 +282,13 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             toggleWindow()
 
+            chooseTeamBox?.visibility = View.GONE
+
             SocketConnection.socket.emit("chooseTeam", player?.nickname, "A", roomName)
+
+            if (teamASpymaster != null) {
+                requestSpymaster?.visibility = View.GONE
+            }
         }
 
         teamBButton?.setOnClickListener {
@@ -287,7 +296,13 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             toggleWindow()
 
+            chooseTeamBox?.visibility = View.GONE
+
             SocketConnection.socket.emit("chooseTeam", player?.nickname, "B", roomName)
+
+            if (teamBSpymaster != null) {
+                requestSpymaster?.visibility = View.GONE
+            }
         }
 
         closeTeamsBox?.setOnClickListener {
@@ -421,35 +436,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             viewTeamsBox?.visibility = View.VISIBLE
 
-            menuTextColour = preferences.getInt("menuTextColour", -1)
-
-            for (p in teamAUsers) {
-                val newPlayer = MaterialTextView(this)
-
-                if (p.isSpymaster) {
-                    newPlayer.text = getString(R.string.spymaster_name, p.nickname)
-                } else {
-                    newPlayer.text = p.nickname
-                }
-
-                newPlayer.setTextColor(menuTextColour)
-                newPlayer.textSize = 30f
-                teamALinear?.addView(newPlayer)
-            }
-
-            for (p in teamBUsers) {
-                val newPlayer = MaterialTextView(this)
-
-                if (p.isSpymaster) {
-                    newPlayer.text = getString(R.string.spymaster_name, p.nickname)
-                } else {
-                    newPlayer.text = p.nickname
-                }
-
-                newPlayer.setTextColor(menuTextColour)
-                newPlayer.textSize = 30f
-                teamBLinear?.addView(newPlayer)
-            }
+            updateTeamsBox()
         }
 
         chatButton?.setOnClickListener {
@@ -835,8 +822,13 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             true
         }
 
+        exitButton?.setOnLongClickListener {
+            speakOut(exitButton?.text.toString())
+            true
+        }
+
         scoreLinear?.setOnLongClickListener {
-            var message = getString(R.string.remaining_words_a, teamAWordCount)
+            var message = getString(R.string.remaining_words_a, teamAWordCount).replace(" A ", " Ay ")
 
             message += "\n" + getString(R.string.remaining_words_b, teamBWordCount)
 
@@ -989,35 +981,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
 
             runOnUiThread {
-                menuTextColour = preferences.getInt("menuTextColour", -1)
-
-                for (p in teamAUsers) {
-                    val newPlayer = MaterialTextView(this)
-
-                    if (p.isSpymaster) {
-                        newPlayer.text = getString(R.string.spymaster_name, p.nickname)
-                    } else {
-                        newPlayer.text = p.nickname
-                    }
-
-                    newPlayer.setTextColor(menuTextColour)
-                    newPlayer.textSize = 30f
-                    teamALinear?.addView(newPlayer)
-                }
-
-                for (p in teamBUsers) {
-                    val newPlayer = MaterialTextView(this)
-
-                    if (p.isSpymaster) {
-                        newPlayer.text = getString(R.string.spymaster_name, p.nickname)
-                    } else {
-                        newPlayer.text = p.nickname
-                    }
-
-                    newPlayer.setTextColor(menuTextColour)
-                    newPlayer.textSize = 30f
-                    teamBLinear?.addView(newPlayer)
-                }
+                updateTeamsBox()
             }
         }
 
@@ -1053,6 +1017,176 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }
 
+        SocketConnection.socket.on("gameDetails") { args ->
+            try {
+                allWords = jsonArrayToStrings(args[0] as JSONArray)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+
+            try {
+                teamAUsers = jsonArrayToPlayers(args[1] as JSONArray)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+
+            try {
+                teamBUsers = jsonArrayToPlayers(args[2] as JSONArray)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+
+            teamASpymaster = if (args[3] != null) {
+                Player((args[3] as String))
+            } else {
+                null
+            }
+
+            teamBSpymaster = if (args[4] != null) {
+                Player((args[4] as String))
+            } else {
+                null
+            }
+
+            try {
+                bombWords = jsonArrayToStrings(args[5] as JSONArray)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+
+            try {
+                neutralWords = jsonArrayToStrings(args[6] as JSONArray)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+
+            try {
+                teamAWords = jsonArrayToStrings(args[7] as JSONArray)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+
+            try {
+                teamBWords = jsonArrayToStrings(args[8] as JSONArray)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+
+            startingTeam = args[9] as String
+
+            runOnUiThread {
+                for (i in wordButtons.indices) {
+                    wordButtons[i]?.text = allWords[i]
+                }
+
+                if (startingTeam == "A") {
+                    teamAColour = preferences.getInt("teamA", -16773377)
+
+                    outline?.setBackgroundColor(teamAColour)
+
+                    teamACount?.paintFlags = teamACount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
+                } else {
+                    teamBColour = preferences.getInt("teamB", -65536)
+
+                    outline?.setBackgroundColor(teamBColour)
+
+                    teamBCount?.paintFlags = teamBCount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
+                }
+
+                teamAWordCount = teamAWords.size
+                teamBWordCount = teamBWords.size
+                teamACount?.text = teamAWordCount.toString()
+                teamBCount?.text = teamBWordCount.toString()
+                loadingText?.visibility = View.GONE
+                chooseTeamBox?.visibility = View.VISIBLE
+            }
+        }
+
+        SocketConnection.socket.on("teamASpymaster") { args ->
+            val newUser = args[0] as String
+
+            for (p in teamAUsers) {
+                if (p.nickname == newUser) {
+                    p.isSpymaster = true
+                    teamASpymaster = p
+                }
+            }
+
+            runOnUiThread {
+                if (player?.nickname == newUser) {
+                    player?.isSpymaster = true
+                    changeTeam?.visibility = View.GONE
+                }
+
+                if (player?.team == "A") {
+                    requestSpymaster?.visibility = View.GONE
+                }
+
+                updateTeamsBox()
+            }
+        }
+
+        SocketConnection.socket.on("teamBSpymaster") { args ->
+            val newUser = args[0] as String
+
+            for (p in teamBUsers) {
+                if (p.nickname == newUser) {
+                    p.isSpymaster = true
+                    teamBSpymaster = p
+                }
+            }
+
+            runOnUiThread {
+                if (player?.nickname == newUser) {
+                    player?.isSpymaster = true
+                    changeTeam?.visibility = View.GONE
+                }
+
+                if (player?.team == "B") {
+                    requestSpymaster?.visibility = View.GONE
+                }
+
+                updateTeamsBox()
+            }
+        }
+
+        SocketConnection.socket.on("spymasterFail") {
+            windowOpen = true
+
+            toggleWindow()
+
+            messageText?.text = getString(R.string.existing_spymaster)
+
+            messageBox?.visibility = View.VISIBLE
+            yesButton?.visibility = View.INVISIBLE
+            okButton?.visibility = View.VISIBLE
+            noButton?.visibility = View.INVISIBLE
+        }
+
+        SocketConnection.socket.on("teamChange") { args ->
+
+        }
+
+        SocketConnection.socket.on("wordButton") { args ->
+
+        }
+
+        SocketConnection.socket.on("endTurn") {
+
+        }
+
+        SocketConnection.socket.on("hint") { args ->
+
+        }
+
+        SocketConnection.socket.on("teamAChat") { args ->
+
+        }
+
+        SocketConnection.socket.on("teamBChat") { args ->
+
+        }
+
         updateColours()
     }
 
@@ -1064,6 +1198,40 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     override fun onBackPressed() {
         exitButton?.performClick()
+    }
+
+    private fun updateTeamsBox() {
+        val preferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        menuTextColour = preferences.getInt("menuTextColour", -1)
+
+        for (p in teamAUsers) {
+            val newPlayer = MaterialTextView(this)
+
+            if (p.isSpymaster) {
+                newPlayer.text = getString(R.string.spymaster_name, p.nickname)
+            } else {
+                newPlayer.text = p.nickname
+            }
+
+            newPlayer.setTextColor(menuTextColour)
+            newPlayer.textSize = 30f
+            teamALinear?.addView(newPlayer)
+        }
+
+        for (p in teamBUsers) {
+            val newPlayer = MaterialTextView(this)
+
+            if (p.isSpymaster) {
+                newPlayer.text = getString(R.string.spymaster_name, p.nickname)
+            } else {
+                newPlayer.text = p.nickname
+            }
+
+            newPlayer.setTextColor(menuTextColour)
+            newPlayer.textSize = 30f
+            teamBLinear?.addView(newPlayer)
+        }
     }
 
     private fun toggleWindow() {
@@ -1085,6 +1253,34 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         for (wb in wordButtons) {
             wb?.isEnabled = !windowOpen
         }
+    }
+
+    @Throws(JSONException::class)
+    private fun jsonArrayToPlayers(jsonArray: JSONArray?): ArrayList<Player> {
+        val players = ArrayList<Player>()
+
+        if (jsonArray != null) {
+            val len = jsonArray.length()
+            for (i in 0 until len) {
+                players.add(Player(jsonArray.getString(i)))
+            }
+        }
+
+        return players
+    }
+
+    @Throws(JSONException::class)
+    private fun jsonArrayToStrings(jsonArray: JSONArray?): ArrayList<String> {
+        val words = ArrayList<String>()
+
+        if (jsonArray != null) {
+            val len = jsonArray.length()
+            for (i in 0 until len) {
+                words.add(jsonArray.getString(i))
+            }
+        }
+
+        return words
     }
 
     private fun speakOut(message: String) {
