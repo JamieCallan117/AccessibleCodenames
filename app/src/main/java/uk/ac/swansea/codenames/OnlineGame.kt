@@ -1209,6 +1209,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                 val user = args[1] as String
                 var typeClicked: String? = null
                 var index = 0
+                var turnEnded = false
 
                 wordCounter++
 
@@ -1259,6 +1260,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     "A" -> {
                         buttonClicked?.setHasBeenClicked(true)
                         if (gamePhase === OnlinePhase.TEAM_B) {
+                            turnEnded = true
+
                             gamePhase = OnlinePhase.TEAM_A_SPY
                             hintText?.visibility = View.GONE
                             hintText?.text = ""
@@ -1290,6 +1293,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     "B" -> {
                         buttonClicked?.setHasBeenClicked(true)
                         if (gamePhase === OnlinePhase.TEAM_A) {
+                            turnEnded = true
                             gamePhase = OnlinePhase.TEAM_B_SPY
                             hintText?.visibility = View.GONE
                             hintText?.text = ""
@@ -1322,6 +1326,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                         buttonClicked?.setHasBeenClicked(true)
 
                         if (gamePhase === OnlinePhase.TEAM_A) {
+                            turnEnded = true
                             gamePhase = OnlinePhase.TEAM_B_SPY
                             hintText?.visibility = View.GONE
                             hintText?.text = ""
@@ -1336,6 +1341,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                                 turnAction?.visibility = View.GONE
                             }
                         } else {
+                            turnEnded = true
                             gamePhase = OnlinePhase.TEAM_A_SPY
                             hintText?.visibility = View.GONE
                             hintText?.text = ""
@@ -1356,6 +1362,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                     "Bomb" -> {
                         buttonClicked?.setHasBeenClicked(true)
+
+                        turnEnded = true
 
                         gamePhase = if (gamePhase === OnlinePhase.TEAM_A) {
                             OnlinePhase.TEAM_B_WIN
@@ -1395,7 +1403,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     chatLinear?.addView(newWord)
                 }
 
-                if (wordCounter == maxTurns) {
+                if (wordCounter == maxTurns && !turnEnded) {
                     if (player?.isHost == true) {
                         println("Turn ended by ${player?.nickname}")
                         SocketConnection.socket.emit("endTurn", roomName)
