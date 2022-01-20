@@ -113,6 +113,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var startingTeam = "A"
     private var roomName: String? = null
 
+    private var maxTurns = 0
     private var teamAWordCount = 0
     private var teamBWordCount = 0
     private var wordCounter = 0
@@ -1200,7 +1201,171 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         SocketConnection.socket.on("wordButton") { args ->
+            runOnUiThread {
+                val word = args[0] as String
+                val user = args[1] as String
+                var typeClicked: String? = null
+                var index = 0
 
+                wordCounter++
+
+                for (i in wordButtons.indices) {
+                    if (wordButtons[i]?.text.toString() == word) {
+                        index = i
+                        break
+                    }
+                }
+
+                val buttonClicked = wordButtons[index]
+
+                for (s in teamAWords) {
+                    if (s == word) {
+                        typeClicked = "A"
+                        break
+                    }
+                }
+
+                if (typeClicked == null) {
+                    for (s in teamBWords) {
+                        if (s == word) {
+                            typeClicked = "B"
+                            break
+                        }
+                    }
+                }
+
+                if (typeClicked == null) {
+                    for (s in neutralWords) {
+                        if (s == word) {
+                            typeClicked = "Neutral"
+                            break
+                        }
+                    }
+                }
+
+                if (typeClicked == null) {
+                    for (s in bombWords) {
+                        if (s == word) {
+                            typeClicked = "Bomb"
+                            break
+                        }
+                    }
+                }
+
+                when (typeClicked) {
+                    "A" -> {
+                        buttonClicked?.setHasBeenClicked(true)
+                        if (gamePhase === OnlinePhase.TEAM_B) {
+                            gamePhase = OnlinePhase.TEAM_A_SPY
+                            hintText?.visibility = View.GONE
+
+                            if (player?.isSpymaster == true && player?.team == "A") {
+                                hintText?.visibility = View.GONE
+                                editHint?.visibility = View.VISIBLE
+                                hintNumber?.visibility = View.VISIBLE
+                                turnAction?.visibility = View.VISIBLE
+                            }
+                        }
+
+                        teamAWordCount--
+                        teamACount?.text = teamAWordCount.toString()
+
+                        updateWordColours()
+                    }
+
+                    "B" -> {
+                        buttonClicked?.setHasBeenClicked(true)
+                        if (gamePhase === OnlinePhase.TEAM_A) {
+                            gamePhase = OnlinePhase.TEAM_B_SPY
+                            hintText?.visibility = View.GONE
+
+                            if (player?.isSpymaster == true && player?.team == "B") {
+                                hintText?.visibility = View.GONE
+                                editHint?.visibility = View.VISIBLE
+                                hintNumber?.visibility = View.VISIBLE
+                                turnAction?.visibility = View.VISIBLE
+                            }
+                        }
+
+                        teamBWordCount--
+                        teamBCount?.text = teamBWordCount.toString()
+
+                        updateWordColours()
+                    }
+
+                    "Neutral" -> {
+                        buttonClicked?.setHasBeenClicked(true)
+
+                        if (gamePhase === OnlinePhase.TEAM_A) {
+                            gamePhase = OnlinePhase.TEAM_B_SPY
+                            hintText?.visibility = View.GONE
+
+                            if (player?.isSpymaster == true && player?.team == "B") {
+                                editHint?.visibility = View.VISIBLE
+                                hintNumber?.visibility = View.VISIBLE
+                                turnAction?.visibility = View.VISIBLE
+                            }
+                        } else {
+                            gamePhase = OnlinePhase.TEAM_A_SPY
+                            hintText?.visibility = View.GONE
+
+                            if (player?.isSpymaster == true && player?.team == "A") {
+                                editHint?.visibility = View.VISIBLE
+                                hintNumber?.visibility = View.VISIBLE
+                                turnAction?.visibility = View.VISIBLE
+                            }
+                        }
+
+                        updateWordColours()
+                    }
+
+                    "Bomb" -> {
+                        buttonClicked?.setHasBeenClicked(true)
+
+                        gamePhase = if (gamePhase === OnlinePhase.TEAM_A) {
+                            OnlinePhase.TEAM_B_WIN
+                        } else {
+                            OnlinePhase.TEAM_A_WIN
+                        }
+
+                        updateWordColours()
+                    }
+
+                    null -> {
+                        val i = Intent(applicationContext, MainMenu::class.java)
+                        i.putExtra("onlineClose", "Unknown error occurred")
+                        startActivity(i)
+                    }
+                }
+
+                teamAColour = preferences.getInt("teamA", -16773377)
+                teamBColour = preferences.getInt("teamB", -65536)
+
+
+                if (gamePhase === OnlinePhase.TEAM_A) {
+                    val newWord = MaterialTextView(this)
+
+                    newWord.text = getString(R.string.chat_word, user, word)
+                    newWord.setTextColor(teamAColour)
+                    newWord.textSize = 18f
+
+                    chatLinear?.addView(newWord)
+                } else {
+                    val newWord = MaterialTextView(this)
+
+                    newWord.text = getString(R.string.chat_word, user, word)
+                    newWord.setTextColor(teamBColour)
+                    newWord.textSize = 18f
+
+                    chatLinear?.addView(newWord)
+                }
+
+                if (wordCounter == maxTurns) {
+                    if (player?.isHost == true) {
+                        SocketConnection.socket.emit("endTurn", roomName)
+                    }
+                }
+            }
         }
 
         SocketConnection.socket.on("endTurn") {
@@ -1250,6 +1415,16 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         SocketConnection.socket.on("hint") { args ->
             runOnUiThread {
                 val hint = args[0] as String
+                val temp = hint.split(": ")
+                val num = temp[1]
+
+                wordCounter = 0
+
+                maxTurns = if (num == "Infinite") {
+                    24
+                } else {
+                    num.toInt() + 1
+                }
 
                 teamAColour = preferences.getInt("teamA", -16773377)
                 teamBColour = preferences.getInt("teamB", -65536)

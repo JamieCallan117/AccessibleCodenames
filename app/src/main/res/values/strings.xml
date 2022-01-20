@@ -140,4 +140,5 @@
     <string name="resume">Resume</string>
     <string name="existing_spymaster">Someone else is already\n the spymaster</string>
     <string name="chat_hint">Hint: %1$s</string>
+    <string name="chat_word">%1$s pressed the word %2$s!</string>
 </resources>
