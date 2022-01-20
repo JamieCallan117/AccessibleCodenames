@@ -114,7 +114,7 @@
     <string name="team_b_words">Team B\n words</string>
     <string name="neutral_words">Neutral\n words</string>
     <string name="bomb_words">Bomb\n words</string>
-    <string name="unclicked_words">Unclicked \n words</string>
+    <string name="unmodified_words">Unmodified \n words</string>
     <string name="clicked_words">Clicked \n words</string>
     <string name="minimum_turn">You must click at least\n one word every turn.</string>
     <string name="team_a_new_hint">Team A new hint. %1$s</string>
@@ -136,4 +136,5 @@
     <string name="end_game">End Game</string>
     <string name="exit_online_host">Are you sure you want\n to end the game?</string>
     <string name="exit_online">Are you sure you want\n to quit the game?</string>
+    <string name="spymaster_name">%1$s &#128065;</string>
 </resources>

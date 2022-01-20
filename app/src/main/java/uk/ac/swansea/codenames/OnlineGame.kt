@@ -42,7 +42,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var ttsB: MaterialButton? = null
     private var ttsNeutral: MaterialButton? = null
     private var ttsBomb: MaterialButton? = null
-    private var ttsUnclicked: MaterialButton? = null
+    private var ttsUnmodified: MaterialButton? = null
     private var ttsClicked: MaterialButton? = null
     private var closeTTS: MaterialButton? = null
     private var exitButton: MaterialButton? = null
@@ -93,14 +93,36 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var squareTwentyThree: WordButton? = null
     private var squareTwentyFour: WordButton? = null
     private var squareTwentyFive: WordButton? = null
+    private var gamePhase = OnlinePhase.START
 
+    private var teamAUsers = ArrayList<Player>()
+    private var teamBUsers = ArrayList<Player>()
+    private var allWords = ArrayList<String>()
+    private var bombWords = ArrayList<String>()
+    private var neutralWords = ArrayList<String>()
+    private var teamAWords = ArrayList<String>()
+    private var teamBWords = ArrayList<String>()
     private var wordButtons = arrayOfNulls<WordButton>(25)
 
     private var player: Player? = null
 
+    private var startingTeam = "A"
     private var roomName: String? = null
 
+    private var teamAWordCount = 0
+    private var teamBWordCount = 0
+    private var wordCounter = 0
+    private var teamAColour = -16773377
+    private var teamBColour = -65536
+    private var bombColour = -14342875
+    private var neutralColour = -11731092
+    private var unmodifiedColour = -3684409
+    private var applicationBackgroundColour = -10921639
+    private var menuButtonsColour = -8164501
+    private var menuTextColour = -1
+
     private var windowOpen = true
+    private var gameOpOpen = true
 
     private var textToSpeech: TextToSpeech? = null
 
@@ -131,7 +153,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         ttsB = findViewById(R.id.ttsB)
         ttsNeutral = findViewById(R.id.ttsNeutral)
         ttsBomb = findViewById(R.id.ttsBomb)
-        ttsUnclicked = findViewById(R.id.ttsUnclicked)
+        ttsUnmodified = findViewById(R.id.ttsUnmodified)
         ttsClicked = findViewById(R.id.ttsClicked)
         closeTTS = findViewById(R.id.closeTTS)
         exitButton = findViewById(R.id.exitButton)
@@ -185,11 +207,13 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         textToSpeech = TextToSpeech(this, this)
 
-        wordButtons = arrayOf(squareOne, squareTwo, squareThree, squareFour, squareFive,
+        wordButtons = arrayOf(
+            squareOne, squareTwo, squareThree, squareFour, squareFive,
             squareSix, squareSeven, squareEight, squareNine, squareTen, squareEleven,
             squareTwelve, squareThirteen, squareFourteen, squareFifteen, squareSixteen,
             squareSeventeen, squareEighteen, squareNineteen, squareTwenty, squareTwentyOne,
-            squareTwentyTwo, squareTwentyThree, squareTwentyFour, squareTwentyFive)
+            squareTwentyTwo, squareTwentyThree, squareTwentyFour, squareTwentyFive
+        )
 
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -197,6 +221,10 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             UUID.randomUUID().toString().replace("-", "").take(10)
         } else {
             preferences.getString("username", "").toString()
+        }
+
+        if (!preferences.getBoolean("textToSpeech", true)) {
+            ttsButton?.visibility = View.GONE
         }
 
         player = Player(username)
@@ -281,7 +309,12 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         requestSpymaster?.setOnClickListener {
-            SocketConnection.socket.emit("requestSpymaster", player?.nickname, roomName, player?.team)
+            SocketConnection.socket.emit(
+                "requestSpymaster",
+                player?.nickname,
+                roomName,
+                player?.team
+            )
         }
 
         changeTeam?.setOnClickListener {
@@ -291,6 +324,585 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                 SocketConnection.socket.emit("chooseTeam", player?.nickname, "A", roomName)
             }
         }
+
+        turnAction?.setOnClickListener {
+            if (gamePhase == OnlinePhase.TEAM_A_SPY || gamePhase == OnlinePhase.TEAM_B_SPY) {
+                var validHint = true
+
+                if (editHint?.text.toString() == "") {
+                    validHint = false
+                } else if (editHint?.text.toString().trim().contains(" ")) {
+                    validHint = false
+                } else if (!editHint?.text.toString().matches("[A-Za-z]+".toRegex())) {
+                    validHint = false
+                } else if (editHint?.text.toString().length < 3) {
+                    validHint = false
+                }
+
+                for (wb in wordButtons) {
+                    if (editHint?.text.toString().uppercase(Locale.getDefault())
+                            .contains(wb?.text.toString().uppercase(Locale.getDefault()))
+                    ) {
+                        validHint = false
+                    }
+
+                    if (wb?.text.toString().uppercase(Locale.getDefault())
+                            .contains(editHint?.text.toString().uppercase(Locale.getDefault()))
+                    ) {
+                        validHint = false
+                    }
+                }
+
+                if (validHint) {
+                    val hint =
+                        editHint?.text.toString() + ": " + hintNumber?.selectedItem.toString()
+
+                    editHint?.visibility = View.GONE
+                    hintNumber?.visibility = View.GONE
+                    turnAction?.visibility = View.GONE
+
+                    SocketConnection.socket.emit("hint", hint, roomName)
+                } else {
+                    windowOpen = true
+
+                    toggleWindow()
+
+                    messageText?.setText(R.string.invalid_hint)
+
+                    messageBox?.visibility = View.VISIBLE
+                    okButton?.visibility = View.VISIBLE
+                    yesButton?.visibility = View.INVISIBLE
+                    noButton?.visibility = View.INVISIBLE
+                }
+            } else {
+                if (wordCounter == 0) {
+                    windowOpen = true
+
+                    toggleWindow()
+
+                    messageText?.text = getString(R.string.minimum_turn)
+
+                    messageBox?.visibility = View.VISIBLE
+                    okButton?.visibility = View.VISIBLE
+                    yesButton?.visibility = View.INVISIBLE
+                    noButton?.visibility = View.INVISIBLE
+                } else {
+                    SocketConnection.socket.emit("endTurn", roomName)
+                }
+            }
+        }
+
+        ttsButton?.setOnClickListener {
+            windowOpen = true
+
+            toggleWindow()
+
+            ttsBox?.visibility = View.VISIBLE
+        }
+
+        viewTeams?.setOnClickListener {
+            windowOpen = true
+
+            toggleWindow()
+
+            viewTeamsBox?.visibility = View.VISIBLE
+
+            menuTextColour = preferences.getInt("menuTextColour", -1)
+
+            for (p in teamAUsers) {
+                val newPlayer = MaterialTextView(this)
+
+                if (p.isSpymaster) {
+                    newPlayer.text = getString(R.string.spymaster_name, p.nickname)
+                } else {
+                    newPlayer.text = p.nickname
+                }
+
+                newPlayer.setTextColor(menuTextColour)
+                newPlayer.textSize = 30f
+                teamALinear?.addView(newPlayer)
+            }
+
+            for (p in teamBUsers) {
+                val newPlayer = MaterialTextView(this)
+
+                if (p.isSpymaster) {
+                    newPlayer.text = getString(R.string.spymaster_name, p.nickname)
+                } else {
+                    newPlayer.text = p.nickname
+                }
+
+                newPlayer.setTextColor(menuTextColour)
+                newPlayer.textSize = 30f
+                teamBLinear?.addView(newPlayer)
+            }
+        }
+
+        chatButton?.setOnClickListener {
+            constraintLayout?.visibility = View.GONE
+            chatWindow?.visibility = View.VISIBLE
+        }
+
+        gameOpToggleButton?.setOnClickListener {
+            val wrapSpec: Int = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+            gameOperations?.measure(wrapSpec, wrapSpec)
+
+            val gameOpWidth = (gameOperations?.measuredWidth?.times(-1.0f))
+
+            if (gameOpOpen) {
+                gameOpWidth?.let { it1 ->
+                    gameOperations?.animate()?.translationX(it1)?.duration = 500
+                }
+                gameOpWidth?.let { it2 ->
+                    gameOpToggleButton?.animate()?.translationX(it2)?.duration = 500
+                }
+
+                gameOpToggleButton?.text = getString(R.string.open)
+
+                gameOpOpen = false
+            } else {
+                gameOperations?.animate()?.translationX(0.0f)?.duration = 500
+                gameOpToggleButton?.animate()?.translationX(0.0f)?.duration = 500
+
+                gameOpToggleButton?.text = getString(R.string.close)
+
+                gameOpOpen = true
+            }
+        }
+
+        for (wb in wordButtons) {
+            wb?.setOnClickListener {
+                if (gamePhase === OnlinePhase.TEAM_A && player?.team == "A" && !player?.isSpymaster!! && !wb.hasBeenClicked()) {
+                    SocketConnection.socket.emit(
+                        "wordButton",
+                        wb.text.toString(),
+                        player?.nickname,
+                        roomName
+                    )
+                } else if (gamePhase === OnlinePhase.TEAM_B && player?.team == "B" && !player?.isSpymaster!! && !wb.hasBeenClicked()) {
+                    SocketConnection.socket.emit(
+                        "wordButton",
+                        wb.text.toString(),
+                        player?.nickname,
+                        roomName
+                    )
+                }
+            }
+        }
+
+        closeChat?.setOnClickListener {
+            chatWindow?.visibility = View.GONE
+            constraintLayout?.visibility = View.VISIBLE
+        }
+
+        sendChat?.setOnClickListener {
+            val message = chatEdit?.text.toString()
+
+            if (message != "") {
+                SocketConnection.socket.emit(
+                    "chat",
+                    player?.nickname,
+                    player?.team,
+                    message.trim(),
+                    roomName
+                )
+                chatEdit?.setText("")
+            }
+        }
+
+        ttsAll?.setOnClickListener {
+            var message = ""
+
+            for (wb in wordButtons) {
+                message += wb?.text.toString() + "\n"
+            }
+
+            ttsBox?.visibility = View.GONE
+
+            windowOpen = false
+
+            toggleWindow()
+
+            speakOut(message)
+        }
+
+        ttsA?.setOnClickListener {
+            var message = ""
+
+            if (player?.isSpymaster == true) {
+                for (wb in wordButtons) {
+                    if (teamAWords.contains(wb?.text.toString())) {
+                        message += wb?.text.toString() + "\n"
+                    }
+                }
+            } else {
+                for (wb in wordButtons) {
+                    if (teamAWords.contains(wb?.text.toString()) && wb?.hasBeenClicked() == true) {
+                        message += wb.text.toString() + "\n"
+                    }
+                }
+            }
+
+            if (message == "") {
+                message = getString(R.string.none_found)
+            }
+
+            ttsBox?.visibility = View.GONE
+
+            windowOpen = false
+
+            toggleWindow()
+
+            speakOut(message)
+        }
+
+        ttsB?.setOnClickListener {
+            var message = ""
+
+            if (player?.isSpymaster == true) {
+                for (wb in wordButtons) {
+                    if (teamBWords.contains(wb?.text.toString())) {
+                        message += wb?.text.toString() + "\n"
+                    }
+                }
+            } else {
+                for (wb in wordButtons) {
+                    if (teamBWords.contains(wb?.text.toString()) && wb?.hasBeenClicked() == true) {
+                        message += wb.text.toString() + "\n"
+                    }
+                }
+            }
+
+            if (message == "") {
+                message = getString(R.string.none_found)
+            }
+
+            ttsBox?.visibility = View.GONE
+
+            windowOpen = false
+
+            toggleWindow()
+
+            speakOut(message)
+        }
+
+        ttsNeutral?.setOnClickListener {
+            var message = ""
+
+            if (player?.isSpymaster == true) {
+                for (wb in wordButtons) {
+                    if (neutralWords.contains(wb?.text.toString())) {
+                        message += wb?.text.toString() + "\n"
+                    }
+                }
+            } else {
+                for (wb in wordButtons) {
+                    if (neutralWords.contains(wb?.text.toString()) && wb?.hasBeenClicked() == true) {
+                        message += wb.text.toString() + "\n"
+                    }
+                }
+            }
+
+            if (message == "") {
+                message = getString(R.string.none_found)
+            }
+
+            ttsBox?.visibility = View.GONE
+
+            windowOpen = false
+
+            toggleWindow()
+
+            speakOut(message)
+        }
+
+        ttsBomb?.setOnClickListener {
+            var message = ""
+
+            if (player?.isSpymaster == true) {
+                for (wb in wordButtons) {
+                    if (bombWords.contains(wb?.text.toString())) {
+                        message += wb?.text.toString() + "\n"
+                    }
+                }
+            } else {
+                for (wb in wordButtons) {
+                    if (bombWords.contains(wb?.text.toString()) && wb?.hasBeenClicked() == true) {
+                        message += wb.text.toString() + "\n"
+                    }
+                }
+            }
+
+            if (message == "") {
+                message = getString(R.string.none_found)
+            }
+
+            ttsBox?.visibility = View.GONE
+
+            windowOpen = false
+
+            toggleWindow()
+
+            speakOut(message)
+        }
+
+        ttsUnmodified?.setOnClickListener {
+            var message = ""
+
+            for (wb in wordButtons) {
+                if (wb?.hasBeenClicked() == false) {
+                    message += wb.text.toString() + "\n"
+                }
+            }
+
+            if (message == "") {
+                message = getString(R.string.none_found)
+            }
+
+            ttsBox?.visibility = View.GONE
+
+            windowOpen = false
+
+            toggleWindow()
+
+            speakOut(message)
+        }
+
+        ttsClicked?.setOnClickListener {
+            var message = ""
+
+            for (wb in wordButtons) {
+                if (wb?.hasBeenClicked() == true) {
+                    message += wb.text.toString() + "\n"
+                }
+            }
+
+            if (message == "") {
+                message = getString(R.string.none_found)
+            }
+
+            ttsBox?.visibility = View.GONE
+
+            windowOpen = false
+
+            toggleWindow()
+
+            speakOut(message)
+        }
+
+        closeTTS?.setOnClickListener {
+            windowOpen = false
+
+            toggleWindow()
+
+            ttsBox?.visibility = View.GONE
+        }
+
+        loadingText?.setOnLongClickListener {
+            speakOut(loadingText?.text.toString())
+            true
+        }
+
+        messageText?.setOnLongClickListener {
+            speakOut(messageText?.text.toString())
+            true
+        }
+
+        yesButton?.setOnLongClickListener {
+            speakOut(yesButton?.text.toString())
+            true
+        }
+
+        okButton?.setOnLongClickListener {
+            speakOut(okButton?.text.toString())
+            true
+        }
+
+        noButton?.setOnLongClickListener {
+            speakOut(noButton?.text.toString())
+            true
+        }
+
+        chooseTeamText?.setOnLongClickListener {
+            speakOut(chooseTeamText?.text.toString())
+            true
+        }
+
+        teamAButton?.setOnLongClickListener {
+            speakOut(teamAButton?.text.toString())
+            true
+        }
+
+        teamBButton?.setOnLongClickListener {
+            speakOut(teamBButton?.text.toString())
+            true
+        }
+
+        closeTeamsBox?.setOnLongClickListener {
+            speakOut(closeTeamsBox?.text.toString())
+            true
+        }
+
+        teamAHeader?.setOnLongClickListener {
+            var message = ""
+
+            message += "Team A members. \n"
+
+            for (i in 0 until teamALinear?.childCount!!) {
+                val member = teamALinear?.getChildAt(i) as MaterialTextView
+
+                message += member.text.toString() + "\n"
+            }
+
+            if (message == "Team A members. \n") {
+                message += getString(R.string.none_found)
+            }
+
+            speakOut(message)
+            true
+        }
+
+        teamBHeader?.setOnLongClickListener {
+            var message = ""
+
+            message += "Team B members. \n"
+
+            for (i in 0 until teamBLinear?.childCount!!) {
+                val member = teamBLinear?.getChildAt(i) as MaterialTextView
+
+                message += member.text.toString() + "\n"
+            }
+
+            if (message == "Team B members. \n") {
+                message += getString(R.string.none_found)
+            }
+
+            speakOut(message)
+            true
+        }
+
+        ttsAll?.setOnLongClickListener {
+            speakOut(ttsAll?.text.toString())
+            true
+        }
+
+        ttsA?.setOnLongClickListener {
+            speakOut(ttsA?.text.toString())
+            true
+        }
+
+        ttsB?.setOnLongClickListener {
+            speakOut(ttsB?.text.toString())
+            true
+        }
+
+        ttsNeutral?.setOnLongClickListener {
+            speakOut(ttsNeutral?.text.toString())
+            true
+        }
+
+        ttsBomb?.setOnLongClickListener {
+            speakOut(ttsBomb?.text.toString())
+            true
+        }
+
+        ttsUnmodified?.setOnLongClickListener {
+            speakOut(ttsUnmodified?.text.toString())
+            true
+        }
+
+        ttsClicked?.setOnLongClickListener {
+            speakOut(ttsClicked?.text.toString())
+            true
+        }
+
+        closeTTS?.setOnLongClickListener {
+            speakOut(closeTTS?.text.toString())
+            true
+        }
+
+        scoreLinear?.setOnLongClickListener {
+            var message = getString(R.string.remaining_words_a, teamAWordCount)
+
+            message += "\n" + getString(R.string.remaining_words_b, teamBWordCount)
+
+            speakOut(message)
+            true
+        }
+
+        startGame?.setOnLongClickListener {
+            speakOut(startGame?.text.toString())
+            true
+        }
+
+        requestSpymaster?.setOnLongClickListener {
+            speakOut(requestSpymaster?.text.toString())
+            true
+        }
+
+        changeTeam?.setOnLongClickListener {
+            speakOut(changeTeam?.text.toString())
+            true
+        }
+
+        hintText?.setOnLongClickListener {
+            speakOut(hintText?.text.toString())
+            true
+        }
+
+        hintNumber?.setOnLongClickListener {
+            speakOut(hintNumber?.selectedItem.toString())
+            true
+        }
+
+        turnAction?.setOnLongClickListener {
+            speakOut(turnAction?.text.toString())
+            true
+        }
+
+        ttsButton?.setOnLongClickListener {
+            speakOut(ttsButton?.text.toString())
+            true
+        }
+
+        viewTeams?.setOnLongClickListener {
+            speakOut(viewTeams?.text.toString())
+            true
+        }
+
+        chatButton?.setOnLongClickListener {
+            speakOut(chatButton?.text.toString())
+            true
+        }
+
+        gameOpToggleButton?.setOnLongClickListener {
+            if (gameOpOpen) {
+                speakOut(getString(R.string.close_game_op))
+            } else {
+                speakOut(getString(R.string.open_game_op))
+            }
+
+            true
+        }
+
+        for (wb in wordButtons) {
+            wb?.setOnLongClickListener {
+                speakOut(wb.text.toString())
+                true
+            }
+        }
+
+        closeChat?.setOnLongClickListener {
+            speakOut(closeChat?.text.toString())
+            true
+        }
+
+        sendChat?.setOnLongClickListener {
+            speakOut(sendChat?.text.toString())
+            true
+        }
+
+        updateColours()
     }
 
     override fun onInit(status: Int) {
@@ -333,6 +945,156 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun updateColours() {
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
+        teamAColour = preferences.getInt("teamA", -16773377)
+        teamBColour = preferences.getInt("teamB", -65536)
+        bombColour = preferences.getInt("bomb", -14342875)
+        neutralColour = preferences.getInt("neutral", -11731092)
+        unmodifiedColour = preferences.getInt("unmodified", -3684409)
+        applicationBackgroundColour = preferences.getInt("applicationBackground", -10921639)
+        menuButtonsColour = preferences.getInt("menuButton", -8164501)
+        menuTextColour = preferences.getInt("menuText", -1)
+
+        teamACount?.setTextColor(teamAColour)
+        teamAButton?.setBackgroundColor(teamAColour)
+        teamAHeader?.setTextColor(teamAColour)
+        ttsA?.setBackgroundColor(teamAColour)
+
+        teamBCount?.setTextColor(teamBColour)
+        teamBButton?.setBackgroundColor(teamBColour)
+        teamBHeader?.setTextColor(teamBColour)
+        ttsB?.setBackgroundColor(teamBColour)
+
+        ttsBomb?.setBackgroundColor(bombColour)
+
+        ttsNeutral?.setBackgroundColor(neutralColour)
+
+        ttsUnmodified?.setBackgroundColor(unmodifiedColour)
+
+        constraintLayout?.setBackgroundColor(applicationBackgroundColour)
+        chatWindow?.setBackgroundColor(applicationBackgroundColour)
+        messageBox?.setBackgroundColor(applicationBackgroundColour)
+        ttsBox?.setBackgroundColor(applicationBackgroundColour)
+        loadingText?.setBackgroundColor(applicationBackgroundColour)
+        chooseTeamBox?.setBackgroundColor(applicationBackgroundColour)
+        viewTeamsBox?.setBackgroundColor(applicationBackgroundColour)
+        gameOperations?.setBackgroundColor(applicationBackgroundColour)
+
+        exitButton?.setBackgroundColor(menuButtonsColour)
+        startGame?.setBackgroundColor(menuButtonsColour)
+        requestSpymaster?.setBackgroundColor(menuButtonsColour)
+        changeTeam?.setBackgroundColor(menuButtonsColour)
+        hintNumber?.setBackgroundColor(menuButtonsColour)
+        turnAction?.setBackgroundColor(menuButtonsColour)
+        ttsButton?.setBackgroundColor(menuButtonsColour)
+        viewTeams?.setBackgroundColor(menuButtonsColour)
+        chatButton?.setBackgroundColor(menuButtonsColour)
+        gameOpToggleButton?.setBackgroundColor(menuButtonsColour)
+        closeChat?.setBackgroundColor(menuButtonsColour)
+        sendChat?.setBackgroundColor(menuButtonsColour)
+        closeTeamsBox?.setBackgroundColor(menuButtonsColour)
+        closeTTS?.setBackgroundColor(menuButtonsColour)
+        ttsAll?.setBackgroundColor(menuButtonsColour)
+        ttsClicked?.setBackgroundColor(menuButtonsColour)
+        yesButton?.setBackgroundColor(menuButtonsColour)
+        okButton?.setBackgroundColor(menuButtonsColour)
+        noButton?.setBackgroundColor(menuButtonsColour)
+
+        loadingText?.setTextColor(menuTextColour)
+        messageText?.setTextColor(menuTextColour)
+        yesButton?.setTextColor(menuTextColour)
+        okButton?.setTextColor(menuTextColour)
+        noButton?.setTextColor(menuTextColour)
+        chooseTeamText?.setTextColor(menuTextColour)
+        teamAButton?.setTextColor(menuTextColour)
+        teamBButton?.setTextColor(menuTextColour)
+        closeTeamsBox?.setTextColor(menuTextColour)
+        ttsAll?.setTextColor(menuTextColour)
+        ttsA?.setTextColor(menuTextColour)
+        ttsB?.setTextColor(menuTextColour)
+        ttsNeutral?.setTextColor(menuTextColour)
+        ttsBomb?.setTextColor(menuTextColour)
+        ttsUnmodified?.setTextColor(menuTextColour)
+        ttsClicked?.setTextColor(menuTextColour)
+        closeTTS?.setTextColor(menuTextColour)
+        exitButton?.setTextColor(menuTextColour)
+        teamCounterLine?.setTextColor(menuTextColour)
+        startGame?.setTextColor(menuTextColour)
+        requestSpymaster?.setTextColor(menuTextColour)
+        changeTeam?.setTextColor(menuTextColour)
+        editHint?.setTextColor(menuTextColour)
+        turnAction?.setTextColor(menuTextColour)
+        ttsButton?.setTextColor(menuTextColour)
+        viewTeams?.setTextColor(menuTextColour)
+        chatButton?.setTextColor(menuTextColour)
+        gameOpToggleButton?.setTextColor(menuTextColour)
+        closeChat?.setTextColor(menuTextColour)
+        chatEdit?.setTextColor(menuTextColour)
+        sendChat?.setTextColor(menuTextColour)
+
+        for (wb in wordButtons) {
+            wb?.setTextColor(menuTextColour)
+        }
+
+        updateWordColours()
+    }
+
+    private fun updateWordColours() {
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        teamAColour = preferences.getInt("teamA", -16773377)
+        teamBColour = preferences.getInt("teamB", -65536)
+        bombColour = preferences.getInt("bomb", -14342875)
+        neutralColour = preferences.getInt("neutral", -11731092)
+        unmodifiedColour = preferences.getInt("unmodified", -3684409)
+
+        if (player?.isSpymaster == true) {
+            for (wb in wordButtons) {
+                when {
+                    teamAWords.contains(wb?.text.toString()) -> {
+                        wb?.setBackgroundColor(teamAColour)
+                    }
+
+                    teamBWords.contains(wb?.text.toString()) -> {
+                        wb?.setBackgroundColor(teamBColour)
+                    }
+
+                    neutralWords.contains(wb?.text.toString()) -> {
+                        wb?.setBackgroundColor(neutralColour)
+                    }
+
+                    bombWords.contains(wb?.text.toString()) -> {
+                        wb?.setBackgroundColor(bombColour)
+                    }
+                }
+            }
+        } else {
+            for (wb in wordButtons) {
+                when {
+                    teamAWords.contains(wb?.text.toString()) && wb?.hasBeenClicked() == true -> {
+                        wb.setBackgroundColor(teamAColour)
+                    }
+
+                    teamBWords.contains(wb?.text.toString()) && wb?.hasBeenClicked() == true -> {
+                        wb.setBackgroundColor(teamBColour)
+                    }
+
+                    neutralWords.contains(wb?.text.toString()) && wb?.hasBeenClicked() == true -> {
+                        wb.setBackgroundColor(neutralColour)
+                    }
+
+                    bombWords.contains(wb?.text.toString()) && wb?.hasBeenClicked() == true -> {
+                        wb.setBackgroundColor(bombColour)
+                    }
+                }
+            }
+        }
+
+        for (wb in wordButtons) {
+            if (wb?.hasBeenClicked() == true) {
+                wb.background.alpha = 128
+            }
+        }
     }
 }

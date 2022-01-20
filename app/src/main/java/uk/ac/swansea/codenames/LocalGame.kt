@@ -49,7 +49,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var ttsB: MaterialButton? = null
     private var ttsNeutral: MaterialButton? = null
     private var ttsBomb: MaterialButton? = null
-    private var ttsUnclicked: MaterialButton? = null
+    private var ttsUnmodified: MaterialButton? = null
     private var ttsClicked: MaterialButton? = null
     private var closeTts: MaterialButton? = null
     private var teamACount: MaterialTextView? = null
@@ -124,7 +124,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         ttsB = findViewById(R.id.ttsB)
         ttsNeutral = findViewById(R.id.ttsNeutral)
         ttsBomb = findViewById(R.id.ttsBomb)
-        ttsUnclicked = findViewById(R.id.ttsUnclicked)
+        ttsUnmodified = findViewById(R.id.ttsUnmodified)
         ttsClicked = findViewById(R.id.ttsClicked)
         closeTts = findViewById(R.id.closeTTS)
         teamACount = findViewById(R.id.teamACount)
@@ -814,7 +814,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             toggleTtsBox(false)
         }
 
-        ttsUnclicked?.setOnClickListener {
+        ttsUnmodified?.setOnClickListener {
             var message = ""
 
             for (wb in wordButtons) {
@@ -978,8 +978,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             true
         }
 
-        ttsUnclicked?.setOnLongClickListener {
-            speakOut(ttsUnclicked?.text.toString().replace("\n", ""))
+        ttsUnmodified?.setOnLongClickListener {
+            speakOut(ttsUnmodified?.text.toString().replace("\n", ""))
             true
         }
 
@@ -1261,7 +1261,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun addHint(hint: String?) {
-        val newHint = TextView(this)
+        val newHint = MaterialTextView(this)
 
         newHint.text = hint
         previousHintsLinear?.addView(newHint)
@@ -1358,7 +1358,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         ttsNeutral?.setBackgroundColor(neutralColour)
 
-        ttsUnclicked?.setBackgroundColor(unmodifiedColour)
+        ttsUnmodified?.setBackgroundColor(unmodifiedColour)
 
         constraintLayout?.setBackgroundColor(applicationBackgroundColour)
         gameOperations?.setBackgroundColor(applicationBackgroundColour)

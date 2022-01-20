@@ -241,7 +241,8 @@
                     android:id="@+id/teamALinear"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"></LinearLayout>
+                    android:orientation="vertical">
+                </LinearLayout>
             </ScrollView>
 
             <ScrollView
@@ -258,7 +259,8 @@
                     android:id="@+id/teamBLinear"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"></LinearLayout>
+                    android:orientation="vertical">
+                </LinearLayout>
             </ScrollView>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -300,7 +302,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="30dp"
                 android:text="@string/team_a_words"
-                app:layout_constraintBottom_toTopOf="@id/ttsUnclicked"
+                app:layout_constraintBottom_toTopOf="@id/ttsUnmodified"
                 app:layout_constraintEnd_toStartOf="@id/ttsB"
                 app:layout_constraintStart_toEndOf="@id/ttsAll"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -343,19 +345,19 @@
                 android:layout_marginBottom="30dp"
                 android:text="@string/bomb_words"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/ttsUnclicked"
+                app:layout_constraintEnd_toStartOf="@id/ttsUnmodified"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ttsAll" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/ttsUnclicked"
+                android:id="@+id/ttsUnmodified"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="30dp"
-                android:text="@string/unclicked_words"
+                android:text="@string/unmodified_words"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/ttsClicked"
                 app:layout_constraintStart_toEndOf="@id/ttsBomb"
@@ -372,7 +374,7 @@
                 android:text="@string/clicked_words"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/closeTTS"
-                app:layout_constraintStart_toEndOf="@id/ttsUnclicked"
+                app:layout_constraintStart_toEndOf="@id/ttsUnmodified"
                 app:layout_constraintTop_toBottomOf="@id/ttsB" />
 
             <com.google.android.material.button.MaterialButton
