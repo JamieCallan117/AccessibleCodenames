@@ -13,6 +13,8 @@ import java.util.*
 
 class MainMenu : AppCompatActivity(), TextToSpeech.OnInitListener {
 
+    //TODO: MessageBox to say when came from an OnlineGame where host quit
+
     private var constraintLayout: ConstraintLayout? = null
     private var mainMenuTitle: TextView? = null
     private var backButton: Button? = null

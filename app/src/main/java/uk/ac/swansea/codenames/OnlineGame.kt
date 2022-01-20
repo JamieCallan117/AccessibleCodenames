@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.speech.tts.TextToSpeech
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.Spinner
@@ -105,6 +106,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var wordButtons = arrayOfNulls<WordButton>(25)
 
     private var player: Player? = null
+    private var teamASpymaster: Player? = null
+    private var teamBSpymaster: Player? = null
 
     private var startingTeam = "A"
     private var roomName: String? = null
@@ -285,6 +288,17 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             toggleWindow()
 
             SocketConnection.socket.emit("chooseTeam", player?.nickname, "B", roomName)
+        }
+
+        closeTeamsBox?.setOnClickListener {
+            windowOpen = false
+
+            toggleWindow()
+
+            viewTeamsBox?.visibility = View.GONE
+
+            teamALinear?.removeAllViews()
+            teamBLinear?.removeAllViews()
         }
 
         exitButton?.setOnClickListener {
@@ -529,7 +543,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         ttsA?.setOnClickListener {
             var message = ""
 
-            if (player?.isSpymaster == true) {
+            if (player?.isSpymaster == true && gamePhase != OnlinePhase.START) {
                 for (wb in wordButtons) {
                     if (teamAWords.contains(wb?.text.toString())) {
                         message += wb?.text.toString() + "\n"
@@ -559,7 +573,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         ttsB?.setOnClickListener {
             var message = ""
 
-            if (player?.isSpymaster == true) {
+            if (player?.isSpymaster == true && gamePhase != OnlinePhase.START) {
                 for (wb in wordButtons) {
                     if (teamBWords.contains(wb?.text.toString())) {
                         message += wb?.text.toString() + "\n"
@@ -589,7 +603,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         ttsNeutral?.setOnClickListener {
             var message = ""
 
-            if (player?.isSpymaster == true) {
+            if (player?.isSpymaster == true && gamePhase != OnlinePhase.START) {
                 for (wb in wordButtons) {
                     if (neutralWords.contains(wb?.text.toString())) {
                         message += wb?.text.toString() + "\n"
@@ -619,7 +633,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         ttsBomb?.setOnClickListener {
             var message = ""
 
-            if (player?.isSpymaster == true) {
+            if (player?.isSpymaster == true && gamePhase != OnlinePhase.START) {
                 for (wb in wordButtons) {
                     if (bombWords.contains(wb?.text.toString())) {
                         message += wb?.text.toString() + "\n"
@@ -902,6 +916,143 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             true
         }
 
+        SocketConnection.socket.on("startFail") { args ->
+            runOnUiThread {
+                val reason = args[0] as String
+                windowOpen = true
+
+                toggleWindow()
+
+                messageText?.text = reason
+
+                messageBox?.visibility = View.VISIBLE
+                yesButton?.visibility = View.INVISIBLE
+                noButton?.visibility = View.INVISIBLE
+            }
+        }
+
+        SocketConnection.socket.on("startSuccess") {
+            runOnUiThread {
+                startGame?.visibility = View.GONE
+                changeTeam?.visibility = View.GONE
+
+                gamePhase = if (startingTeam == "A") {
+                    OnlinePhase.TEAM_A_SPY
+                } else {
+                    OnlinePhase.TEAM_B_SPY
+                }
+
+                if (player?.isSpymaster == true) {
+                    turnAction?.setText(R.string.give_hint)
+                } else {
+                    turnAction?.setText(R.string.end_turn)
+                }
+
+                if (player?.isSpymaster == true && player?.team == "A" && gamePhase === OnlinePhase.TEAM_A_SPY) {
+                    editHint?.visibility = View.VISIBLE
+                    hintNumber?.visibility = View.VISIBLE
+                    turnAction?.visibility = View.VISIBLE
+                }
+
+                if (player?.isSpymaster == true && player?.team == "B" && gamePhase === OnlinePhase.TEAM_B_SPY) {
+                    editHint?.visibility = View.VISIBLE
+                    hintNumber?.visibility = View.VISIBLE
+                    turnAction?.visibility = View.VISIBLE
+                }
+
+                updateSpinner()
+                updateWordColours()
+            }
+        }
+
+        SocketConnection.socket.on("hostQuit") {
+            val i = Intent(this, MainMenu::class.java)
+            i.putExtra("onlineClose", "hostQuit")
+            startActivity(i)
+        }
+
+        SocketConnection.socket.on("playerQuit") { args ->
+            val usernameQuit = args[0] as String
+
+            for (p in teamAUsers) {
+                if (p.nickname == usernameQuit) {
+                    teamAUsers.remove(p)
+                    break
+                }
+            }
+
+            for (p in teamBUsers) {
+                if (p.nickname == usernameQuit) {
+                    teamBUsers.remove(p)
+                    break
+                }
+            }
+
+            runOnUiThread {
+                menuTextColour = preferences.getInt("menuTextColour", -1)
+
+                for (p in teamAUsers) {
+                    val newPlayer = MaterialTextView(this)
+
+                    if (p.isSpymaster) {
+                        newPlayer.text = getString(R.string.spymaster_name, p.nickname)
+                    } else {
+                        newPlayer.text = p.nickname
+                    }
+
+                    newPlayer.setTextColor(menuTextColour)
+                    newPlayer.textSize = 30f
+                    teamALinear?.addView(newPlayer)
+                }
+
+                for (p in teamBUsers) {
+                    val newPlayer = MaterialTextView(this)
+
+                    if (p.isSpymaster) {
+                        newPlayer.text = getString(R.string.spymaster_name, p.nickname)
+                    } else {
+                        newPlayer.text = p.nickname
+                    }
+
+                    newPlayer.setTextColor(menuTextColour)
+                    newPlayer.textSize = 30f
+                    teamBLinear?.addView(newPlayer)
+                }
+            }
+        }
+
+        SocketConnection.socket.on("spymasterQuitA") {
+            if (gamePhase == OnlinePhase.START) {
+                teamASpymaster = null
+
+                runOnUiThread {
+                    if (player?.team == "A") {
+                        requestSpymaster?.visibility = View.VISIBLE
+                    }
+                }
+            } else {
+                val i = Intent(this, MainMenu::class.java)
+                i.putExtra("onlineClose", "spymasterQuit")
+                startActivity(i)
+            }
+        }
+
+        SocketConnection.socket.on("spymasterQuitB") {
+            if (gamePhase == OnlinePhase.START) {
+                teamBSpymaster = null
+
+                runOnUiThread {
+                    if (player?.team == "B") {
+                        requestSpymaster?.visibility = View.VISIBLE
+                    }
+                }
+            } else {
+                val i = Intent(this, MainMenu::class.java)
+                i.putExtra("onlineClose", "spymasterQuit")
+                startActivity(i)
+            }
+        }
+
         updateColours()
     }
 
@@ -942,6 +1093,28 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         if (preferences.getBoolean("textToSpeech", true)) {
             textToSpeech!!.speak(message, TextToSpeech.QUEUE_FLUSH, null, "")
         }
+    }
+
+    private fun updateSpinner() {
+        val spinnerArray: MutableList<String> = ArrayList()
+
+        if (gamePhase == OnlinePhase.TEAM_A_SPY) {
+            for (i in 1 until teamAWordCount + 1) {
+                spinnerArray.add(i.toString())
+            }
+        } else {
+            for (i in 1 until teamBWordCount + 1) {
+                spinnerArray.add(i.toString())
+            }
+        }
+
+        spinnerArray.add("0")
+        spinnerArray.add("Infinite")
+
+        val adapter = ArrayAdapter(this,
+            android.R.layout.simple_spinner_item, spinnerArray)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        hintNumber?.adapter = adapter
     }
 
     private fun updateColours() {
@@ -1000,6 +1173,10 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         yesButton?.setBackgroundColor(menuButtonsColour)
         okButton?.setBackgroundColor(menuButtonsColour)
         noButton?.setBackgroundColor(menuButtonsColour)
+
+        for (wb in wordButtons) {
+            wb?.setBackgroundColor(menuButtonsColour)
+        }
 
         loadingText?.setTextColor(menuTextColour)
         messageText?.setTextColor(menuTextColour)
