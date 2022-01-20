@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.speech.tts.TextToSpeech
+import android.view.Gravity
 import android.view.View
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -20,6 +21,10 @@ import org.json.JSONException
 import java.util.*
 
 class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
+
+    // TODO: Proper win screen.
+    // TODO: Disable chat for spymasters
+    // TODO: A few TTS fixes. (\n on some buttons, probably some "Team Ay"'s needed and chat messages/individual team members need TTS
 
     private var outline: ConstraintLayout? = null
     private var constraintLayout: ConstraintLayout? = null
@@ -310,9 +315,6 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             toggleWindow()
 
             viewTeamsBox?.visibility = View.GONE
-
-            teamALinear?.removeAllViews()
-            teamBLinear?.removeAllViews()
         }
 
         exitButton?.setOnClickListener {
@@ -746,7 +748,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         teamAHeader?.setOnLongClickListener {
             var message = ""
 
-            message += "Team A members. \n"
+            message += "Team Ay members. \n"
 
             for (i in 0 until teamALinear?.childCount!!) {
                 val member = teamALinear?.getChildAt(i) as MaterialTextView
@@ -754,7 +756,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                 message += member.text.toString() + "\n"
             }
 
-            if (message == "Team A members. \n") {
+            if (message == "Team Ay members. \n") {
                 message += getString(R.string.none_found)
             }
 
@@ -918,6 +920,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                 messageBox?.visibility = View.VISIBLE
                 yesButton?.visibility = View.INVISIBLE
+                okButton?.visibility = View.VISIBLE
                 noButton?.visibility = View.INVISIBLE
             }
         }
@@ -1347,7 +1350,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                     newWord.text = getString(R.string.chat_word, user, word)
                     newWord.setTextColor(teamAColour)
-                    newWord.textSize = 18f
+                    newWord.textSize = 30f
 
                     chatLinear?.addView(newWord)
                 } else {
@@ -1355,7 +1358,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                     newWord.text = getString(R.string.chat_word, user, word)
                     newWord.setTextColor(teamBColour)
-                    newWord.textSize = 18f
+                    newWord.textSize = 30f
 
                     chatLinear?.addView(newWord)
                 }
@@ -1376,6 +1379,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
 
             runOnUiThread {
+                hintText?.visibility = View.GONE
+                
                 if (player?.isSpymaster == true && player?.team == "A" && gamePhase === OnlinePhase.TEAM_A_SPY) {
                     editHint?.visibility = View.VISIBLE
                     hintNumber?.visibility = View.VISIBLE
@@ -1437,7 +1442,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                     newHint.text = getString(R.string.chat_hint, hint)
                     newHint.setTextColor(teamAColour)
-                    newHint.textSize = 18f
+                    newHint.textSize = 30f
 
                     chatLinear?.addView(newHint)
                 } else {
@@ -1447,7 +1452,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                     newHint.text = getString(R.string.chat_hint, hint)
                     newHint.setTextColor(teamBColour)
-                    newHint.textSize = 18f
+                    newHint.textSize = 30f
 
                     chatLinear?.addView(newHint)
                 }
@@ -1545,6 +1550,9 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         menuTextColour = preferences.getInt("menuTextColour", -1)
 
+        teamALinear?.removeAllViews()
+        teamBLinear?.removeAllViews()
+
         for (p in teamAUsers) {
             val newPlayer = MaterialTextView(this)
 
@@ -1553,6 +1561,15 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             } else {
                 newPlayer.text = p.nickname
             }
+
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+
+            params.gravity = Gravity.CENTER
+
+            newPlayer.layoutParams = params
 
             newPlayer.setTextColor(menuTextColour)
             newPlayer.textSize = 30f
@@ -1567,6 +1584,15 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             } else {
                 newPlayer.text = p.nickname
             }
+
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+
+            params.gravity = Gravity.CENTER
+
+            newPlayer.layoutParams = params
 
             newPlayer.setTextColor(menuTextColour)
             newPlayer.textSize = 30f
@@ -1694,7 +1720,6 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         startGame?.setBackgroundColor(menuButtonsColour)
         requestSpymaster?.setBackgroundColor(menuButtonsColour)
         changeTeam?.setBackgroundColor(menuButtonsColour)
-        hintNumber?.setBackgroundColor(menuButtonsColour)
         turnAction?.setBackgroundColor(menuButtonsColour)
         ttsButton?.setBackgroundColor(menuButtonsColour)
         viewTeams?.setBackgroundColor(menuButtonsColour)
