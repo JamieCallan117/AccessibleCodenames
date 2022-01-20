@@ -9,11 +9,9 @@ import android.os.Handler
 import android.os.Looper
 import android.speech.tts.TextToSpeech
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.LinearLayout
-import android.widget.ScrollView
-import android.widget.Spinner
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.text.HtmlCompat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
@@ -1164,7 +1162,41 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         SocketConnection.socket.on("teamChange") { args ->
+            val playerName = args[0] as String
+            val team = args[1] as String
+            val newPlayer = Player(playerName, team)
 
+            for (p in teamAUsers) {
+                if (p.nickname == playerName) {
+                    teamAUsers.remove(p)
+                    break
+                }
+            }
+
+            for (p in teamBUsers) {
+                if (p.nickname == playerName) {
+                    teamBUsers.remove(p)
+                    break
+                }
+            }
+
+            if (team == "A") {
+                teamAUsers.add(newPlayer)
+            } else {
+                teamBUsers.add(newPlayer)
+            }
+
+            if (newPlayer.nickname == player?.nickname) {
+                player?.team = team
+            }
+
+            if (team == "A" && teamASpymaster != null) {
+                requestSpymaster?.visibility = View.GONE
+            } else if (team == "B" && teamBSpymaster != null) {
+                requestSpymaster?.visibility = View.GONE
+            }
+
+            updateTeamsBox()
         }
 
         SocketConnection.socket.on("wordButton") { args ->
@@ -1172,19 +1204,152 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         SocketConnection.socket.on("endTurn") {
+            gamePhase = if (gamePhase === OnlinePhase.TEAM_A) {
+                OnlinePhase.TEAM_B_SPY
+            } else {
+                OnlinePhase.TEAM_A_SPY
+            }
 
+            runOnUiThread {
+                if (player?.isSpymaster == true && player?.team == "A" && gamePhase === OnlinePhase.TEAM_A_SPY) {
+                    editHint?.visibility = View.VISIBLE
+                    hintNumber?.visibility = View.VISIBLE
+                    turnAction?.visibility = View.VISIBLE
+                } else if (!player?.isSpymaster!! && player?.team == "A" && gamePhase === OnlinePhase.TEAM_B_SPY) {
+                    turnAction?.visibility = View.GONE
+                }
+
+                if (player?.isSpymaster == true && player?.team == "B" && gamePhase === OnlinePhase.TEAM_B_SPY) {
+                    editHint?.visibility = View.VISIBLE
+                    hintNumber?.visibility = View.VISIBLE
+                    turnAction?.visibility = View.VISIBLE
+                } else if (!player?.isSpymaster!! && player?.team == "B" && gamePhase === OnlinePhase.TEAM_A_SPY) {
+                    turnAction?.visibility = View.GONE
+                }
+
+                if (gamePhase == OnlinePhase.TEAM_A_SPY) {
+                    teamAColour = preferences.getInt("teamA", -16773377)
+
+                    outline?.setBackgroundColor(teamAColour)
+
+                    teamACount?.paintFlags = teamACount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
+                    teamBCount?.paintFlags = teamBCount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
+                } else {
+                    teamBColour = preferences.getInt("teamB", -65536)
+
+                    outline?.setBackgroundColor(teamBColour)
+
+                    teamBCount?.paintFlags = teamBCount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
+                    teamACount?.paintFlags = teamACount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
+                }
+
+                updateSpinner()
+            }
         }
 
         SocketConnection.socket.on("hint") { args ->
+            runOnUiThread {
+                val hint = args[0] as String
 
+                teamAColour = preferences.getInt("teamA", -16773377)
+                teamBColour = preferences.getInt("teamB", -65536)
+
+
+                if (gamePhase === OnlinePhase.TEAM_A_SPY) {
+                    gamePhase = OnlinePhase.TEAM_A
+
+                    val newHint = MaterialTextView(this)
+
+                    newHint.text = getString(R.string.chat_hint, hint)
+                    newHint.setTextColor(teamAColour)
+                    newHint.textSize = 18f
+
+                    chatLinear?.addView(newHint)
+                } else {
+                    gamePhase = OnlinePhase.TEAM_B
+
+                    val newHint = MaterialTextView(this)
+
+                    newHint.text = getString(R.string.chat_hint, hint)
+                    newHint.setTextColor(teamBColour)
+                    newHint.textSize = 18f
+
+                    chatLinear?.addView(newHint)
+                }
+
+                hintText?.text = hint
+                hintText?.visibility = View.VISIBLE
+
+                if (player?.isSpymaster == true) {
+                    editHint?.visibility = View.GONE
+                    hintNumber?.visibility = View.GONE
+                    turnAction?.visibility = View.GONE
+                } else {
+                    if (gamePhase === OnlinePhase.TEAM_A && player?.team == "A") {
+                        turnAction?.visibility = View.VISIBLE
+                    } else if (gamePhase === OnlinePhase.TEAM_B && player?.team == "B") {
+                        turnAction?.visibility = View.VISIBLE
+                    }
+                }
+            }
         }
 
         SocketConnection.socket.on("teamAChat") { args ->
+            val usernameChat = args[0] as String
+            val message = args[1] as String
 
+            teamAColour = preferences.getInt("teamA", -16773377)
+            menuTextColour = preferences.getInt("menuTextColour", -1)
+
+            val newMessage = MaterialTextView(this)
+
+            val usernameColour = "<font color=$teamAColour>$usernameChat</font>"
+            val messageColour = "<font color=$menuTextColour>$message</font>"
+
+            newMessage.text = HtmlCompat.fromHtml("$usernameColour: $messageColour", HtmlCompat.FROM_HTML_MODE_LEGACY)
+            newMessage.textSize = 32f
+
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+
+            params.bottomMargin = 8
+
+            newMessage.layoutParams = params
+
+            runOnUiThread {
+                chatLinear?.addView(newMessage)
+            }
         }
 
         SocketConnection.socket.on("teamBChat") { args ->
+            val usernameChat = args[0] as String
+            val message = args[1] as String
 
+            teamBColour = preferences.getInt("teamB", -65536)
+            menuTextColour = preferences.getInt("menuTextColour", -1)
+
+            val newMessage = MaterialTextView(this)
+
+            val usernameColour = "<font color=$teamBColour>$usernameChat</font>"
+            val messageColour = "<font color=$menuTextColour>$message</font>"
+
+            newMessage.text = HtmlCompat.fromHtml("$usernameColour: $messageColour", HtmlCompat.FROM_HTML_MODE_LEGACY)
+            newMessage.textSize = 32f
+
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+
+            params.bottomMargin = 8
+
+            newMessage.layoutParams = params
+
+            runOnUiThread {
+                chatLinear?.addView(newMessage)
+            }
         }
 
         updateColours()
