@@ -1261,17 +1261,28 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                         if (gamePhase === OnlinePhase.TEAM_B) {
                             gamePhase = OnlinePhase.TEAM_A_SPY
                             hintText?.visibility = View.GONE
+                            hintText?.text = ""
 
                             if (player?.isSpymaster == true && player?.team == "A") {
-                                hintText?.visibility = View.GONE
                                 editHint?.visibility = View.VISIBLE
                                 hintNumber?.visibility = View.VISIBLE
                                 turnAction?.visibility = View.VISIBLE
+                            } else {
+                                editHint?.visibility = View.GONE
+                                hintNumber?.visibility = View.GONE
+                                turnAction?.visibility = View.GONE
                             }
                         }
 
                         teamAWordCount--
                         teamACount?.text = teamAWordCount.toString()
+
+                        teamAColour = preferences.getInt("teamA", -16773377)
+
+                        outline?.setBackgroundColor(teamAColour)
+
+                        teamACount?.paintFlags = teamACount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
+                        teamBCount?.paintFlags = teamBCount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
 
                         updateWordColours()
                     }
@@ -1281,17 +1292,28 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                         if (gamePhase === OnlinePhase.TEAM_A) {
                             gamePhase = OnlinePhase.TEAM_B_SPY
                             hintText?.visibility = View.GONE
+                            hintText?.text = ""
 
                             if (player?.isSpymaster == true && player?.team == "B") {
-                                hintText?.visibility = View.GONE
                                 editHint?.visibility = View.VISIBLE
                                 hintNumber?.visibility = View.VISIBLE
                                 turnAction?.visibility = View.VISIBLE
+                            } else {
+                                editHint?.visibility = View.GONE
+                                hintNumber?.visibility = View.GONE
+                                turnAction?.visibility = View.GONE
                             }
                         }
 
                         teamBWordCount--
                         teamBCount?.text = teamBWordCount.toString()
+
+                        teamBColour = preferences.getInt("teamB", -65536)
+
+                        outline?.setBackgroundColor(teamBColour)
+
+                        teamBCount?.paintFlags = teamBCount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
+                        teamACount?.paintFlags = teamACount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
 
                         updateWordColours()
                     }
@@ -1302,20 +1324,30 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                         if (gamePhase === OnlinePhase.TEAM_A) {
                             gamePhase = OnlinePhase.TEAM_B_SPY
                             hintText?.visibility = View.GONE
+                            hintText?.text = ""
 
                             if (player?.isSpymaster == true && player?.team == "B") {
                                 editHint?.visibility = View.VISIBLE
                                 hintNumber?.visibility = View.VISIBLE
                                 turnAction?.visibility = View.VISIBLE
+                            } else {
+                                editHint?.visibility = View.GONE
+                                hintNumber?.visibility = View.GONE
+                                turnAction?.visibility = View.GONE
                             }
                         } else {
                             gamePhase = OnlinePhase.TEAM_A_SPY
                             hintText?.visibility = View.GONE
+                            hintText?.text = ""
 
                             if (player?.isSpymaster == true && player?.team == "A") {
                                 editHint?.visibility = View.VISIBLE
                                 hintNumber?.visibility = View.VISIBLE
                                 turnAction?.visibility = View.VISIBLE
+                            } else {
+                                editHint?.visibility = View.GONE
+                                hintNumber?.visibility = View.GONE
+                                turnAction?.visibility = View.GONE
                             }
                         }
 
@@ -1365,6 +1397,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                 if (wordCounter == maxTurns) {
                     if (player?.isHost == true) {
+                        println("Turn ended by ${player?.nickname}")
                         SocketConnection.socket.emit("endTurn", roomName)
                     }
                 }
@@ -1380,12 +1413,15 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             runOnUiThread {
                 hintText?.visibility = View.GONE
+                hintText?.text = ""
                 
                 if (player?.isSpymaster == true && player?.team == "A" && gamePhase === OnlinePhase.TEAM_A_SPY) {
                     editHint?.visibility = View.VISIBLE
                     hintNumber?.visibility = View.VISIBLE
                     turnAction?.visibility = View.VISIBLE
                 } else if (!player?.isSpymaster!! && player?.team == "A" && gamePhase === OnlinePhase.TEAM_B_SPY) {
+                    editHint?.visibility = View.GONE
+                    hintNumber?.visibility = View.GONE
                     turnAction?.visibility = View.GONE
                 }
 
@@ -1394,6 +1430,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     hintNumber?.visibility = View.VISIBLE
                     turnAction?.visibility = View.VISIBLE
                 } else if (!player?.isSpymaster!! && player?.team == "B" && gamePhase === OnlinePhase.TEAM_A_SPY) {
+                    editHint?.visibility = View.GONE
+                    hintNumber?.visibility = View.GONE
                     turnAction?.visibility = View.GONE
                 }
 
