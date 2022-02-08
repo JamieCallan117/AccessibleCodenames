@@ -6,6 +6,5 @@ import java.net.URI
 
 object SocketConnection {
     @JvmField
-    //var socket: Socket = IO.socket(URI.create("https://codenamesserver.appspot.com"))
-    var socket: Socket = IO.socket(URI.create("http://192.168.1.123:8080"))
+    var socket: Socket = IO.socket(URI.create("https://codenamesserver-340711.nw.r.appspot.com"))
 }
