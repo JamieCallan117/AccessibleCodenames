@@ -41,10 +41,6 @@ class LaunchScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
         val sharedPreferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 
-        //Used for presentation. Delete later
-        editor.putBoolean("firstLaunch", true)
-        editor.apply()
-
         if (!sharedPreferences.getBoolean("firstLaunch", true)) {
             val intent = Intent(applicationContext, StartScreen::class.java)
             startActivity(intent)

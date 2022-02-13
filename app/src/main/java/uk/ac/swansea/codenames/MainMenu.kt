@@ -7,8 +7,11 @@ import android.widget.TextView
 import android.os.Bundle
 import android.content.Intent
 import android.speech.tts.TextToSpeech
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textview.MaterialTextView
 import java.util.*
 
 class MainMenu : AppCompatActivity(), TextToSpeech.OnInitListener {
@@ -16,12 +19,15 @@ class MainMenu : AppCompatActivity(), TextToSpeech.OnInitListener {
     //TODO: MessageBox to say when came from an OnlineGame where host quit
 
     private var constraintLayout: ConstraintLayout? = null
-    private var mainMenuTitle: TextView? = null
-    private var backButton: Button? = null
-    private var howToPlayButton: Button? = null
-    private var playOnline: Button? = null
-    private var playLocal: Button? = null
-    private var settingsButton: Button? = null
+    private var messageBox: ConstraintLayout? = null
+    private var mainMenuTitle: MaterialTextView? = null
+    private var messageText: MaterialTextView? = null
+    private var backButton: MaterialButton? = null
+    private var howToPlayButton: MaterialButton? = null
+    private var playOnline: MaterialButton? = null
+    private var playLocal: MaterialButton? = null
+    private var settingsButton: MaterialButton? = null
+    private var okButton: MaterialButton? = null
     private var onlineImage: ImageView? = null
     private var localImage: ImageView? = null
     private var settingsImage: ImageView? = null
@@ -34,18 +40,43 @@ class MainMenu : AppCompatActivity(), TextToSpeech.OnInitListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_menu)
 
-        constraintLayout = findViewById(R.id.saveButton)
+        constraintLayout = findViewById(R.id.constraintLayout)
+        messageBox = findViewById(R.id.messageBox)
         mainMenuTitle = findViewById(R.id.mainMenuTitle)
+        messageText = findViewById(R.id.messageText)
         backButton = findViewById(R.id.backButton)
         howToPlayButton = findViewById(R.id.howToPlayButton)
         playOnline = findViewById(R.id.playOnline)
         playLocal = findViewById(R.id.playLocal)
         settingsButton = findViewById(R.id.settingsButton)
+        okButton = findViewById(R.id.okButton)
         onlineImage = findViewById(R.id.onlineImage)
         localImage = findViewById(R.id.localImage)
         settingsImage = findViewById(R.id.settingsImage)
 
         textToSpeech = TextToSpeech(this, this)
+
+        if (intent.getStringExtra("onlineClose") != null) {
+            messageBox?.visibility = View.VISIBLE
+
+            messageText?.text = intent.getStringExtra("onlineClose")
+
+            backButton?.isEnabled = false
+            howToPlayButton?.isEnabled = false
+            playOnline?.isEnabled = false
+            playLocal?.isEnabled = false
+            settingsButton?.isEnabled = false
+        }
+
+        okButton?.setOnClickListener {
+            messageBox?.visibility = View.INVISIBLE
+
+            backButton?.isEnabled = true
+            howToPlayButton?.isEnabled = true
+            playOnline?.isEnabled = true
+            playLocal?.isEnabled = true
+            settingsButton?.isEnabled = true
+        }
 
         backButton?.setOnClickListener {
             textToSpeech?.stop()
@@ -86,6 +117,16 @@ class MainMenu : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         mainMenuTitle?.setOnLongClickListener {
             speakOut(mainMenuTitle?.text.toString())
+            true
+        }
+
+        messageText?.setOnLongClickListener {
+            speakOut(messageText?.text.toString())
+            true
+        }
+
+        okButton?.setOnLongClickListener {
+            speakOut(okButton?.text.toString())
             true
         }
 
@@ -143,8 +184,10 @@ class MainMenu : AppCompatActivity(), TextToSpeech.OnInitListener {
         menuTextColour = preferences.getInt("menuText", -1)
         
         constraintLayout?.setBackgroundColor(applicationBackgroundColour)
+        messageBox?.setBackgroundColor(applicationBackgroundColour)
 
         backButton?.setBackgroundColor(menuButtonsColour)
+        okButton?.setBackgroundColor(menuButtonsColour)
         howToPlayButton?.setBackgroundColor(menuButtonsColour)
         playOnline?.setBackgroundColor(menuButtonsColour)
         playLocal?.setBackgroundColor(menuButtonsColour)
@@ -154,7 +197,9 @@ class MainMenu : AppCompatActivity(), TextToSpeech.OnInitListener {
         settingsImage?.setColorFilter(menuButtonsColour)
 
         mainMenuTitle?.setTextColor(menuTextColour)
+        messageText?.setTextColor(menuTextColour)
         backButton?.setTextColor(menuTextColour)
+        okButton?.setTextColor(menuTextColour)
         howToPlayButton?.setTextColor(menuTextColour)
         playOnline?.setTextColor(menuTextColour)
         playLocal?.setTextColor(menuTextColour)

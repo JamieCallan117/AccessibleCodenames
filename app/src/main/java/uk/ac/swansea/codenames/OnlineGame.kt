@@ -960,9 +960,11 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         SocketConnection.socket.on("hostQuit") {
-            val i = Intent(this, MainMenu::class.java)
-            i.putExtra("onlineClose", "hostQuit")
-            startActivity(i)
+            if (!player!!.isHost) {
+                val i = Intent(this, MainMenu::class.java)
+                i.putExtra("onlineClose", "The host has left the game.")
+                startActivity(i)
+            }
         }
 
         SocketConnection.socket.on("playerQuit") { args ->
@@ -998,7 +1000,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                 }
             } else {
                 val i = Intent(this, MainMenu::class.java)
-                i.putExtra("onlineClose", "spymasterQuit")
+                i.putExtra("onlineClose", "Team A's spymaster left the game.")
                 startActivity(i)
             }
         }
@@ -1014,7 +1016,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                 }
             } else {
                 val i = Intent(this, MainMenu::class.java)
-                i.putExtra("onlineClose", "spymasterQuit")
+                i.putExtra("onlineClose", "Team B's spymaster left the game.")
                 startActivity(i)
             }
         }
@@ -1331,6 +1333,13 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                             hintText?.visibility = View.GONE
                             hintText?.text = ""
 
+                            teamBColour = preferences.getInt("teamB", -65536)
+
+                            outline?.setBackgroundColor(teamBColour)
+
+                            teamBCount?.paintFlags = teamBCount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
+                            teamACount?.paintFlags = teamACount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
+
                             if (player?.isSpymaster == true && player?.team == "B") {
                                 editHint?.visibility = View.VISIBLE
                                 hintNumber?.visibility = View.VISIBLE
@@ -1345,6 +1354,13 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                             gamePhase = OnlinePhase.TEAM_A_SPY
                             hintText?.visibility = View.GONE
                             hintText?.text = ""
+
+                            teamAColour = preferences.getInt("teamA", -16773377)
+
+                            outline?.setBackgroundColor(teamAColour)
+
+                            teamACount?.paintFlags = teamACount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
+                            teamBCount?.paintFlags = teamBCount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
 
                             if (player?.isSpymaster == true && player?.team == "A") {
                                 editHint?.visibility = View.VISIBLE
