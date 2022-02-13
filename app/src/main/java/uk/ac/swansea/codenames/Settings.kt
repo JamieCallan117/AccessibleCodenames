@@ -37,7 +37,7 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings)
 
-        constraintLayout = findViewById(R.id.saveButton)
+        constraintLayout = findViewById(R.id.constraintLayout)
         settingsTitle = findViewById(R.id.settingsTitle)
         musicVolumeText = findViewById(R.id.musicVolumeText)
         soundFXVolumeText = findViewById(R.id.soundFXVolumeText)
