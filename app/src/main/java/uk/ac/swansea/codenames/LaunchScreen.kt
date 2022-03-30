@@ -15,7 +15,6 @@ import com.google.android.material.textview.MaterialTextView
 import java.util.*
 
 class LaunchScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
-
     private var textToSpeech: TextToSpeech? = null
     private var continueButton: MaterialButton? = null
     private var ttsInfo: MaterialTextView? = null

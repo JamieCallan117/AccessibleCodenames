@@ -21,10 +21,6 @@ import org.json.JSONException
 import java.util.*
 
 class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
-
-    // TODO: Proper win screen.
-    // TODO: A few TTS fixes. (\n on some buttons, probably some "Team Ay"'s needed and chat messages/individual team members need TTS
-
     private var outline: ConstraintLayout? = null
     private var constraintLayout: ConstraintLayout? = null
     private var messageBox: ConstraintLayout? = null

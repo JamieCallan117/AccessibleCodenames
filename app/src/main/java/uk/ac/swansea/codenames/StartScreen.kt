@@ -8,7 +8,6 @@ import android.content.Intent
 import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.ImageView
-import androidx.gridlayout.widget.GridLayout
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
 import java.util.*
@@ -18,7 +17,6 @@ import kotlin.system.exitProcess
  * Starting screen, what is seen when the app is launched. Can go to the main menu, or the settings page from here.
  */
 class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
-
     private var quitBox: ConstraintLayout? = null
     private var constraintLayout: ConstraintLayout? = null
     private var playButton: MaterialButton? = null

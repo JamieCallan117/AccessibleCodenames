@@ -14,7 +14,6 @@ import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener
 import java.util.*
 
 class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
-
     private var teamAButton: Button? = null
     private var teamBButton: Button? = null
     private var bombSquareButton: Button? = null

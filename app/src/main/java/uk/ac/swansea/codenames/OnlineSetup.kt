@@ -15,7 +15,6 @@ import com.google.android.material.textview.MaterialTextView
 import java.util.*
 
 class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
-
     private var constraintLayout: ConstraintLayout? = null
     private var messageBox: ConstraintLayout? = null
     private var gameSetupTitle: MaterialTextView? = null

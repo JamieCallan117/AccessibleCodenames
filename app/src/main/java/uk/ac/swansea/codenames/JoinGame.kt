@@ -20,9 +20,7 @@ import com.google.android.material.textview.MaterialTextView
 import java.util.*
 
 class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
-
     //TODO: Sort problems with joining with same nickname. May be a server or client problem. Sometimes the joinFailNick isn't triggered
-
     private var constraintLayout: ConstraintLayout? = null
     private var messageBox: ConstraintLayout? = null
     private var scrollLinear: LinearLayout? = null

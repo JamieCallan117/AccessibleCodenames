@@ -13,7 +13,6 @@ import com.google.android.material.textview.MaterialTextView
 import java.util.*
 
 class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
-
     private var constraintLayout: ConstraintLayout? = null
     private var backButton: MaterialButton? = null
     private var colourButton: MaterialButton? = null

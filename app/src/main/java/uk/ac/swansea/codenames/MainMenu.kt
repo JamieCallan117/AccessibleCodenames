@@ -13,7 +13,6 @@ import com.google.android.material.textview.MaterialTextView
 import java.util.*
 
 class MainMenu : AppCompatActivity(), TextToSpeech.OnInitListener {
-
     private var constraintLayout: ConstraintLayout? = null
     private var messageBox: ConstraintLayout? = null
     private var mainMenuTitle: MaterialTextView? = null

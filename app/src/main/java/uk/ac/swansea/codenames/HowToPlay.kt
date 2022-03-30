@@ -11,7 +11,6 @@ import com.google.android.material.textview.MaterialTextView
 import java.util.*
 
 class HowToPlay : AppCompatActivity(), TextToSpeech.OnInitListener {
-
     private var backButton: MaterialButton? = null
     private var teamsHelp: MaterialButton? = null
     private var spymasterHelp: MaterialButton? = null
