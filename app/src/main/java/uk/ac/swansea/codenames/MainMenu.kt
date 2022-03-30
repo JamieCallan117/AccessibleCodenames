@@ -3,20 +3,16 @@ package uk.ac.swansea.codenames
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import android.widget.TextView
 import android.os.Bundle
 import android.content.Intent
 import android.speech.tts.TextToSpeech
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
 import java.util.*
 
 class MainMenu : AppCompatActivity(), TextToSpeech.OnInitListener {
-
-    //TODO: MessageBox to say when came from an OnlineGame where host quit
 
     private var constraintLayout: ConstraintLayout? = null
     private var messageBox: ConstraintLayout? = null
@@ -66,6 +62,8 @@ class MainMenu : AppCompatActivity(), TextToSpeech.OnInitListener {
             playOnline?.isEnabled = false
             playLocal?.isEnabled = false
             settingsButton?.isEnabled = false
+
+            speakOut(messageText?.text.toString())
         }
 
         okButton?.setOnClickListener {

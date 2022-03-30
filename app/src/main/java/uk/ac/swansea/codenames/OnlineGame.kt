@@ -23,7 +23,6 @@ import java.util.*
 class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     // TODO: Proper win screen.
-    // TODO: Disable chat for spymasters
     // TODO: A few TTS fixes. (\n on some buttons, probably some "Team Ay"'s needed and chat messages/individual team members need TTS
 
     private var outline: ConstraintLayout? = null
@@ -253,13 +252,16 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         yesButton?.setOnClickListener {
+            textToSpeech?.stop()
             SocketConnection.socket.emit("leaveRoom")
+            SocketConnection.socket.disconnect()
 
             val i = Intent(applicationContext, MainMenu::class.java)
             startActivity(i)
         }
 
         noButton?.setOnClickListener {
+            textToSpeech?.stop()
             windowOpen = false
 
             toggleWindow()
@@ -271,6 +273,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         okButton?.setOnClickListener {
+            textToSpeech?.stop()
             windowOpen = false
 
             toggleWindow()
@@ -282,6 +285,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         teamAButton?.setOnClickListener {
+            textToSpeech?.stop()
             windowOpen = false
 
             toggleWindow()
@@ -296,6 +300,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         teamBButton?.setOnClickListener {
+            textToSpeech?.stop()
             windowOpen = false
 
             toggleWindow()
@@ -332,6 +337,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             } else {
                 messageText?.text = getString(R.string.exit_online)
             }
+
+            speakOut(messageText?.text.toString())
         }
 
         startGame?.setOnClickListener {
@@ -387,6 +394,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     val hint =
                         editHint?.text.toString() + ": " + hintNumber?.selectedItem.toString()
 
+                    editHint?.setText("")
+
                     editHint?.visibility = View.GONE
                     hintNumber?.visibility = View.GONE
                     turnAction?.visibility = View.GONE
@@ -403,6 +412,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     okButton?.visibility = View.VISIBLE
                     yesButton?.visibility = View.INVISIBLE
                     noButton?.visibility = View.INVISIBLE
+
+                    speakOut(messageText?.text.toString())
                 }
             } else {
                 if (wordCounter == 0) {
@@ -416,6 +427,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     okButton?.visibility = View.VISIBLE
                     yesButton?.visibility = View.INVISIBLE
                     noButton?.visibility = View.INVISIBLE
+
+                    speakOut(messageText?.text.toString())
                 } else {
                     SocketConnection.socket.emit("endTurn", roomName)
                 }
@@ -474,14 +487,14 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         for (wb in wordButtons) {
             wb?.setOnClickListener {
-                if (gamePhase === OnlinePhase.TEAM_A && player?.team == "A" && !player?.isSpymaster!! && !wb.hasBeenClicked()) {
+                if (gamePhase == OnlinePhase.TEAM_A && player?.team == "A" && !player?.isSpymaster!! && !wb.hasBeenClicked()) {
                     SocketConnection.socket.emit(
                         "wordButton",
                         wb.text.toString(),
                         player?.nickname,
                         roomName
                     )
-                } else if (gamePhase === OnlinePhase.TEAM_B && player?.team == "B" && !player?.isSpymaster!! && !wb.hasBeenClicked()) {
+                } else if (gamePhase == OnlinePhase.TEAM_B && player?.team == "B" && !player?.isSpymaster!! && !wb.hasBeenClicked()) {
                     SocketConnection.socket.emit(
                         "wordButton",
                         wb.text.toString(),
@@ -752,8 +765,12 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             for (i in 0 until teamALinear?.childCount!!) {
                 val member = teamALinear?.getChildAt(i) as MaterialTextView
+                var memberStr = member.text.toString()
 
-                message += member.text.toString() + "\n"
+                val regex = Regex("[^A-Za-z0-9]")
+                memberStr = regex.replace(memberStr, "")
+
+                message += memberStr + "\n"
             }
 
             if (message == "Team Ay members. \n") {
@@ -771,8 +788,11 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             for (i in 0 until teamBLinear?.childCount!!) {
                 val member = teamBLinear?.getChildAt(i) as MaterialTextView
+                var memberStr = member.text.toString()
+                val regex = Regex("[^A-Za-z0-9]")
+                memberStr = regex.replace(memberStr, "")
 
-                message += member.text.toString() + "\n"
+                message += memberStr + "\n"
             }
 
             if (message == "Team B members. \n") {
@@ -784,37 +804,37 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         ttsAll?.setOnLongClickListener {
-            speakOut(ttsAll?.text.toString())
+            speakOut(ttsAll?.text.toString().replace("\n", ""))
             true
         }
 
         ttsA?.setOnLongClickListener {
-            speakOut(ttsA?.text.toString())
+            speakOut(ttsA?.text.toString().replace(" A ", " Ay ").replace("\n", ""))
             true
         }
 
         ttsB?.setOnLongClickListener {
-            speakOut(ttsB?.text.toString())
+            speakOut(ttsB?.text.toString().replace("\n", ""))
             true
         }
 
         ttsNeutral?.setOnLongClickListener {
-            speakOut(ttsNeutral?.text.toString())
+            speakOut(ttsNeutral?.text.toString().replace("\n", ""))
             true
         }
 
         ttsBomb?.setOnLongClickListener {
-            speakOut(ttsBomb?.text.toString())
+            speakOut(ttsBomb?.text.toString().replace("\n", ""))
             true
         }
 
         ttsUnmodified?.setOnLongClickListener {
-            speakOut(ttsUnmodified?.text.toString())
+            speakOut(ttsUnmodified?.text.toString().replace("\n", ""))
             true
         }
 
         ttsClicked?.setOnLongClickListener {
-            speakOut(ttsClicked?.text.toString())
+            speakOut(ttsClicked?.text.toString().replace("\n", ""))
             true
         }
 
@@ -831,7 +851,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         scoreLinear?.setOnLongClickListener {
             var message = getString(R.string.remaining_words_a, teamAWordCount).replace(" A ", " Ay ")
 
-            message += "\n" + getString(R.string.remaining_words_b, teamBWordCount)
+            message += ".\n" + getString(R.string.remaining_words_b, teamBWordCount)
 
             speakOut(message)
             true
@@ -868,7 +888,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         ttsButton?.setOnLongClickListener {
-            speakOut(ttsButton?.text.toString())
+            speakOut(ttsButton?.text.toString().replace("\n", ""))
             true
         }
 
@@ -922,6 +942,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                 yesButton?.visibility = View.INVISIBLE
                 okButton?.visibility = View.VISIBLE
                 noButton?.visibility = View.INVISIBLE
+
+                speakOut(messageText?.text.toString())
             }
         }
 
@@ -938,17 +960,19 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                 if (player?.isSpymaster == true) {
                     turnAction?.setText(R.string.give_hint)
+                    chatEdit?.visibility = View.GONE
+                    sendChat?.visibility = View.GONE
                 } else {
                     turnAction?.setText(R.string.end_turn)
                 }
 
-                if (player?.isSpymaster == true && player?.team == "A" && gamePhase === OnlinePhase.TEAM_A_SPY) {
+                if (player?.isSpymaster == true && player?.team == "A" && gamePhase == OnlinePhase.TEAM_A_SPY) {
                     editHint?.visibility = View.VISIBLE
                     hintNumber?.visibility = View.VISIBLE
                     turnAction?.visibility = View.VISIBLE
                 }
 
-                if (player?.isSpymaster == true && player?.team == "B" && gamePhase === OnlinePhase.TEAM_B_SPY) {
+                if (player?.isSpymaster == true && player?.team == "B" && gamePhase == OnlinePhase.TEAM_B_SPY) {
                     editHint?.visibility = View.VISIBLE
                     hintNumber?.visibility = View.VISIBLE
                     turnAction?.visibility = View.VISIBLE
@@ -998,7 +1022,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                         requestSpymaster?.visibility = View.VISIBLE
                     }
                 }
-            } else {
+            } else if (gamePhase != OnlinePhase.TEAM_A_WIN && gamePhase != OnlinePhase.TEAM_B_WIN) {
                 val i = Intent(this, MainMenu::class.java)
                 i.putExtra("onlineClose", "Team A's spymaster left the game.")
                 startActivity(i)
@@ -1014,7 +1038,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                         requestSpymaster?.visibility = View.VISIBLE
                     }
                 }
-            } else {
+            } else if (gamePhase != OnlinePhase.TEAM_A_WIN && gamePhase != OnlinePhase.TEAM_B_WIN) {
                 val i = Intent(this, MainMenu::class.java)
                 i.putExtra("onlineClose", "Team B's spymaster left the game.")
                 startActivity(i)
@@ -1046,10 +1070,26 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                 null
             }
 
+            if (teamASpymaster != null) {
+                for (p in teamAUsers) {
+                    if (p.nickname == args[3]) {
+                        p.isSpymaster = true
+                    }
+                }
+            }
+
             teamBSpymaster = if (args[4] != null) {
                 Player((args[4] as String))
             } else {
                 null
+            }
+
+            if (teamBSpymaster != null) {
+                for (p in teamBUsers) {
+                    if (p.nickname == args[4]) {
+                        p.isSpymaster = true
+                    }
+                }
             }
 
             try {
@@ -1103,6 +1143,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                 teamBCount?.text = teamBWordCount.toString()
                 loadingText?.visibility = View.GONE
                 chooseTeamBox?.visibility = View.VISIBLE
+
+                speakOut(chooseTeamText?.text.toString())
             }
         }
 
@@ -1165,6 +1207,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             yesButton?.visibility = View.INVISIBLE
             okButton?.visibility = View.VISIBLE
             noButton?.visibility = View.INVISIBLE
+
+            speakOut(messageText?.text.toString())
         }
 
         SocketConnection.socket.on("teamChange") { args ->
@@ -1196,10 +1240,12 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                 player?.team = team
             }
 
-            if (team == "A" && teamASpymaster != null) {
-                requestSpymaster?.visibility = View.GONE
-            } else if (team == "B" && teamBSpymaster != null) {
-                requestSpymaster?.visibility = View.GONE
+            runOnUiThread {
+                if (player?.team == "A" && teamASpymaster != null) {
+                    requestSpymaster?.visibility = View.GONE
+                } else if (player?.team == "B" && teamBSpymaster != null) {
+                    requestSpymaster?.visibility = View.GONE
+                }
             }
 
             updateTeamsBox()
@@ -1261,7 +1307,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                 when (typeClicked) {
                     "A" -> {
                         buttonClicked?.setHasBeenClicked(true)
-                        if (gamePhase === OnlinePhase.TEAM_B) {
+                        if (gamePhase == OnlinePhase.TEAM_B) {
                             turnEnded = true
 
                             gamePhase = OnlinePhase.TEAM_A_SPY
@@ -1294,7 +1340,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                     "B" -> {
                         buttonClicked?.setHasBeenClicked(true)
-                        if (gamePhase === OnlinePhase.TEAM_A) {
+                        if (gamePhase == OnlinePhase.TEAM_A) {
                             turnEnded = true
                             gamePhase = OnlinePhase.TEAM_B_SPY
                             hintText?.visibility = View.GONE
@@ -1327,7 +1373,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     "Neutral" -> {
                         buttonClicked?.setHasBeenClicked(true)
 
-                        if (gamePhase === OnlinePhase.TEAM_A) {
+                        if (gamePhase == OnlinePhase.TEAM_A) {
                             turnEnded = true
                             gamePhase = OnlinePhase.TEAM_B_SPY
                             hintText?.visibility = View.GONE
@@ -1381,7 +1427,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                         turnEnded = true
 
-                        gamePhase = if (gamePhase === OnlinePhase.TEAM_A) {
+                        gamePhase = if (gamePhase == OnlinePhase.TEAM_A) {
                             OnlinePhase.TEAM_B_WIN
                         } else {
                             OnlinePhase.TEAM_A_WIN
@@ -1401,7 +1447,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                 teamBColour = preferences.getInt("teamB", -65536)
 
 
-                if (gamePhase === OnlinePhase.TEAM_A) {
+                if (gamePhase == OnlinePhase.TEAM_A) {
                     val newWord = MaterialTextView(this)
 
                     newWord.text = getString(R.string.chat_word, user, word)
@@ -1409,7 +1455,12 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     newWord.textSize = 30f
 
                     chatLinear?.addView(newWord)
-                } else {
+
+                    newWord.setOnLongClickListener{
+                        speakOut(newWord.text.toString())
+                        true
+                    }
+                } else if (gamePhase == OnlinePhase.TEAM_B) {
                     val newWord = MaterialTextView(this)
 
                     newWord.text = getString(R.string.chat_word, user, word)
@@ -1417,11 +1468,25 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     newWord.textSize = 30f
 
                     chatLinear?.addView(newWord)
+
+                    newWord.setOnLongClickListener{
+                        speakOut(newWord.text.toString())
+                        true
+                    }
                 }
 
-                if (wordCounter == maxTurns && !turnEnded) {
+                if (teamAWordCount == 0) {
+                    gamePhase = OnlinePhase.TEAM_A_WIN
+                } else if (teamBWordCount == 0) {
+                    gamePhase = OnlinePhase.TEAM_B_WIN
+                }
+
+                if (gamePhase == OnlinePhase.TEAM_A_WIN) {
+                    gameWin("A")
+                } else if (gamePhase == OnlinePhase.TEAM_B_WIN) {
+                    gameWin("B")
+                } else if (wordCounter == maxTurns && !turnEnded) {
                     if (player?.isHost == true) {
-                        println("Turn ended by ${player?.nickname}")
                         SocketConnection.socket.emit("endTurn", roomName)
                     }
                 }
@@ -1429,7 +1494,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         SocketConnection.socket.on("endTurn") {
-            gamePhase = if (gamePhase === OnlinePhase.TEAM_A) {
+            gamePhase = if (gamePhase == OnlinePhase.TEAM_A) {
                 OnlinePhase.TEAM_B_SPY
             } else {
                 OnlinePhase.TEAM_A_SPY
@@ -1439,21 +1504,21 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                 hintText?.visibility = View.GONE
                 hintText?.text = ""
                 
-                if (player?.isSpymaster == true && player?.team == "A" && gamePhase === OnlinePhase.TEAM_A_SPY) {
+                if (player?.isSpymaster == true && player?.team == "A" && gamePhase == OnlinePhase.TEAM_A_SPY) {
                     editHint?.visibility = View.VISIBLE
                     hintNumber?.visibility = View.VISIBLE
                     turnAction?.visibility = View.VISIBLE
-                } else if (!player?.isSpymaster!! && player?.team == "A" && gamePhase === OnlinePhase.TEAM_B_SPY) {
+                } else if (!player?.isSpymaster!! && player?.team == "A" && gamePhase == OnlinePhase.TEAM_B_SPY) {
                     editHint?.visibility = View.GONE
                     hintNumber?.visibility = View.GONE
                     turnAction?.visibility = View.GONE
                 }
 
-                if (player?.isSpymaster == true && player?.team == "B" && gamePhase === OnlinePhase.TEAM_B_SPY) {
+                if (player?.isSpymaster == true && player?.team == "B" && gamePhase == OnlinePhase.TEAM_B_SPY) {
                     editHint?.visibility = View.VISIBLE
                     hintNumber?.visibility = View.VISIBLE
                     turnAction?.visibility = View.VISIBLE
-                } else if (!player?.isSpymaster!! && player?.team == "B" && gamePhase === OnlinePhase.TEAM_A_SPY) {
+                } else if (!player?.isSpymaster!! && player?.team == "B" && gamePhase == OnlinePhase.TEAM_A_SPY) {
                     editHint?.visibility = View.GONE
                     hintNumber?.visibility = View.GONE
                     turnAction?.visibility = View.GONE
@@ -1497,7 +1562,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                 teamBColour = preferences.getInt("teamB", -65536)
 
 
-                if (gamePhase === OnlinePhase.TEAM_A_SPY) {
+                if (gamePhase == OnlinePhase.TEAM_A_SPY) {
                     gamePhase = OnlinePhase.TEAM_A
 
                     val newHint = MaterialTextView(this)
@@ -1507,6 +1572,13 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     newHint.textSize = 30f
 
                     chatLinear?.addView(newHint)
+
+                    newHint.setOnLongClickListener {
+                        speakOut(getString(R.string.team_a_new_hint, newHint.text.toString()).replace(" A ", " Ay "))
+                        true
+                    }
+
+                    speakOut(getString(R.string.team_a_new_hint, newHint.text.toString()).replace(" A ", " Ay "))
                 } else {
                     gamePhase = OnlinePhase.TEAM_B
 
@@ -1517,6 +1589,13 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     newHint.textSize = 30f
 
                     chatLinear?.addView(newHint)
+
+                    newHint.setOnLongClickListener {
+                        speakOut(getString(R.string.team_b_new_hint, newHint.text.toString()))
+                        true
+                    }
+
+                    speakOut(getString(R.string.team_b_new_hint, newHint.text.toString()))
                 }
 
                 hintText?.text = hint
@@ -1527,9 +1606,9 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     hintNumber?.visibility = View.GONE
                     turnAction?.visibility = View.GONE
                 } else {
-                    if (gamePhase === OnlinePhase.TEAM_A && player?.team == "A") {
+                    if (gamePhase == OnlinePhase.TEAM_A && player?.team == "A") {
                         turnAction?.visibility = View.VISIBLE
-                    } else if (gamePhase === OnlinePhase.TEAM_B && player?.team == "B") {
+                    } else if (gamePhase == OnlinePhase.TEAM_B && player?.team == "B") {
                         turnAction?.visibility = View.VISIBLE
                     }
                 }
@@ -1560,6 +1639,11 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             newMessage.layoutParams = params
 
+            newMessage.setOnLongClickListener {
+                speakOut(newMessage.text.toString())
+                true
+            }
+
             runOnUiThread {
                 chatLinear?.addView(newMessage)
             }
@@ -1589,6 +1673,11 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             newMessage.layoutParams = params
 
+            newMessage.setOnLongClickListener {
+                speakOut(newMessage.text.toString())
+                true
+            }
+
             runOnUiThread {
                 chatLinear?.addView(newMessage)
             }
@@ -1605,6 +1694,42 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     override fun onBackPressed() {
         exitButton?.performClick()
+    }
+
+    private fun gameWin(winningTeam : String) {
+        if (winningTeam == "A") {
+            if (player?.team == "A") {
+                messageText?.text = getString(R.string.team_a_win)
+            } else {
+                messageText?.text = getString(R.string.team_b_loss)
+            }
+        } else {
+            if (player?.team == "B") {
+                messageText?.text = getString(R.string.team_b_win)
+            } else {
+                messageText?.text = getString(R.string.team_a_loss)
+            }
+        }
+
+        hintText?.visibility = View.GONE
+        editHint?.visibility = View.GONE
+        hintNumber?.visibility = View.GONE
+        turnAction?.visibility = View.GONE
+        chatEdit?.visibility = View.VISIBLE
+        sendChat?.visibility = View.VISIBLE
+
+        windowOpen = true
+
+        toggleWindow()
+
+        messageBox?.visibility = View.VISIBLE
+        yesButton?.visibility = View.INVISIBLE
+        noButton?.visibility = View.INVISIBLE
+        okButton?.visibility = View.VISIBLE
+
+        speakOut((messageText?.text.toString()))
+
+        updateWordColours()
     }
 
     private fun updateTeamsBox() {
@@ -1635,7 +1760,15 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             newPlayer.setTextColor(menuTextColour)
             newPlayer.textSize = 30f
-            teamALinear?.addView(newPlayer)
+
+            runOnUiThread {
+                teamALinear?.addView(newPlayer)
+            }
+
+            newPlayer.setOnLongClickListener {
+                speakOut(newPlayer.text.toString())
+                true
+            }
         }
 
         for (p in teamBUsers) {
@@ -1658,7 +1791,15 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             newPlayer.setTextColor(menuTextColour)
             newPlayer.textSize = 30f
-            teamBLinear?.addView(newPlayer)
+
+            runOnUiThread {
+                teamBLinear?.addView(newPlayer)
+            }
+
+            newPlayer.setOnLongClickListener {
+                speakOut(newPlayer.text.toString())
+                true
+            }
         }
     }
 
@@ -1886,6 +2027,28 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                     bombWords.contains(wb?.text.toString()) && wb?.hasBeenClicked() == true -> {
                         wb.setBackgroundColor(bombColour)
+                    }
+                }
+            }
+        }
+        
+        if (gamePhase == OnlinePhase.TEAM_A_WIN || gamePhase == OnlinePhase.TEAM_B_WIN) {
+            for (wb in wordButtons) {
+                when {
+                    teamAWords.contains(wb?.text.toString()) -> {
+                        wb?.setBackgroundColor(teamAColour)
+                    }
+
+                    teamBWords.contains(wb?.text.toString()) -> {
+                        wb?.setBackgroundColor(teamBColour)
+                    }
+
+                    neutralWords.contains(wb?.text.toString()) -> {
+                        wb?.setBackgroundColor(neutralColour)
+                    }
+
+                    bombWords.contains(wb?.text.toString()) -> {
+                        wb?.setBackgroundColor(bombColour)
                     }
                 }
             }
