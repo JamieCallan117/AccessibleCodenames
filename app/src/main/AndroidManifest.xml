@@ -69,6 +69,7 @@
             android:name=".OnlineGame"
             android:screenOrientation="sensorLandscape">
         </activity>
+        <service android:name=".BackgroundMusicService"/>
     </application>
 
     <queries>

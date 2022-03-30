@@ -23,8 +23,8 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var soundFXVolumeSlider: Slider? = null
     private var vibrationSwitch: SwitchMaterial? = null
     private var ttsSwitch: SwitchMaterial? = null
-    private var musicVolume = 0
-    private var soundFXVolume = 0
+    private var musicVolume = 0.5f
+    private var soundFXVolume = 0.5f
     private var applicationBackgroundColour = -10921639
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
@@ -53,29 +53,35 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
-        musicVolume = preferences.getInt("musicVolume", 100)
+        musicVolume = preferences.getFloat("musicVolume", 0.5f)
 
-        musicVolumeSlider?.value = musicVolume.toFloat()
+        musicVolumeSlider?.value = musicVolume
 
         musicVolumeSlider?.addOnChangeListener { _, value, _ ->
             val editor = preferences!!.edit()
-            editor.putInt("musicVolume", value.toInt())
+            editor.putFloat("musicVolume", value)
             editor.apply()
+
+            val intent = Intent(this, BackgroundMusicService::class.java)
+
+            this.stopService(intent)
+
+            this.startService(intent)
         }
 
-        musicVolumeSlider?.setLabelFormatter { value -> "${value.toInt()}%" }
+        musicVolumeSlider?.setLabelFormatter { value -> "${(value * 100f).toInt()}%" }
 
-        soundFXVolume = preferences.getInt("soundFXVolume", 100)
+        soundFXVolume = preferences.getFloat("soundFXVolume", 0.5f)
 
-        soundFXVolumeSlider?.value = soundFXVolume.toFloat()
+        soundFXVolumeSlider?.value = soundFXVolume
 
         soundFXVolumeSlider?.addOnChangeListener { _, value, _ ->
             val editor = preferences!!.edit()
-            editor.putInt("soundFXVolume", value.toInt())
+            editor.putFloat("soundFXVolume", value)
             editor.apply()
         }
 
-        soundFXVolumeSlider?.setLabelFormatter { value -> "${value.toInt()}%" }
+        soundFXVolumeSlider?.setLabelFormatter { value -> "${(value * 100f).toInt()}%" }
 
         vibration = preferences.getBoolean("vibration", true)
 

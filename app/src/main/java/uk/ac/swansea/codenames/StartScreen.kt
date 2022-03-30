@@ -1,20 +1,22 @@
 package uk.ac.swansea.codenames
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import android.os.Bundle
 import android.content.Intent
+import android.media.MediaPlayer
+import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
 import java.util.*
 import kotlin.system.exitProcess
 
 /**
- * Starting screen, what is seen when the app is launched. Can go to the main menu, or the settings page from here.
+ * Starting screen, this is what you will see when you launch the app for the 2nd and onwards time.
+ * You can go to the settings or main menu screen.
  */
 class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var quitBox: ConstraintLayout? = null
@@ -33,6 +35,7 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var menuTextColour = -1
     private var exiting = false
     private var textToSpeech: TextToSpeech? = null
+    private var buttonClick: MediaPlayer? = null
 
     /**
      * Sets up the layout for the screen.
@@ -54,10 +57,24 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
         playImage = findViewById(R.id.playImage)
         settingsImage = findViewById(R.id.settingsImage)
 
+        buttonClick = MediaPlayer.create(this, R.raw.buttonclick)
+
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        val soundFXVolume = preferences.getFloat("soundFXVolume", 0.5f)
+
+        buttonClick?.setVolume(soundFXVolume, soundFXVolume)
+
+        val intent = Intent(this, BackgroundMusicService::class.java)
+
+        this.startService(intent)
+
         textToSpeech = TextToSpeech(this, this)
 
         playButton!!.setOnClickListener {
             textToSpeech?.stop()
+
+            buttonClick?.start()
 
             val i = Intent(this, MainMenu::class.java)
             startActivity(i)
@@ -65,6 +82,8 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         settingsButton!!.setOnClickListener {
             textToSpeech?.stop()
+
+            buttonClick?.start()
 
             val i = Intent(this, Settings::class.java)
             i.putExtra("from", "start_screen")
@@ -74,11 +93,15 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
         exitButton!!.setOnClickListener {
             textToSpeech?.stop()
 
+            buttonClick?.start()
+
             onBackPressed()
         }
 
         yesButton!!.setOnClickListener {
             textToSpeech?.stop()
+
+            buttonClick?.start()
 
             //Closes the app.
             finishAffinity()
@@ -87,6 +110,8 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         noButton!!.setOnClickListener {
             textToSpeech?.stop()
+
+            buttonClick?.start()
 
             quitBox!!.visibility = View.INVISIBLE
             playButton!!.visibility = View.VISIBLE
@@ -136,6 +161,9 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
         updateColours()
     }
 
+    /**
+     * Sets up the TextToSpeech engine.
+     */
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             textToSpeech!!.language = Locale.UK
@@ -172,6 +200,9 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Reads out the given string using the TextToSpeech engine if it is enabled.
+     */
     private fun speakOut(message : String) {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
