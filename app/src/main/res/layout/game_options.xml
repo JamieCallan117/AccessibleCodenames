@@ -115,7 +115,8 @@
                     android:layout_width="94dp"
                     android:layout_height="47dp"
                     android:layout_weight="1"
-                    app:srcCompat="@android:drawable/ic_menu_delete" />
+                    app:srcCompat="@android:drawable/ic_menu_delete"
+                    android:contentDescription="@{String.format(@string/delete_icon_for_custom_word, 1)}"/>
 
             </LinearLayout>
 
@@ -140,7 +141,8 @@
                     android:layout_width="94dp"
                     android:layout_height="47dp"
                     android:layout_weight="1"
-                    app:srcCompat="@android:drawable/ic_menu_delete" />
+                    app:srcCompat="@android:drawable/ic_menu_delete"
+                    android:contentDescription="@{String.format(@string/delete_icon_for_custom_word, 2)}" />
             </LinearLayout>
 
             <LinearLayout
@@ -164,7 +166,8 @@
                     android:layout_width="94dp"
                     android:layout_height="47dp"
                     android:layout_weight="1"
-                    app:srcCompat="@android:drawable/ic_menu_delete" />
+                    app:srcCompat="@android:drawable/ic_menu_delete"
+                    android:contentDescription="@{String.format(@string/delete_icon_for_custom_word, 3)}" />
             </LinearLayout>
 
             <LinearLayout
@@ -188,7 +191,8 @@
                     android:layout_width="94dp"
                     android:layout_height="47dp"
                     android:layout_weight="1"
-                    app:srcCompat="@android:drawable/ic_menu_delete" />
+                    app:srcCompat="@android:drawable/ic_menu_delete"
+                    android:contentDescription="@{String.format(@string/delete_icon_for_custom_word, 4)}" />
             </LinearLayout>
 
             <LinearLayout
@@ -212,7 +216,8 @@
                     android:layout_width="94dp"
                     android:layout_height="47dp"
                     android:layout_weight="1"
-                    app:srcCompat="@android:drawable/ic_menu_delete" />
+                    app:srcCompat="@android:drawable/ic_menu_delete"
+                    android:contentDescription="@{String.format(@string/delete_icon_for_custom_word, 5)}" />
             </LinearLayout>
 
             <LinearLayout
@@ -236,7 +241,8 @@
                     android:layout_width="94dp"
                     android:layout_height="47dp"
                     android:layout_weight="1"
-                    app:srcCompat="@android:drawable/ic_menu_delete" />
+                    app:srcCompat="@android:drawable/ic_menu_delete"
+                    android:contentDescription="@{String.format(@string/delete_icon_for_custom_word, 6)}" />
             </LinearLayout>
 
             <LinearLayout
@@ -260,7 +266,8 @@
                     android:layout_width="94dp"
                     android:layout_height="47dp"
                     android:layout_weight="1"
-                    app:srcCompat="@android:drawable/ic_menu_delete" />
+                    app:srcCompat="@android:drawable/ic_menu_delete"
+                    android:contentDescription="@{String.format(@string/delete_icon_for_custom_word, 7)}" />
             </LinearLayout>
 
             <LinearLayout
@@ -284,7 +291,8 @@
                     android:layout_width="94dp"
                     android:layout_height="47dp"
                     android:layout_weight="1"
-                    app:srcCompat="@android:drawable/ic_menu_delete" />
+                    app:srcCompat="@android:drawable/ic_menu_delete"
+                    android:contentDescription="@{String.format(@string/delete_icon_for_custom_word, 8)}" />
             </LinearLayout>
 
             <LinearLayout
@@ -308,7 +316,8 @@
                     android:layout_width="94dp"
                     android:layout_height="47dp"
                     android:layout_weight="1"
-                    app:srcCompat="@android:drawable/ic_menu_delete" />
+                    app:srcCompat="@android:drawable/ic_menu_delete"
+                    android:contentDescription="@{String.format(@string/delete_icon_for_custom_word, 9)}" />
             </LinearLayout>
 
             <LinearLayout
@@ -331,7 +340,8 @@
                     android:layout_width="94dp"
                     android:layout_height="47dp"
                     android:layout_weight="1"
-                    app:srcCompat="@android:drawable/ic_menu_delete" />
+                    app:srcCompat="@android:drawable/ic_menu_delete"
+                    android:contentDescription="@{String.format(@string/delete_icon_for_custom_word, 10)}" />
             </LinearLayout>
 
         </LinearLayout>

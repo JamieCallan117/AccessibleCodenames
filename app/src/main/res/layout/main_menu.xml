@@ -108,9 +108,9 @@
         android:layout_marginEnd="62dp"
         android:layout_marginBottom="60dp"
         android:gravity="center"
-        android:paddingLeft="32dp"
+        android:paddingStart="32dp"
         android:paddingTop="25dp"
-        android:paddingRight="33dp"
+        android:paddingEnd="33dp"
         android:paddingBottom="25dp"
         android:text="@string/settings"
         android:textSize="18sp"
@@ -151,7 +151,8 @@
         app:layout_constraintBottom_toTopOf="@+id/playOnline"
         app:layout_constraintEnd_toEndOf="@+id/playOnline"
         app:layout_constraintStart_toStartOf="@+id/playOnline"
-        app:srcCompat="@drawable/online" />
+        app:srcCompat="@drawable/online"
+        android:contentDescription="@string/online_play_image" />
 
     <ImageView
         android:id="@+id/settingsImage"
@@ -161,7 +162,8 @@
         app:layout_constraintBottom_toTopOf="@+id/settingsButton"
         app:layout_constraintEnd_toEndOf="@+id/settingsButton"
         app:layout_constraintStart_toStartOf="@+id/settingsButton"
-        app:srcCompat="@drawable/settings" />
+        app:srcCompat="@drawable/settings"
+        android:contentDescription="@string/settings_image" />
 
     <ImageView
         android:id="@+id/localImage"
@@ -172,6 +174,7 @@
         app:layout_constraintEnd_toEndOf="@+id/playLocal"
         app:layout_constraintHorizontal_bias="0.457"
         app:layout_constraintStart_toStartOf="@+id/playLocal"
-        app:srcCompat="@drawable/local" />
+        app:srcCompat="@drawable/local"
+        android:contentDescription="@string/local_play_image" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

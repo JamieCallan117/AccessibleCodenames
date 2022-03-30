@@ -141,4 +141,8 @@
     <string name="existing_spymaster">Someone else is already\n the spymaster</string>
     <string name="chat_hint">Hint: %1$s</string>
     <string name="chat_word">%1$s pressed the word %2$s!</string>
+    <string name="delete_icon_for_custom_word">Delete Icon for custom word %1$d</string>
+    <string name="online_play_image">Online Play Image</string>
+    <string name="settings_image">Settings Image</string>
+    <string name="local_play_image">Local Play Image</string>
 </resources>
