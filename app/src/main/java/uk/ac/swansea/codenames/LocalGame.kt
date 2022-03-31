@@ -149,10 +149,10 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         hidePreviousHints = findViewById(R.id.hidePreviousHints)
         scoreLinear = findViewById(R.id.scoreLinear)
 
-        correctGuess = MediaPlayer.create(this, R.raw.buttonclick)
-        incorrectGuess = MediaPlayer.create(this, R.raw.buttonclick)
-        winSound = MediaPlayer.create(this, R.raw.buttonclick)
-        lossSound = MediaPlayer.create(this, R.raw.buttonclick)
+        correctGuess = MediaPlayer.create(this, R.raw.correctguess)
+        incorrectGuess = MediaPlayer.create(this, R.raw.incorrectguess)
+        winSound = MediaPlayer.create(this, R.raw.gamewin)
+        lossSound = MediaPlayer.create(this, R.raw.gameloss)
         buttonClick = MediaPlayer.create(this, R.raw.buttonclick)
 
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
@@ -1230,6 +1230,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                 }
 
                 "neutral" -> {
+                    incorrectGuess?.start()
+
                     if (gamePhase == LocalPhase.TEAM_A) {
                         gamePhase = LocalPhase.TEAM_B_INTERMISSION
                         teamBCount?.paintFlags = teamBCount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
@@ -1260,6 +1262,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                 "teamA" -> {
                     if (gamePhase == LocalPhase.TEAM_B) {
+                        incorrectGuess?.start()
+
                         gamePhase = LocalPhase.TEAM_A_INTERMISSION
                         teamACount?.paintFlags = teamACount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
                         teamBCount?.paintFlags = teamBCount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
@@ -1273,6 +1277,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                         outline?.setBackgroundColor(teamAColour)
 
                         toggleMessageBox(true, 0)
+                    } else {
+                        correctGuess?.start()
                     }
 
                     teamASquaresCount--
@@ -1305,6 +1311,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                 "teamB" -> {
                     if (gamePhase == LocalPhase.TEAM_A) {
+                        incorrectGuess?.start()
+
                         gamePhase = LocalPhase.TEAM_B_INTERMISSION
                         teamBCount?.paintFlags = teamBCount?.paintFlags?.or(Paint.UNDERLINE_TEXT_FLAG)!!
                         teamACount?.paintFlags = teamACount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
@@ -1318,6 +1326,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                         outline?.setBackgroundColor(teamBColour)
 
                         toggleMessageBox(true, 0)
+                    } else {
+                        correctGuess?.start()
                     }
 
                     teamBSquaresCount--

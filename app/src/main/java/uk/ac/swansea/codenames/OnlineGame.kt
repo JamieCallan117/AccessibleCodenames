@@ -216,10 +216,10 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         squareTwentyFour = findViewById(R.id.squareTwentyFour)
         squareTwentyFive = findViewById(R.id.squareTwentyFive)
 
-        correctGuess = MediaPlayer.create(this, R.raw.buttonclick)
-        incorrectGuess = MediaPlayer.create(this, R.raw.buttonclick)
-        winSound = MediaPlayer.create(this, R.raw.buttonclick)
-        lossSound = MediaPlayer.create(this, R.raw.buttonclick)
+        correctGuess = MediaPlayer.create(this, R.raw.correctguess)
+        incorrectGuess = MediaPlayer.create(this, R.raw.incorrectguess)
+        winSound = MediaPlayer.create(this, R.raw.gamewin)
+        lossSound = MediaPlayer.create(this, R.raw.gameloss)
         buttonClick = MediaPlayer.create(this, R.raw.buttonclick)
 
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
