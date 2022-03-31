@@ -5,16 +5,17 @@ import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.IBinder
+import kotlin.properties.Delegates
 
+/**
+ * This service allows for music to be played in the
+ */
 class BackgroundMusicService : Service() {
     private lateinit var player: MediaPlayer
+    private var length: Int = 0
     override fun onBind(arg0: Intent): IBinder? {
 
         return null
-    }
-
-    override fun onCreate() {
-        super.onCreate()
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
@@ -35,27 +36,15 @@ class BackgroundMusicService : Service() {
             player.start()
         } else if (intent.action != null && intent.action.equals("CHANGE_VOLUME")) {
             player.setVolume(musicVolume, musicVolume)
+        } else if (intent.action != null && intent.action.equals("PAUSE")) {
+            player.pause()
+            length = player.currentPosition
+        } else if (intent.action != null && intent.action.equals("RESUME")) {
+            player.seekTo(length)
+            player.start()
         }
 
-
         return START_STICKY
-    }
-
-    override fun onStart(intent: Intent, startId: Int) {
-        // TO DO
-    }
-
-    fun onUnBind(arg0: Intent): IBinder? {
-        // TO DO Auto-generated method
-        return null
-    }
-
-    fun onStop() {
-
-    }
-
-    fun onPause() {
-
     }
 
     override fun onDestroy() {
@@ -65,9 +54,5 @@ class BackgroundMusicService : Service() {
 
     override fun onLowMemory() {
 
-    }
-
-    companion object {
-        private val TAG: String? = null
     }
 }

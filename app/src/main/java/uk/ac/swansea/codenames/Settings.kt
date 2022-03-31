@@ -82,6 +82,8 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
             val editor = preferences!!.edit()
             editor.putFloat("soundFXVolume", value)
             editor.apply()
+
+            soundFXVolume = value
         }
 
         soundFXVolumeSlider?.setLabelFormatter { value -> "${(value * 100f).toInt()}%" }
@@ -162,6 +164,26 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
             speakOut(colourButton?.text.toString())
             true
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val intent = Intent(this, BackgroundMusicService::class.java)
+
+        intent.action = "RESUME"
+
+        startService(intent)
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        val intent = Intent(this, BackgroundMusicService::class.java)
+
+        intent.action = "PAUSE"
+
+        startService(intent)
     }
 
     override fun onInit(status: Int) {

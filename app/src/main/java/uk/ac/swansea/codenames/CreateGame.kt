@@ -410,6 +410,26 @@ class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         updateColours()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        val intent = Intent(this, BackgroundMusicService::class.java)
+
+        intent.action = "RESUME"
+
+        startService(intent)
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        val intent = Intent(this, BackgroundMusicService::class.java)
+
+        intent.action = "PAUSE"
+
+        startService(intent)
+    }
+
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             textToSpeech!!.language = Locale.UK
