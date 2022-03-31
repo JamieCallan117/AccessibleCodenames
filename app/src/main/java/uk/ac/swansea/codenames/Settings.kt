@@ -22,14 +22,12 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var soundFXVolumeText: MaterialTextView? = null
     private var musicVolumeSlider: Slider? = null
     private var soundFXVolumeSlider: Slider? = null
-    private var vibrationSwitch: SwitchMaterial? = null
     private var ttsSwitch: SwitchMaterial? = null
     private var musicVolume = 0.5f
     private var soundFXVolume = 0.5f
     private var applicationBackgroundColour = -10921639
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
-    private var vibration = false
     private var textToSpeechBool = false
     private var textToSpeech: TextToSpeech? = null
     private var buttonClick: MediaPlayer? = null
@@ -46,7 +44,6 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
         colourButton = findViewById(R.id.colourButton)
         musicVolumeSlider = findViewById(R.id.musicVolumeSlider)
         soundFXVolumeSlider = findViewById(R.id.soundFXVolumeSlider)
-        vibrationSwitch = findViewById(R.id.vibrationSwitch)
         ttsSwitch = findViewById(R.id.ttsSwitch)
 
         buttonClick = MediaPlayer.create(this, R.raw.buttonclick)
@@ -88,16 +85,6 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         soundFXVolumeSlider?.setLabelFormatter { value -> "${(value * 100f).toInt()}%" }
-
-        vibration = preferences.getBoolean("vibration", true)
-
-        vibrationSwitch?.isChecked = vibration
-
-        vibrationSwitch?.setOnCheckedChangeListener { _, _ ->
-            val editor = preferences!!.edit()
-            editor.putBoolean("vibration", vibrationSwitch!!.isChecked)
-            editor.apply()
-        }
 
         textToSpeechBool = preferences.getBoolean("textToSpeech", true)
 
@@ -171,16 +158,6 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
             true
         }
 
-        vibrationSwitch?.setOnLongClickListener {
-            if (vibrationSwitch!!.isChecked) {
-                speakOut(vibrationSwitch!!.text.toString() + ", enabled.")
-            } else {
-                speakOut(vibrationSwitch!!.text.toString() + ", disabled.")
-            }
-
-            true
-        }
-
         colourButton?.setOnLongClickListener {
             speakOut(colourButton?.text.toString())
             true
@@ -223,6 +200,5 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
         backButton?.setTextColor(menuTextColour)
         colourButton?.setTextColor(menuTextColour)
         ttsSwitch?.setTextColor(menuTextColour)
-        vibrationSwitch?.setTextColor(menuTextColour)
     }
 }
