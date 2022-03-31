@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.os.Bundle
 import android.content.Intent
+import android.media.MediaPlayer
 import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.ImageView
@@ -30,6 +31,7 @@ class MainMenu : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
     private var textToSpeech: TextToSpeech? = null
+    private var buttonClick: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +51,14 @@ class MainMenu : AppCompatActivity(), TextToSpeech.OnInitListener {
         localImage = findViewById(R.id.localImage)
         settingsImage = findViewById(R.id.settingsImage)
 
+        buttonClick = MediaPlayer.create(this, R.raw.buttonclick)
+
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        val soundFXVolume = preferences.getFloat("soundFXVolume", 0.5f)
+
+        buttonClick?.setVolume(soundFXVolume, soundFXVolume)
+
         textToSpeech = TextToSpeech(this, this)
 
         if (intent.getStringExtra("onlineClose") != null) {
@@ -65,7 +75,19 @@ class MainMenu : AppCompatActivity(), TextToSpeech.OnInitListener {
             speakOut(messageText?.text.toString())
         }
 
+        if (intent.getBooleanExtra("startMusic", false)) {
+            val musicIntent = Intent(this, BackgroundMusicService::class.java)
+
+            musicIntent.action = "START_MENU"
+
+            stopService(musicIntent)
+
+            startService(musicIntent)
+        }
+
         okButton?.setOnClickListener {
+            buttonClick?.start()
+
             messageBox?.visibility = View.INVISIBLE
 
             backButton?.isEnabled = true
@@ -76,6 +98,8 @@ class MainMenu : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         backButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             val i = Intent(applicationContext, StartScreen::class.java)
@@ -83,6 +107,8 @@ class MainMenu : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         howToPlayButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             val i = Intent(applicationContext, HowToPlay::class.java)
@@ -90,6 +116,8 @@ class MainMenu : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         settingsButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             val i = Intent(this, Settings::class.java)
@@ -99,6 +127,8 @@ class MainMenu : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
         
         playLocal?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             val i = Intent(applicationContext, LocalSetup::class.java)
@@ -106,6 +136,8 @@ class MainMenu : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
         
         playOnline?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             val i = Intent(applicationContext, OnlineSetup::class.java)

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.os.Bundle
 import android.content.Intent
+import android.media.MediaPlayer
 import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.LinearLayout
@@ -34,6 +35,7 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
     private var textToSpeech: TextToSpeech? = null
+    private var buttonClick: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +54,14 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         backButton = findViewById(R.id.backButton)
         gameOptionsButton = findViewById(R.id.gameOptionsButton)
         playButton = findViewById(R.id.playButton)
+
+        buttonClick = MediaPlayer.create(this, R.raw.buttonclick)
+
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        val soundFXVolume = preferences.getFloat("soundFXVolume", 0.5f)
+
+        buttonClick?.setVolume(soundFXVolume, soundFXVolume)
 
         textToSpeech = TextToSpeech(this, this)
 
@@ -105,6 +115,8 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         backButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             val i = Intent(applicationContext, MainMenu::class.java)
@@ -112,6 +124,8 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         gameOptionsButton?.setOnClickListener {
+            buttonClick?.start()
+
             val i = Intent(applicationContext, GameOptions::class.java)
 
             i.putExtra("type", "local")
@@ -132,6 +146,8 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         playButton?.setOnClickListener {
+            buttonClick?.start()
+
             val i = Intent(applicationContext, LocalGame::class.java)
 
             if (intent.getBooleanExtra("hasCustomSettings", false)) {

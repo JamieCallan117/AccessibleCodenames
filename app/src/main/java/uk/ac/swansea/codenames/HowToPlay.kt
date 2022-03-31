@@ -2,6 +2,7 @@ package uk.ac.swansea.codenames
 
 import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +26,7 @@ class HowToPlay : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
     private var textToSpeech: TextToSpeech? = null
+    private var buttonClick: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +43,14 @@ class HowToPlay : AppCompatActivity(), TextToSpeech.OnInitListener {
         howToPlayTitle = findViewById(R.id.howToPlayTitle)
         helpText = findViewById(R.id.helpText)
 
+        buttonClick = MediaPlayer.create(this, R.raw.buttonclick)
+
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        val soundFXVolume = preferences.getFloat("soundFXVolume", 0.5f)
+
+        buttonClick?.setVolume(soundFXVolume, soundFXVolume)
+
         textToSpeech = TextToSpeech(this, this)
 
         helpText?.setText(R.string.teams_help)
@@ -48,6 +58,8 @@ class HowToPlay : AppCompatActivity(), TextToSpeech.OnInitListener {
         updateColours()
 
         backButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             val i = Intent(applicationContext, MainMenu::class.java)
@@ -55,36 +67,48 @@ class HowToPlay : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         teamsHelp?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             helpText?.setText(R.string.teams_help)
         }
 
         spymasterHelp?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             helpText?.setText(R.string.spymaster_help)
         }
 
         hintsHelp?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             helpText?.setText(R.string.hints_help)
         }
 
         guessHelp?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             helpText?.setText(R.string.guessing_help)
         }
 
         squaresHelp?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             helpText?.setText(R.string.squares_help)
         }
 
         playingHelp?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             helpText?.setText(R.string.playing_help)

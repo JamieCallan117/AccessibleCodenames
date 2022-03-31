@@ -16,6 +16,7 @@
         android:paddingTop="28dp"
         android:paddingBottom="28dp"
         android:text="@string/back"
+        android:soundEffectsEnabled="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -357,6 +358,7 @@
         android:paddingBottom="28dp"
         android:text="@string/save"
         android:visibility="invisible"
+        android:soundEffectsEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -394,7 +396,8 @@
                 android:layout_weight="1"
                 android:minWidth="44dip"
                 android:text="@string/minus"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:soundEffectsEnabled="false" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/bombSquareCount"
@@ -413,7 +416,8 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:text="@string/plus"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:soundEffectsEnabled="false" />
 
         </LinearLayout>
 
@@ -437,7 +441,8 @@
                 android:layout_weight="1"
                 android:minWidth="44dip"
                 android:text="@string/minus"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:soundEffectsEnabled="false" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/neutralSquareCount"
@@ -454,7 +459,8 @@
                 android:layout_weight="1"
                 android:minWidth="44dip"
                 android:text="@string/plus"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:soundEffectsEnabled="false" />
 
         </LinearLayout>
 
@@ -507,7 +513,8 @@
                 android:layout_weight="1"
                 android:minWidth="44dip"
                 android:text="@string/minus"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:soundEffectsEnabled="false" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/teamASquaresCount"
@@ -524,7 +531,8 @@
                 android:layout_weight="1"
                 android:minWidth="44dip"
                 android:text="@string/plus"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:soundEffectsEnabled="false" />
         </LinearLayout>
 
         <TextView
@@ -547,7 +555,8 @@
                 android:layout_weight="1"
                 android:minWidth="44dip"
                 android:text="@string/minus"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:soundEffectsEnabled="false" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/teamBSquaresCount"
@@ -564,7 +573,8 @@
                 android:layout_weight="1"
                 android:minWidth="44dip"
                 android:text="@string/plus"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:soundEffectsEnabled="false" />
         </LinearLayout>
 
         <com.google.android.material.textview.MaterialTextView
@@ -625,6 +635,7 @@
             android:layout_marginBottom="10dp"
             android:text="@string/ok"
             android:textSize="20sp"
+            android:soundEffectsEnabled="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/noButton"
             app:layout_constraintStart_toEndOf="@id/yesButton"
@@ -639,6 +650,7 @@
             android:layout_marginBottom="10dp"
             android:text="@string/yes"
             android:textSize="20sp"
+            android:soundEffectsEnabled="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/okButton"
             app:layout_constraintStart_toStartOf="parent"
@@ -653,6 +665,7 @@
             android:layout_marginBottom="10dp"
             android:text="@string/no"
             android:textSize="20sp"
+            android:soundEffectsEnabled="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/okButton"

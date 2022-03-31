@@ -27,6 +27,7 @@
         android:paddingTop="28dp"
         android:paddingBottom="28dp"
         android:text="@string/back"
+        android:soundEffectsEnabled="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -62,42 +63,48 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/teams"
-                    android:textSize="30sp" />
+                    android:textSize="30sp"
+                    android:soundEffectsEnabled="false" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/spymasterHelp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/spymaster"
-                    android:textSize="30sp" />
+                    android:textSize="30sp"
+                    android:soundEffectsEnabled="false" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/hintsHelp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/hints"
-                    android:textSize="30sp" />
+                    android:textSize="30sp"
+                    android:soundEffectsEnabled="false" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/guessHelp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/guessing"
-                    android:textSize="30sp" />
+                    android:textSize="30sp"
+                    android:soundEffectsEnabled="false" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/squaresHelp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/squares"
-                    android:textSize="30sp" />
+                    android:textSize="30sp"
+                    android:soundEffectsEnabled="false" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/playingHelp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/playing"
-                    android:textSize="30sp" />
+                    android:textSize="30sp"
+                    android:soundEffectsEnabled="false" />
             </LinearLayout>
         </ScrollView>
 

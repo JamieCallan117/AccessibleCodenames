@@ -16,6 +16,7 @@
         android:paddingTop="28dp"
         android:paddingBottom="28dp"
         android:text="@string/back"
+        android:soundEffectsEnabled="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -56,6 +57,7 @@
         android:paddingEnd="55dp"
         android:paddingBottom="55dp"
         android:text="@string/play"
+        android:soundEffectsEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -68,6 +70,7 @@
         android:paddingTop="54dp"
         android:paddingBottom="55dp"
         android:text="@string/game_options"
+        android:soundEffectsEnabled="false"
         app:layout_constraintEnd_toStartOf="@+id/playButton"
         app:layout_constraintTop_toTopOf="parent" />
 

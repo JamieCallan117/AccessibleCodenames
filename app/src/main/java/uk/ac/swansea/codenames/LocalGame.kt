@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import android.os.Bundle
 import android.content.Intent
 import android.graphics.Paint
+import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
 import android.speech.tts.TextToSpeech
@@ -104,6 +105,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var wordCounter = 0
     private var maxTurns = 0
     private var textToSpeech: TextToSpeech? = null
+    private var buttonClick: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -143,9 +145,23 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         hidePreviousHints = findViewById(R.id.hidePreviousHints)
         scoreLinear = findViewById(R.id.scoreLinear)
 
-        textToSpeech = TextToSpeech(this, this)
+        buttonClick = MediaPlayer.create(this, R.raw.buttonclick)
 
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        val soundFXVolume = preferences.getFloat("soundFXVolume", 0.5f)
+
+        buttonClick?.setVolume(soundFXVolume, soundFXVolume)
+
+        textToSpeech = TextToSpeech(this, this)
+
+        val musicIntent = Intent(this, BackgroundMusicService::class.java)
+
+        musicIntent.action = "START_GAME"
+
+        stopService(musicIntent)
+
+        startService(musicIntent)
 
         if (!preferences.getBoolean("textToSpeech", true)) {
             ttsButton?.visibility = View.GONE
@@ -303,31 +319,130 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             counter++
         }
 
-        squareOne?.setOnClickListener { wordButtonPress(squareOne) }
-        squareTwo?.setOnClickListener { wordButtonPress(squareTwo) }
-        squareThree?.setOnClickListener { wordButtonPress(squareThree) }
-        squareFour?.setOnClickListener { wordButtonPress(squareFour) }
-        squareFive?.setOnClickListener { wordButtonPress(squareFive) }
-        squareSix?.setOnClickListener { wordButtonPress(squareSix) }
-        squareSeven?.setOnClickListener { wordButtonPress(squareSeven) }
-        squareEight?.setOnClickListener { wordButtonPress(squareEight) }
-        squareNine?.setOnClickListener { wordButtonPress(squareNine) }
-        squareTen?.setOnClickListener { wordButtonPress(squareTen) }
-        squareEleven?.setOnClickListener { wordButtonPress(squareEleven) }
-        squareTwelve?.setOnClickListener { wordButtonPress(squareTwelve) }
-        squareThirteen?.setOnClickListener { wordButtonPress(squareThirteen) }
-        squareFourteen?.setOnClickListener { wordButtonPress(squareFourteen) }
-        squareFifteen?.setOnClickListener { wordButtonPress(squareFifteen) }
-        squareSixteen?.setOnClickListener { wordButtonPress(squareSixteen) }
-        squareSeventeen?.setOnClickListener { wordButtonPress(squareSeventeen) }
-        squareEighteen?.setOnClickListener { wordButtonPress(squareEighteen) }
-        squareNineteen?.setOnClickListener { wordButtonPress(squareNineteen) }
-        squareTwenty?.setOnClickListener { wordButtonPress(squareTwenty) }
-        squareTwentyOne?.setOnClickListener { wordButtonPress(squareTwentyOne) }
-        squareTwentyTwo?.setOnClickListener { wordButtonPress(squareTwentyTwo) }
-        squareTwentyThree?.setOnClickListener { wordButtonPress(squareTwentyThree) }
-        squareTwentyFour?.setOnClickListener { wordButtonPress(squareTwentyFour) }
-        squareTwentyFive?.setOnClickListener { wordButtonPress(squareTwentyFive) }
+        squareOne?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareOne)
+        }
+
+        squareTwo?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareTwo)
+        }
+
+        squareThree?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareThree)
+        }
+
+        squareFour?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareFour)
+        }
+
+        squareFive?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareFive)
+        }
+
+        squareSix?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareSix)
+        }
+
+        squareSeven?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareSeven)
+        }
+
+        squareEight?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareEight)
+        }
+
+        squareNine?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareNine)
+        }
+
+        squareTen?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareTen)
+        }
+
+        squareEleven?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareEleven)
+        }
+
+        squareTwelve?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareTwelve)
+        }
+
+        squareThirteen?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareThirteen)
+        }
+
+        squareFourteen?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareFourteen)
+        }
+
+        squareFifteen?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareFifteen)
+        }
+
+        squareSixteen?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareSixteen)
+        }
+
+        squareSeventeen?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareSeventeen)
+        }
+
+        squareEighteen?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareEighteen)
+        }
+
+        squareNineteen?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareNineteen)
+        }
+
+        squareTwenty?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareTwenty)
+        }
+
+        squareTwentyOne?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareTwentyOne)
+        }
+
+        squareTwentyTwo?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareTwentyTwo)
+        }
+
+        squareTwentyThree?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareTwentyThree)
+        }
+
+        squareTwentyFour?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareTwentyFour)
+        }
+
+        squareTwentyFive?.setOnClickListener {
+            buttonClick?.start()
+            wordButtonPress(squareTwentyFive)
+        }
 
         squareOne?.setOnLongClickListener {
             speakOut(squareOne?.text.toString())
@@ -455,6 +570,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         gameOpToggleButton?.setOnClickListener {
+            buttonClick?.start()
+
             val wrapSpec: Int = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
             gameOperations?.measure(wrapSpec, wrapSpec)
 
@@ -478,6 +595,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         confirmButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             if (gamePhase == LocalPhase.TEAM_A || gamePhase == LocalPhase.TEAM_B || gamePhase == LocalPhase.TEAM_A_SPY || gamePhase == LocalPhase.TEAM_B_SPY) {
@@ -488,6 +607,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     LocalPhase.TEAM_B_INTERMISSION -> gamePhase = LocalPhase.TEAM_B_SPY
                     else -> {
                         val i = Intent(this, MainMenu::class.java)
+                        i.putExtra("startMusic", true)
                         startActivity(i)
                     }
                 }
@@ -515,6 +635,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         turnAction?.setOnClickListener {
+            buttonClick?.start()
+
             var validHint = true
 
             when (gamePhase) {
@@ -667,6 +789,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                 }
                 else -> {
                     val i = Intent(this, MainMenu::class.java)
+                    i.putExtra("startMusic", true)
                     startActivity(i)
                 }
             }
@@ -675,15 +798,21 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         noButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
             toggleMessageBox(false, 1)
         }
 
         ttsButton?.setOnClickListener {
+            buttonClick?.start()
+
             toggleTtsBox(true)
         }
 
         ttsAll?.setOnClickListener {
+            buttonClick?.start()
+
             var message = ""
 
             for (wb in wordButtons) {
@@ -696,6 +825,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         ttsA?.setOnClickListener {
+            buttonClick?.start()
+
             var message = ""
 
             if (gamePhase != LocalPhase.TEAM_A && gamePhase != LocalPhase.TEAM_B) {
@@ -726,6 +857,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         ttsB?.setOnClickListener {
+            buttonClick?.start()
+
             var message = ""
 
             if (gamePhase != LocalPhase.TEAM_A && gamePhase != LocalPhase.TEAM_B) {
@@ -756,6 +889,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         ttsNeutral?.setOnClickListener {
+            buttonClick?.start()
+
             var message = ""
             if (gamePhase != LocalPhase.TEAM_A && gamePhase != LocalPhase.TEAM_B) {
                 for (wb in wordButtons) {
@@ -785,6 +920,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         ttsBomb?.setOnClickListener {
+            buttonClick?.start()
+
             var message = ""
 
             if (gamePhase != LocalPhase.TEAM_A && gamePhase != LocalPhase.TEAM_B) {
@@ -815,6 +952,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         ttsUnmodified?.setOnClickListener {
+            buttonClick?.start()
+
             var message = ""
 
             for (wb in wordButtons) {
@@ -829,6 +968,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         ttsClicked?.setOnClickListener {
+            buttonClick?.start()
+
             var message = ""
 
             for (wb in wordButtons) {
@@ -846,24 +987,33 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             toggleTtsBox(false)
         }
 
-        closeTts?.setOnClickListener { toggleTtsBox(false) }
+        closeTts?.setOnClickListener {
+            buttonClick?.start()
+            toggleTtsBox(false)
+        }
 
         viewPreviousHints?.setOnClickListener {
+            buttonClick?.start()
+
             previousHintsScroll?.visibility = View.VISIBLE
             gameOpToggleButton?.visibility = View.INVISIBLE
             gameOperations?.visibility = View.INVISIBLE
         }
 
         hidePreviousHints?.setOnClickListener {
+            buttonClick?.start()
+
             previousHintsScroll?.visibility = View.INVISIBLE
             gameOperations?.visibility = View.VISIBLE
             gameOpToggleButton?.visibility = View.VISIBLE
         }
 
         exitButton?.setOnClickListener {
+            buttonClick?.start()
+
             if (gamePhase == LocalPhase.TEAM_A_WIN || gamePhase == LocalPhase.TEAM_B_WIN) {
                 val i = Intent(applicationContext, MainMenu::class.java)
-
+                i.putExtra("startMusic", true)
                 startActivity(i)
             } else {
                 messageText?.setText(R.string.exit_confirm)
@@ -873,9 +1023,12 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         yesButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             val i = Intent(applicationContext, MainMenu::class.java)
+            i.putExtra("startMusic", true)
             startActivity(i)
         }
 
@@ -1485,6 +1638,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
             else -> {
                 val i = Intent(this, MainMenu::class.java)
+                i.putExtra("startMusic", true)
                 startActivity(i)
             }
         }

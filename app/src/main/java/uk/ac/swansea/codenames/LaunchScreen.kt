@@ -2,6 +2,7 @@ package uk.ac.swansea.codenames
 
 import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -24,6 +25,7 @@ class LaunchScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var applicationBackgroundColour = -10921639
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
+    private var buttonClick: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,12 +37,25 @@ class LaunchScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
         ttsSwitch = findViewById(R.id.ttsSwitch)
         constraintLayout = findViewById(R.id.constraintLayout)
 
+        buttonClick = MediaPlayer.create(this, R.raw.buttonclick)
+
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        val soundFXVolume = preferences.getFloat("soundFXVolume", 0.5f)
+
+        buttonClick?.setVolume(soundFXVolume, soundFXVolume)
+
         textToSpeech = TextToSpeech(this, this)
 
-        val sharedPreferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
+        val editor = preferences.edit()
 
-        if (!sharedPreferences.getBoolean("firstLaunch", true)) {
+        if (!preferences.getBoolean("firstLaunch", true)) {
+            val musicIntent = Intent(this, BackgroundMusicService::class.java)
+
+            musicIntent.action = "START_MENU"
+
+            startService(musicIntent)
+
             val intent = Intent(applicationContext, StartScreen::class.java)
             startActivity(intent)
         } else {
@@ -64,6 +79,8 @@ class LaunchScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         continueButton?.setOnClickListener {
+            buttonClick?.start()
+
             editor.putBoolean("firstLaunch", false)
             editor.apply()
 

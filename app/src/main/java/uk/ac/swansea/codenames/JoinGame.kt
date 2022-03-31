@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import android.widget.LinearLayout
 import android.os.Bundle
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
 import android.speech.tts.TextToSpeech
@@ -42,6 +43,7 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var validJoin = false
     private var messageBoxOpen = false
     private var textToSpeech: TextToSpeech? = null
+    private var buttonClick: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,9 +64,15 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         okButton = findViewById(R.id.okButton)
         messageText = findViewById(R.id.messageText)
 
-        textToSpeech = TextToSpeech(this, this)
+        buttonClick = MediaPlayer.create(this, R.raw.buttonclick)
 
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        val soundFXVolume = preferences.getFloat("soundFXVolume", 0.5f)
+
+        buttonClick?.setVolume(soundFXVolume, soundFXVolume)
+
+        textToSpeech = TextToSpeech(this, this)
 
         username = preferences.getString("username", "")
 
@@ -73,6 +81,8 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         SocketConnection.socket.emit("getAllRooms")
 
         joinPrivateButton?.setOnClickListener {
+            buttonClick?.start()
+
             validJoin = true
 
             SocketConnection.socket.close()
@@ -112,11 +122,15 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         refreshButton?.setOnClickListener {
+            buttonClick?.start()
+
             scrollLinear?.removeAllViews()
             SocketConnection.socket.emit("getAllRooms")
         }
 
         backButton?.setOnClickListener {
+            buttonClick?.start()
+
             if (!messageBoxOpen) {
                 textToSpeech?.stop()
 
@@ -126,6 +140,8 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         okButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             messageBoxOpen = false
@@ -208,6 +224,7 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                         joinButton.text = name
                         joinButton.setTextColor(menuTextColour)
                         joinButton.setBackgroundColor(menuButtonsColour)
+                        joinButton.isSoundEffectsEnabled = false
 
                         val buttonParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
 
@@ -216,6 +233,8 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                         joinButton.layoutParams = buttonParams
 
                         joinButton.setOnClickListener {
+                            buttonClick?.start()
+
                             validJoin = true
 
                             SocketConnection.socket.close()

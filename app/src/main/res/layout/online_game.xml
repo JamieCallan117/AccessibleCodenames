@@ -77,6 +77,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="30dp"
                 android:text="@string/yes"
+                android:soundEffectsEnabled="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/okButton"
                 app:layout_constraintStart_toStartOf="parent"
@@ -91,6 +92,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="30dp"
                 android:text="@string/ok"
+                android:soundEffectsEnabled="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/noButton"
                 app:layout_constraintStart_toEndOf="@id/yesButton"
@@ -105,6 +107,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="30dp"
                 android:text="@string/no"
+                android:soundEffectsEnabled="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/okButton"
@@ -153,6 +156,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="30dp"
                 android:text="@string/team_a"
+                android:soundEffectsEnabled="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/teamBButton"
                 app:layout_constraintStart_toStartOf="parent"
@@ -167,6 +171,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="30dp"
                 android:text="@string/team_b"
+                android:soundEffectsEnabled="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/teamAButton"
@@ -195,6 +200,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:text="@string/close_str"
+                android:soundEffectsEnabled="false"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -295,6 +301,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="30dp"
                 android:text="@string/all_words"
+                android:soundEffectsEnabled="false"
                 app:layout_constraintBottom_toTopOf="@id/ttsBomb"
                 app:layout_constraintEnd_toStartOf="@id/ttsA"
                 app:layout_constraintStart_toStartOf="parent"
@@ -309,6 +316,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="30dp"
                 android:text="@string/team_a_words"
+                android:soundEffectsEnabled="false"
                 app:layout_constraintBottom_toTopOf="@id/ttsUnmodified"
                 app:layout_constraintEnd_toStartOf="@id/ttsB"
                 app:layout_constraintStart_toEndOf="@id/ttsAll"
@@ -323,6 +331,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="30dp"
                 android:text="@string/team_b_words"
+                android:soundEffectsEnabled="false"
                 app:layout_constraintBottom_toTopOf="@id/ttsClicked"
                 app:layout_constraintEnd_toStartOf="@id/ttsNeutral"
                 app:layout_constraintStart_toEndOf="@id/ttsA"
@@ -337,6 +346,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="30dp"
                 android:text="@string/neutral_words"
+                android:soundEffectsEnabled="false"
                 app:layout_constraintBottom_toTopOf="@id/closeTTS"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/ttsB"
@@ -351,6 +361,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="30dp"
                 android:text="@string/bomb_words"
+                android:soundEffectsEnabled="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/ttsUnmodified"
                 app:layout_constraintStart_toStartOf="parent"
@@ -365,6 +376,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="30dp"
                 android:text="@string/unmodified_words"
+                android:soundEffectsEnabled="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/ttsClicked"
                 app:layout_constraintStart_toEndOf="@id/ttsBomb"
@@ -379,6 +391,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="30dp"
                 android:text="@string/clicked_words"
+                android:soundEffectsEnabled="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/closeTTS"
                 app:layout_constraintStart_toEndOf="@id/ttsUnmodified"
@@ -393,6 +406,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="30dp"
                 android:text="@string/close_str"
+                android:soundEffectsEnabled="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/ttsClicked"
@@ -422,7 +436,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
-                    android:text="@string/exit" />
+                    android:text="@string/exit"
+                    android:soundEffectsEnabled="false" />
 
                 <LinearLayout
                     android:id="@+id/scoreLinear"
@@ -463,7 +478,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:enabled="false"
-                    android:text="@string/start_game" />
+                    android:text="@string/start_game"
+                    android:soundEffectsEnabled="false" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/requestSpymaster"
@@ -471,7 +487,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:enabled="false"
-                    android:text="@string/request_spymaster" />
+                    android:text="@string/request_spymaster"
+                    android:soundEffectsEnabled="false" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/changeTeam"
@@ -479,7 +496,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:enabled="false"
-                    android:text="@string/change_team" />
+                    android:text="@string/change_team"
+                    android:soundEffectsEnabled="false" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/hintText"
@@ -516,7 +534,8 @@
                     android:layout_marginTop="8dp"
                     android:enabled="false"
                     android:text="@string/give_hint"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:soundEffectsEnabled="false" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/ttsButton"
@@ -524,7 +543,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:enabled="false"
-                    android:text="@string/text_to_speech_btn" />
+                    android:text="@string/text_to_speech_btn"
+                    android:soundEffectsEnabled="false" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/viewTeams"
@@ -532,7 +552,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:enabled="false"
-                    android:text="@string/view_teams" />
+                    android:text="@string/view_teams"
+                    android:soundEffectsEnabled="false" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/chatButton"
@@ -540,7 +561,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:enabled="false"
-                    android:text="@string/chat" />
+                    android:text="@string/chat"
+                    android:soundEffectsEnabled="false" />
             </LinearLayout>
         </ScrollView>
 
@@ -555,6 +577,7 @@
             android:paddingRight="8dp"
             android:paddingBottom="12dp"
             android:text="@string/close"
+            android:soundEffectsEnabled="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/gameOperations"
             app:layout_constraintTop_toTopOf="parent" />
@@ -587,6 +610,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toTopOf="@id/squareSix"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -599,6 +623,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toTopOf="@id/squareEleven"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -611,6 +636,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toTopOf="@id/squareSixteen"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -623,6 +649,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toTopOf="@id/squareTwentyOne"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -635,6 +662,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -654,6 +682,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toTopOf="@id/squareSeven"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -666,6 +695,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toTopOf="@id/squareTwelve"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -678,6 +708,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toTopOf="@id/squareSeventeen"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -690,6 +721,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toTopOf="@id/squareTwentyTwo"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -702,6 +734,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -721,6 +754,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toTopOf="@id/squareEight"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -733,6 +767,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toTopOf="@id/squareThirteen"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -745,6 +780,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toTopOf="@id/squareEighteen"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -757,6 +793,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toTopOf="@id/squareTwentyThree"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -769,6 +806,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -788,6 +826,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toTopOf="@id/squareNine"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -800,6 +839,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toTopOf="@id/squareFourteen"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -812,6 +852,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toTopOf="@id/squareNineteen"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -824,6 +865,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toTopOf="@id/squareTwentyFour"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -836,6 +878,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -855,6 +898,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toTopOf="@id/squareTen"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -867,6 +911,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toTopOf="@id/squareFifteen"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -879,6 +924,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toTopOf="@id/squareTwenty"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -891,6 +937,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toTopOf="@id/squareTwentyFive"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -903,6 +950,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:enabled="false"
+                    android:soundEffectsEnabled="false"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -932,6 +980,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:text="@string/close_str"
+            android:soundEffectsEnabled="false"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

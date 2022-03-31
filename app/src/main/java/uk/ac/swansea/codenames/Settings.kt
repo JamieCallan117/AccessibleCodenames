@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.os.Bundle
 import android.content.Intent
+import android.media.MediaPlayer
 import android.speech.tts.TextToSpeech
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.slider.Slider
@@ -31,6 +32,7 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var vibration = false
     private var textToSpeechBool = false
     private var textToSpeech: TextToSpeech? = null
+    private var buttonClick: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,11 +49,17 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
         vibrationSwitch = findViewById(R.id.vibrationSwitch)
         ttsSwitch = findViewById(R.id.ttsSwitch)
 
+        buttonClick = MediaPlayer.create(this, R.raw.buttonclick)
+
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        soundFXVolume = preferences.getFloat("soundFXVolume", 0.5f)
+
+        buttonClick?.setVolume(soundFXVolume, soundFXVolume)
+
         textToSpeech = TextToSpeech(this, this)
 
         updateColours()
-
-        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
         musicVolume = preferences.getFloat("musicVolume", 0.5f)
 
@@ -64,14 +72,12 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             val intent = Intent(this, BackgroundMusicService::class.java)
 
-            this.stopService(intent)
+            intent.action = "CHANGE_VOLUME"
 
-            this.startService(intent)
+            startService(intent)
         }
 
         musicVolumeSlider?.setLabelFormatter { value -> "${(value * 100f).toInt()}%" }
-
-        soundFXVolume = preferences.getFloat("soundFXVolume", 0.5f)
 
         soundFXVolumeSlider?.value = soundFXVolume
 
@@ -104,6 +110,8 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         backButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             val i: Intent
@@ -118,6 +126,8 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         colourButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             val i = Intent(applicationContext, ColourOptions::class.java)

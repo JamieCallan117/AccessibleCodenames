@@ -3,6 +3,7 @@ package uk.ac.swansea.codenames
 import android.content.Context
 import android.content.Intent
 import android.graphics.Paint
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -130,6 +131,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var gameOpOpen = true
 
     private var textToSpeech: TextToSpeech? = null
+    private var buttonClick: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -210,7 +212,23 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         squareTwentyFour = findViewById(R.id.squareTwentyFour)
         squareTwentyFive = findViewById(R.id.squareTwentyFive)
 
+        buttonClick = MediaPlayer.create(this, R.raw.buttonclick)
+
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        val soundFXVolume = preferences.getFloat("soundFXVolume", 0.5f)
+
+        buttonClick?.setVolume(soundFXVolume, soundFXVolume)
+
         textToSpeech = TextToSpeech(this, this)
+
+        val musicIntent = Intent(this, BackgroundMusicService::class.java)
+
+        musicIntent.action = "START_GAME"
+
+        stopService(musicIntent)
+
+        startService(musicIntent)
 
         wordButtons = arrayOf(
             squareOne, squareTwo, squareThree, squareFour, squareFive,
@@ -219,8 +237,6 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             squareSeventeen, squareEighteen, squareNineteen, squareTwenty, squareTwentyOne,
             squareTwentyTwo, squareTwentyThree, squareTwentyFour, squareTwentyFive
         )
-
-        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
         val username = if (preferences.getString("username", "").isNullOrEmpty()) {
             UUID.randomUUID().toString().replace("-", "").take(10)
@@ -248,15 +264,22 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         yesButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
             SocketConnection.socket.emit("leaveRoom")
             SocketConnection.socket.disconnect()
 
             val i = Intent(applicationContext, MainMenu::class.java)
+
+            i.putExtra("startMusic", true)
+
             startActivity(i)
         }
 
         noButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
             windowOpen = false
 
@@ -269,6 +292,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         okButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
             windowOpen = false
 
@@ -281,6 +306,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         teamAButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
             windowOpen = false
 
@@ -296,6 +323,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         teamBButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
             windowOpen = false
 
@@ -311,6 +340,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         closeTeamsBox?.setOnClickListener {
+            buttonClick?.start()
+
             windowOpen = false
 
             toggleWindow()
@@ -319,6 +350,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         exitButton?.setOnClickListener {
+            buttonClick?.start()
+
             windowOpen = true
 
             toggleWindow()
@@ -338,10 +371,14 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         startGame?.setOnClickListener {
+            buttonClick?.start()
+
             SocketConnection.socket.emit("startGame")
         }
 
         requestSpymaster?.setOnClickListener {
+            buttonClick?.start()
+
             SocketConnection.socket.emit(
                 "requestSpymaster",
                 player?.nickname,
@@ -351,6 +388,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         changeTeam?.setOnClickListener {
+            buttonClick?.start()
+
             if (player?.team == "A") {
                 SocketConnection.socket.emit("chooseTeam", player?.nickname, "B", roomName)
             } else {
@@ -359,6 +398,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         turnAction?.setOnClickListener {
+            buttonClick?.start()
+
             if (gamePhase == OnlinePhase.TEAM_A_SPY || gamePhase == OnlinePhase.TEAM_B_SPY) {
                 var validHint = true
 
@@ -432,6 +473,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         ttsButton?.setOnClickListener {
+            buttonClick?.start()
+
             windowOpen = true
 
             toggleWindow()
@@ -440,6 +483,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         viewTeams?.setOnClickListener {
+            buttonClick?.start()
+
             windowOpen = true
 
             toggleWindow()
@@ -450,11 +495,15 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         chatButton?.setOnClickListener {
+            buttonClick?.start()
+
             constraintLayout?.visibility = View.GONE
             chatWindow?.visibility = View.VISIBLE
         }
 
         gameOpToggleButton?.setOnClickListener {
+            buttonClick?.start()
+
             val wrapSpec: Int = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
             gameOperations?.measure(wrapSpec, wrapSpec)
 
@@ -483,6 +532,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         for (wb in wordButtons) {
             wb?.setOnClickListener {
+                buttonClick?.start()
+
                 if (gamePhase == OnlinePhase.TEAM_A && player?.team == "A" && !player?.isSpymaster!! && !wb.hasBeenClicked()) {
                     SocketConnection.socket.emit(
                         "wordButton",
@@ -502,11 +553,15 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         closeChat?.setOnClickListener {
+            buttonClick?.start()
+
             chatWindow?.visibility = View.GONE
             constraintLayout?.visibility = View.VISIBLE
         }
 
         sendChat?.setOnClickListener {
+            buttonClick?.start()
+
             val message = chatEdit?.text.toString()
 
             if (message != "") {
@@ -522,6 +577,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         ttsAll?.setOnClickListener {
+            buttonClick?.start()
+
             var message = ""
 
             for (wb in wordButtons) {
@@ -538,6 +595,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         ttsA?.setOnClickListener {
+            buttonClick?.start()
+
             var message = ""
 
             if (player?.isSpymaster == true && gamePhase != OnlinePhase.START) {
@@ -568,6 +627,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         ttsB?.setOnClickListener {
+            buttonClick?.start()
+
             var message = ""
 
             if (player?.isSpymaster == true && gamePhase != OnlinePhase.START) {
@@ -598,6 +659,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         ttsNeutral?.setOnClickListener {
+            buttonClick?.start()
+
             var message = ""
 
             if (player?.isSpymaster == true && gamePhase != OnlinePhase.START) {
@@ -628,6 +691,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         ttsBomb?.setOnClickListener {
+            buttonClick?.start()
+
             var message = ""
 
             if (player?.isSpymaster == true && gamePhase != OnlinePhase.START) {
@@ -658,6 +723,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         ttsUnmodified?.setOnClickListener {
+            buttonClick?.start()
+
             var message = ""
 
             for (wb in wordButtons) {
@@ -680,6 +747,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         ttsClicked?.setOnClickListener {
+            buttonClick?.start()
+
             var message = ""
 
             for (wb in wordButtons) {
@@ -702,6 +771,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         closeTTS?.setOnClickListener {
+            buttonClick?.start()
+
             windowOpen = false
 
             toggleWindow()
@@ -983,6 +1054,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             if (!player!!.isHost) {
                 val i = Intent(this, MainMenu::class.java)
                 i.putExtra("onlineClose", "The host has left the game.")
+                i.putExtra("startMusic", true)
                 startActivity(i)
             }
         }
@@ -1021,6 +1093,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             } else if (gamePhase != OnlinePhase.TEAM_A_WIN && gamePhase != OnlinePhase.TEAM_B_WIN) {
                 val i = Intent(this, MainMenu::class.java)
                 i.putExtra("onlineClose", "Team A's spymaster left the game.")
+                i.putExtra("startMusic", true)
                 startActivity(i)
             }
         }
@@ -1037,6 +1110,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             } else if (gamePhase != OnlinePhase.TEAM_A_WIN && gamePhase != OnlinePhase.TEAM_B_WIN) {
                 val i = Intent(this, MainMenu::class.java)
                 i.putExtra("onlineClose", "Team B's spymaster left the game.")
+                i.putExtra("startMusic", true)
                 startActivity(i)
             }
         }
@@ -1435,6 +1509,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     null -> {
                         val i = Intent(applicationContext, MainMenu::class.java)
                         i.putExtra("onlineClose", "Unknown error occurred")
+                        i.putExtra("startMusic", true)
                         startActivity(i)
                     }
                 }

@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.content.Intent
+import android.media.MediaPlayer
 import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.*
@@ -83,6 +84,7 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var windowOpen = false
     private val maxSquares = 25
     private var textToSpeech: TextToSpeech? = null
+    private var buttonClick: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -142,6 +144,14 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         gameOptionsTitle = findViewById(R.id.gameOptionsTitle)
         backButton = findViewById(R.id.backButton)
 
+        buttonClick = MediaPlayer.create(this, R.raw.buttonclick)
+
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        val soundFXVolume = preferences.getFloat("soundFXVolume", 0.5f)
+
+        buttonClick?.setVolume(soundFXVolume, soundFXVolume)
+
         textToSpeech = TextToSpeech(this, this)
 
         updateTotalSquares()
@@ -180,6 +190,8 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         teamASqrInc?.setOnClickListener {
+            buttonClick?.start()
+
             if (totalSquaresInUse != maxSquares) {
                 saveButton?.visibility = View.VISIBLE
                 hasCustomSettings = true
@@ -192,6 +204,8 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         teamASqrDec?.setOnClickListener {
+            buttonClick?.start()
+
             if (totalSquaresInUse >= 1 && teamASquares >= 2) {
                 saveButton?.visibility = View.VISIBLE
                 hasCustomSettings = true
@@ -204,6 +218,8 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         teamBSqrInc?.setOnClickListener {
+            buttonClick?.start()
+
             if (totalSquaresInUse != maxSquares) {
                 saveButton?.visibility = View.VISIBLE
                 hasCustomSettings = true
@@ -216,6 +232,8 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         teamBSqrDec?.setOnClickListener {
+            buttonClick?.start()
+
             if (totalSquaresInUse >= 1 && teamBSquares >= 2) {
                 saveButton?.visibility = View.VISIBLE
                 hasCustomSettings = true
@@ -228,6 +246,8 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         addBombsButton?.setOnClickListener {
+            buttonClick?.start()
+
             if (totalSquaresInUse != maxSquares) {
                 saveButton?.visibility = View.VISIBLE
                 hasCustomSettings = true
@@ -240,6 +260,8 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         subtractBombsButton?.setOnClickListener {
+            buttonClick?.start()
+
             if (totalSquaresInUse >= 1 && bombSquares >= 1) {
                 saveButton?.visibility = View.VISIBLE
                 hasCustomSettings = true
@@ -252,6 +274,8 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         addNeutralsButton?.setOnClickListener {
+            buttonClick?.start()
+
             if (totalSquaresInUse != maxSquares) {
                 saveButton?.visibility = View.VISIBLE
                 hasCustomSettings = true
@@ -263,6 +287,8 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }
         subtractNeutralsButton?.setOnClickListener {
+            buttonClick?.start()
+
             if (totalSquaresInUse >= 1 && neutralSquares >= 1) {
                 saveButton?.visibility = View.VISIBLE
                 hasCustomSettings = true
@@ -369,18 +395,59 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
             false
         }
 
-        deleteCustomWord1?.setOnClickListener { customWordText1?.setText("") }
-        deleteCustomWord2?.setOnClickListener { customWordText2?.setText("") }
-        deleteCustomWord3?.setOnClickListener { customWordText3?.setText("") }
-        deleteCustomWord4?.setOnClickListener { customWordText4?.setText("") }
-        deleteCustomWord5?.setOnClickListener { customWordText5?.setText("") }
-        deleteCustomWord6?.setOnClickListener { customWordText6?.setText("") }
-        deleteCustomWord7?.setOnClickListener { customWordText7?.setText("") }
-        deleteCustomWord8?.setOnClickListener { customWordText8?.setText("") }
-        deleteCustomWord9?.setOnClickListener { customWordText9?.setText("") }
-        deleteCustomWord10?.setOnClickListener { customWordText10?.setText("") }
+        deleteCustomWord1?.setOnClickListener {
+            buttonClick?.start()
+            customWordText1?.setText("")
+        }
+
+        deleteCustomWord2?.setOnClickListener {
+            buttonClick?.start()
+            customWordText2?.setText("")
+        }
+
+        deleteCustomWord3?.setOnClickListener {
+            buttonClick?.start()
+            customWordText3?.setText("")
+        }
+
+        deleteCustomWord4?.setOnClickListener {
+            buttonClick?.start()
+            customWordText4?.setText("")
+        }
+
+        deleteCustomWord5?.setOnClickListener {
+            buttonClick?.start()
+            customWordText5?.setText("")
+        }
+
+        deleteCustomWord6?.setOnClickListener {
+            buttonClick?.start()
+            customWordText6?.setText("")
+        }
+
+        deleteCustomWord7?.setOnClickListener {
+            buttonClick?.start()
+            customWordText7?.setText("")
+        }
+
+        deleteCustomWord8?.setOnClickListener {
+            buttonClick?.start()
+            customWordText8?.setText("")
+        }
+
+        deleteCustomWord9?.setOnClickListener {
+            buttonClick?.start()
+            customWordText9?.setText("")
+        }
+
+        deleteCustomWord10?.setOnClickListener {
+            buttonClick?.start()
+            customWordText10?.setText("")
+        }
 
         backButton?.setOnClickListener {
+            buttonClick?.start()
+
             if (hasCustomSettings) {
                 toggleMessageBox(getString(R.string.exit_without_save), 1)
             } else {
@@ -389,6 +456,8 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         saveButton?.setOnClickListener {
+            buttonClick?.start()
+
             val i: Intent
             var error = ""
             var validSave = true
@@ -526,12 +595,16 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         okButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             toggleMessageBox("", 0)
         }
 
         yesButton?.setOnClickListener {
+            buttonClick?.start()
+
             val i: Intent
 
             if (intent.getStringExtra("type") == "local") {
@@ -590,6 +663,8 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         noButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             toggleMessageBox("", 0)

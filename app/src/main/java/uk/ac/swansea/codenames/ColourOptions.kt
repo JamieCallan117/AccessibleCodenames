@@ -7,6 +7,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import android.os.Bundle
 import android.content.Intent
 import android.graphics.Color
+import android.media.MediaPlayer
 import android.speech.tts.TextToSpeech
 import android.widget.Button
 import yuku.ambilwarna.AmbilWarnaDialog
@@ -36,6 +37,7 @@ class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
     private var textToSpeech: TextToSpeech? = null
+    private var buttonClick: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,12 +56,20 @@ class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         colourTitle = findViewById(R.id.colourTitle)
         constraintLayout = findViewById(R.id.constraintLayout)
 
-        textToSpeech = TextToSpeech(this, this)
+        buttonClick = MediaPlayer.create(this, R.raw.buttonclick)
 
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
+        val soundFXVolume = preferences.getFloat("soundFXVolume", 0.5f)
+
+        buttonClick?.setVolume(soundFXVolume, soundFXVolume)
+
+        textToSpeech = TextToSpeech(this, this)
+
         backButton?.setOnClickListener {
             textToSpeech?.stop()
+
+            buttonClick?.start()
 
             val i = Intent(applicationContext, Settings::class.java)
 
@@ -73,6 +83,8 @@ class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         resetColoursButton?.setOnClickListener {
+            buttonClick?.start()
+
             val editor = preferences!!.edit()
             editor.putInt("teamA", -16773377)
             editor.putInt("teamB", -65536)
@@ -87,14 +99,45 @@ class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
             updateColours()
         }
 
-        teamAButton?.setOnClickListener { openColourPicker("teamA") }
-        teamBButton?.setOnClickListener { openColourPicker("teamB") }
-        bombSquareButton?.setOnClickListener { openColourPicker("bomb") }
-        neutralSquareButton?.setOnClickListener { openColourPicker("neutral") }
-        unmodifiedSquareButton?.setOnClickListener { openColourPicker("unmodified") }
-        applicationBackgroundButton?.setOnClickListener { openColourPicker("applicationBackground") }
-        menuButtonsButton?.setOnClickListener { openColourPicker("menuButton") }
-        menuTextButton?.setOnClickListener { openColourPicker("menuText") }
+        teamAButton?.setOnClickListener {
+            buttonClick?.start()
+            openColourPicker("teamA")
+        }
+
+        teamBButton?.setOnClickListener {
+            buttonClick?.start()
+            openColourPicker("teamB")
+        }
+
+        bombSquareButton?.setOnClickListener {
+            buttonClick?.start()
+            openColourPicker("bomb")
+        }
+
+        neutralSquareButton?.setOnClickListener {
+            buttonClick?.start()
+            openColourPicker("neutral")
+        }
+
+        unmodifiedSquareButton?.setOnClickListener {
+            buttonClick?.start()
+            openColourPicker("unmodified")
+        }
+
+        applicationBackgroundButton?.setOnClickListener {
+            buttonClick?.start()
+            openColourPicker("applicationBackground")
+        }
+
+        menuButtonsButton?.setOnClickListener {
+            buttonClick?.start()
+            openColourPicker("menuButton")
+        }
+
+        menuTextButton?.setOnClickListener {
+            buttonClick?.start()
+            openColourPicker("menuText")
+        }
 
         backButton?.setOnLongClickListener {
             speakOut(backButton?.text.toString())

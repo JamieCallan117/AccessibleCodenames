@@ -60,6 +60,7 @@
         android:text="@string/continue_btn"
         android:textSize="26sp"
         android:visibility="invisible"
+        android:soundEffectsEnabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

@@ -65,10 +65,6 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         buttonClick?.setVolume(soundFXVolume, soundFXVolume)
 
-        val intent = Intent(this, BackgroundMusicService::class.java)
-
-        this.startService(intent)
-
         textToSpeech = TextToSpeech(this, this)
 
         playButton!!.setOnClickListener {

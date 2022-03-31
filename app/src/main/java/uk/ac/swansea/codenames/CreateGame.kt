@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.core.content.res.ResourcesCompat
 import org.json.JSONArray
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
 import android.speech.tts.TextToSpeech
@@ -46,6 +47,7 @@ class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var menuTextColour = -1
     private var textToSpeech: TextToSpeech? = null
     private var messageBoxOpen = false
+    private var buttonClick: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +71,14 @@ class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         messageBox = findViewById(R.id.messageBox)
         messageText = findViewById(R.id.messageText)
         okButton = findViewById(R.id.okButton)
+
+        buttonClick = MediaPlayer.create(this, R.raw.buttonclick)
+
+        val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        val soundFXVolume = preferences.getFloat("soundFXVolume", 0.5f)
+
+        buttonClick?.setVolume(soundFXVolume, soundFXVolume)
 
         textToSpeech = TextToSpeech(this, this)
 
@@ -122,6 +132,8 @@ class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         backButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             val i = Intent(applicationContext, OnlineSetup::class.java)
@@ -129,6 +141,8 @@ class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         gameOptionsButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             val i = Intent(applicationContext, GameOptions::class.java)
@@ -149,6 +163,8 @@ class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         createButton?.setOnClickListener {
+            buttonClick?.start()
+
             validGame = true
 
             backButton?.isEnabled = false
@@ -299,6 +315,8 @@ class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         okButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
             messageBox?.visibility = View.INVISIBLE
             messageBoxOpen = false

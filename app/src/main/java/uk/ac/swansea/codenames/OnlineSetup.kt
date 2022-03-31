@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.os.Bundle
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
 import android.speech.tts.TextToSpeech
@@ -32,6 +33,7 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var connectingBoxOpen = true
     private var textToSpeech: TextToSpeech? = null
     private var messageType = 0
+    private var buttonClick: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,9 +51,15 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         messageText = findViewById(R.id.messageText)
         okButton = findViewById(R.id.okButton)
 
-        textToSpeech = TextToSpeech(this, this)
+        buttonClick = MediaPlayer.create(this, R.raw.buttonclick)
 
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+        val soundFXVolume = preferences.getFloat("soundFXVolume", 0.5f)
+
+        buttonClick?.setVolume(soundFXVolume, soundFXVolume)
+
+        textToSpeech = TextToSpeech(this, this)
 
         var username = preferences.getString("username", "")
 
@@ -63,6 +71,8 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         toggleMessageBox()
         
         okButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             if (messageType == 0) {
@@ -80,6 +90,8 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         backButton?.setOnClickListener {
+            buttonClick?.start()
+
             textToSpeech?.stop()
 
             val editor = preferences!!.edit()
@@ -92,6 +104,8 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         createGameButton?.setOnClickListener {
+            buttonClick?.start()
+
             username = usernameEdit?.text.toString().replace(" ", "")
 
             if (username == "") {
@@ -115,6 +129,8 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         joinGameButton?.setOnClickListener {
+            buttonClick?.start()
+
             username = usernameEdit?.text.toString().replace(" ", "")
 
             if (username == "") {
