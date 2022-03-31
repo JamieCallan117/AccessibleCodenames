@@ -106,6 +106,10 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var maxTurns = 0
     private var textToSpeech: TextToSpeech? = null
     private var buttonClick: MediaPlayer? = null
+    private var correctGuess: MediaPlayer? = null
+    private var incorrectGuess: MediaPlayer? = null
+    private var winSound: MediaPlayer? = null
+    private var lossSound: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -145,12 +149,20 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         hidePreviousHints = findViewById(R.id.hidePreviousHints)
         scoreLinear = findViewById(R.id.scoreLinear)
 
+        correctGuess = MediaPlayer.create(this, R.raw.buttonclick)
+        incorrectGuess = MediaPlayer.create(this, R.raw.buttonclick)
+        winSound = MediaPlayer.create(this, R.raw.buttonclick)
+        lossSound = MediaPlayer.create(this, R.raw.buttonclick)
         buttonClick = MediaPlayer.create(this, R.raw.buttonclick)
 
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
         val soundFXVolume = preferences.getFloat("soundFXVolume", 0.5f)
 
+        correctGuess?.setVolume(soundFXVolume, soundFXVolume)
+        incorrectGuess?.setVolume(soundFXVolume, soundFXVolume)
+        winSound?.setVolume(soundFXVolume, soundFXVolume)
+        lossSound?.setVolume(soundFXVolume, soundFXVolume)
         buttonClick?.setVolume(soundFXVolume, soundFXVolume)
 
         textToSpeech = TextToSpeech(this, this)
@@ -1212,6 +1224,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     teamACount?.paintFlags = teamACount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
                     teamBCount?.paintFlags = teamBCount?.paintFlags?.and(Paint.UNDERLINE_TEXT_FLAG.inv())!!
 
+                    lossSound?.start()
+
                     gameWin()
                 }
 
@@ -1267,6 +1281,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     if (teamASquaresCount == 0) {
                         gamePhase = LocalPhase.TEAM_A_WIN
 
+                        winSound?.start()
+
                         gameWin()
                     } else if (maxTurns == wordCounter) {
                         Handler(Looper.getMainLooper()).postDelayed({
@@ -1309,6 +1325,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                     if (teamBSquaresCount == 0) {
                         gamePhase = LocalPhase.TEAM_B_WIN
+
+                        winSound?.start()
 
                         gameWin()
                     } else if (maxTurns == wordCounter) {

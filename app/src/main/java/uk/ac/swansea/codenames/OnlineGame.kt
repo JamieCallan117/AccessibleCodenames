@@ -132,6 +132,10 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private var textToSpeech: TextToSpeech? = null
     private var buttonClick: MediaPlayer? = null
+    private var correctGuess: MediaPlayer? = null
+    private var incorrectGuess: MediaPlayer? = null
+    private var winSound: MediaPlayer? = null
+    private var lossSound: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -212,12 +216,20 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         squareTwentyFour = findViewById(R.id.squareTwentyFour)
         squareTwentyFive = findViewById(R.id.squareTwentyFive)
 
+        correctGuess = MediaPlayer.create(this, R.raw.buttonclick)
+        incorrectGuess = MediaPlayer.create(this, R.raw.buttonclick)
+        winSound = MediaPlayer.create(this, R.raw.buttonclick)
+        lossSound = MediaPlayer.create(this, R.raw.buttonclick)
         buttonClick = MediaPlayer.create(this, R.raw.buttonclick)
 
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
         val soundFXVolume = preferences.getFloat("soundFXVolume", 0.5f)
 
+        correctGuess?.setVolume(soundFXVolume, soundFXVolume)
+        incorrectGuess?.setVolume(soundFXVolume, soundFXVolume)
+        winSound?.setVolume(soundFXVolume, soundFXVolume)
+        lossSound?.setVolume(soundFXVolume, soundFXVolume)
         buttonClick?.setVolume(soundFXVolume, soundFXVolume)
 
         textToSpeech = TextToSpeech(this, this)
@@ -1378,6 +1390,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     "A" -> {
                         buttonClicked?.setHasBeenClicked(true)
                         if (gamePhase == OnlinePhase.TEAM_B) {
+                            incorrectGuess?.start()
+
                             turnEnded = true
 
                             gamePhase = OnlinePhase.TEAM_A_SPY
@@ -1393,6 +1407,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                                 hintNumber?.visibility = View.GONE
                                 turnAction?.visibility = View.GONE
                             }
+                        } else {
+                            correctGuess?.start()
                         }
 
                         teamAWordCount--
@@ -1411,6 +1427,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     "B" -> {
                         buttonClicked?.setHasBeenClicked(true)
                         if (gamePhase == OnlinePhase.TEAM_A) {
+                            incorrectGuess?.start()
+
                             turnEnded = true
                             gamePhase = OnlinePhase.TEAM_B_SPY
                             hintText?.visibility = View.GONE
@@ -1425,6 +1443,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                                 hintNumber?.visibility = View.GONE
                                 turnAction?.visibility = View.GONE
                             }
+                        } else {
+                            correctGuess?.start()
                         }
 
                         teamBWordCount--
@@ -1442,6 +1462,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                     "Neutral" -> {
                         buttonClicked?.setHasBeenClicked(true)
+
+                        incorrectGuess?.start()
 
                         if (gamePhase == OnlinePhase.TEAM_A) {
                             turnEnded = true
@@ -1494,6 +1516,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                     "Bomb" -> {
                         buttonClicked?.setHasBeenClicked(true)
+
+                        incorrectGuess?.start()
 
                         turnEnded = true
 
@@ -1771,14 +1795,18 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         if (winningTeam == "A") {
             if (player?.team == "A") {
                 messageText?.text = getString(R.string.team_a_win)
+                winSound?.start()
             } else {
                 messageText?.text = getString(R.string.team_b_loss)
+                lossSound?.start()
             }
         } else {
             if (player?.team == "B") {
                 messageText?.text = getString(R.string.team_b_win)
+                winSound?.start()
             } else {
                 messageText?.text = getString(R.string.team_a_loss)
+                lossSound?.start()
             }
         }
 
