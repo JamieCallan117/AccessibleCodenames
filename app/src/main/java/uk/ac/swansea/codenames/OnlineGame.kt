@@ -1821,12 +1821,14 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         toggleWindow()
 
-        messageBox?.visibility = View.VISIBLE
-        yesButton?.visibility = View.INVISIBLE
-        noButton?.visibility = View.INVISIBLE
-        okButton?.visibility = View.VISIBLE
+        Handler(Looper.getMainLooper()).postDelayed({
+            messageBox?.visibility = View.VISIBLE
+            yesButton?.visibility = View.INVISIBLE
+            noButton?.visibility = View.INVISIBLE
+            okButton?.visibility = View.VISIBLE
 
-        speakOut((messageText?.text.toString()))
+            speakOut((messageText?.text.toString()))
+        }, 1000)
 
         updateWordColours()
     }

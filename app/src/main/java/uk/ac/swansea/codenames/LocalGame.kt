@@ -1226,7 +1226,9 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                     lossSound?.start()
 
-                    gameWin()
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        gameWin()
+                    }, 1000)
                 }
 
                 "neutral" -> {
@@ -1257,7 +1259,9 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     messageText?.setText(R.string.spymaster_confirmation)
                     confirmButton?.setText(R.string.confirm)
 
-                    toggleMessageBox(true, 0)
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        toggleMessageBox(true, 0)
+                    }, 1000)
                 }
 
                 "teamA" -> {
@@ -1276,7 +1280,9 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                         outline?.setBackgroundColor(teamAColour)
 
-                        toggleMessageBox(true, 0)
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            toggleMessageBox(true, 0)
+                        }, 1000)
                     } else {
                         correctGuess?.start()
                     }
@@ -1289,7 +1295,9 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                         winSound?.start()
 
-                        gameWin()
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            gameWin()
+                        }, 1000)
                     } else if (maxTurns == wordCounter) {
                         Handler(Looper.getMainLooper()).postDelayed({
                             gamePhase = LocalPhase.TEAM_B_INTERMISSION
@@ -1325,7 +1333,9 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                         outline?.setBackgroundColor(teamBColour)
 
-                        toggleMessageBox(true, 0)
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            toggleMessageBox(true, 0)
+                        }, 1000)
                     } else {
                         correctGuess?.start()
                     }
@@ -1338,7 +1348,9 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                         winSound?.start()
 
-                        gameWin()
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            gameWin()
+                        }, 1000)
                     } else if (maxTurns == wordCounter) {
                         Handler(Looper.getMainLooper()).postDelayed({
                             gamePhase = LocalPhase.TEAM_A_INTERMISSION
