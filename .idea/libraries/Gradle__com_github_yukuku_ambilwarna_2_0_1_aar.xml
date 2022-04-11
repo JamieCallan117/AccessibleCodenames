@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.yukuku:ambilwarna:2.0.1@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/f87eb9e5afbd1a419f667ba59aac6a12/transformed/jetified-ambilwarna-2.0.1/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f87eb9e5afbd1a419f667ba59aac6a12/transformed/jetified-ambilwarna-2.0.1/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f87eb9e5afbd1a419f667ba59aac6a12/transformed/jetified-ambilwarna-2.0.1/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/cc55880542bb2d9e2decbc2dd93006a7/transformed/jetified-ambilwarna-2.0.1/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/cc55880542bb2d9e2decbc2dd93006a7/transformed/jetified-ambilwarna-2.0.1/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/cc55880542bb2d9e2decbc2dd93006a7/transformed/jetified-ambilwarna-2.0.1/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.yukuku/ambilwarna/2.0.1/d3cbd0f9c7d3b249246c049829f39a3c703521ac/ambilwarna-2.0.1-javadoc.jar!/" />

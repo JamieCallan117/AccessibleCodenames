@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -36,6 +37,8 @@ class LaunchScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
         welcomeText = findViewById(R.id.welcomeText)
         ttsSwitch = findViewById(R.id.ttsSwitch)
         constraintLayout = findViewById(R.id.constraintLayout)
+
+        Log.i("Test", "Launch screen onCreate")
 
         buttonClick = MediaPlayer.create(this, R.raw.buttonclick)
 
@@ -116,26 +119,6 @@ class LaunchScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         updateColours()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        val intent = Intent(this, BackgroundMusicService::class.java)
-
-        intent.action = "RESUME"
-
-        startService(intent)
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        val intent = Intent(this, BackgroundMusicService::class.java)
-
-        intent.action = "PAUSE"
-
-        startService(intent)
     }
 
     override fun onInit(status: Int) {

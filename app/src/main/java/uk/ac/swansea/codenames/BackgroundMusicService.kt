@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.IBinder
-import kotlin.properties.Delegates
 
 /**
  * This service allows for music to be played in the
@@ -13,6 +12,7 @@ import kotlin.properties.Delegates
 class BackgroundMusicService : Service() {
     private lateinit var player: MediaPlayer
     private var length: Int = 0
+
     override fun onBind(arg0: Intent): IBinder? {
 
         return null
@@ -37,11 +37,19 @@ class BackgroundMusicService : Service() {
         } else if (intent.action != null && intent.action.equals("CHANGE_VOLUME")) {
             player.setVolume(musicVolume, musicVolume)
         } else if (intent.action != null && intent.action.equals("PAUSE")) {
-            player.pause()
-            length = player.currentPosition
+            try {
+                player.pause()
+                length = player.currentPosition
+            } catch (e: IllegalStateException) {
+                e.printStackTrace()
+            }
         } else if (intent.action != null && intent.action.equals("RESUME")) {
-            player.seekTo(length)
-            player.start()
+            try {
+                player.seekTo(length)
+                player.start()
+            } catch (e: IllegalStateException) {
+                e.printStackTrace()
+            }
         }
 
         return START_STICKY
