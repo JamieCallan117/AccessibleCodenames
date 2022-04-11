@@ -37,18 +37,14 @@ class BackgroundMusicService : Service() {
         } else if (intent.action != null && intent.action.equals("CHANGE_VOLUME")) {
             player.setVolume(musicVolume, musicVolume)
         } else if (intent.action != null && intent.action.equals("PAUSE")) {
-            try {
+            if (!::player.isInitialized) {
                 player.pause()
                 length = player.currentPosition
-            } catch (e: IllegalStateException) {
-                e.printStackTrace()
             }
         } else if (intent.action != null && intent.action.equals("RESUME")) {
-            try {
+            if (!::player.isInitialized) {
                 player.seekTo(length)
                 player.start()
-            } catch (e: IllegalStateException) {
-                e.printStackTrace()
             }
         }
 
