@@ -145,4 +145,10 @@
     <string name="online_play_image">Online Play Image</string>
     <string name="settings_image">Settings Image</string>
     <string name="local_play_image">Local Play Image</string>
+    <string name="team_b_member">Team B Member..</string>
+    <string name="team_a_member">Team A Member..</string>
+    <string name="team_b_spymaster">Team B Spymaster..</string>
+    <string name="team_a_spymaster">Team A Spymaster..</string>
+    <string name="set_up_teams">Set up teams</string>
+    <string name="team_info">Add the spymaster and members of each team here.\n\nFor members, include a comma between each name.</string>
 </resources>

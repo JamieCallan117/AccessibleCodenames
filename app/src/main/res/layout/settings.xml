@@ -122,8 +122,12 @@
         android:layout_marginBottom="3dp"
         android:baselineAligned="false"
         android:gravity="center"
-        android:text="@string/colour_options"
+        android:paddingLeft="24dp"
+        android:paddingTop="16dp"
+        android:paddingRight="24dp"
+        android:paddingBottom="16dp"
         android:soundEffectsEnabled="false"
+        android:text="@string/colour_options"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

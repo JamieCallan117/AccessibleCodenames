@@ -13,11 +13,14 @@ import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.children
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
 import java.util.*
+import kotlin.collections.ArrayList
 
 class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var constraintLayout: ConstraintLayout? = null
+    private var setupTeamsBox: ConstraintLayout? = null
     private var customWordsLinear: LinearLayout? = null
     private var localSetupTitle: MaterialTextView? = null
     private var localSetupSubtitle: MaterialTextView? = null
@@ -27,21 +30,35 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var teamBSquaresText: MaterialTextView? = null
     private var startingTeamText: MaterialTextView? = null
     private var customWordsText: MaterialTextView? = null
+    private var teamsNote: MaterialTextView? = null
     private var backButton: MaterialButton? = null
     private var gameOptionsButton: MaterialButton? = null
     private var playButton: MaterialButton? = null
+    private var setupTeams: MaterialButton? = null
+    private var closeSetupTeams: MaterialButton? = null
+    private var teamASpymasterEdit: TextInputEditText? = null
+    private var teamBSpymasterEdit: TextInputEditText? = null
+    private var teamAMemberEdit: TextInputEditText? = null
+    private var teamBMemberEdit: TextInputEditText? = null
     private val customWordTexts = arrayOfNulls<TextView>(10)
     private var applicationBackgroundColour = -10921639
     private var menuButtonsColour = -8164501
     private var menuTextColour = -1
     private var textToSpeech: TextToSpeech? = null
     private var buttonClick: MediaPlayer? = null
+    private var teamsWindowOpen = false
+    private var teamsAdded = false
+    private var spymasterA = ""
+    private var spymasterB = ""
+    private var teamAMembers = ArrayList<String>()
+    private var teamBMembers = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.local_setup)
 
         constraintLayout = findViewById(R.id.constraintLayout)
+        setupTeamsBox = findViewById(R.id.setupTeamsBox)
         customWordsLinear = findViewById(R.id.customWordsLinear)
         localSetupTitle = findViewById(R.id.localSetupTitle)
         localSetupSubtitle = findViewById(R.id.localSetupSubtitle)
@@ -54,6 +71,13 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         backButton = findViewById(R.id.backButton)
         gameOptionsButton = findViewById(R.id.gameOptionsButton)
         playButton = findViewById(R.id.playButton)
+        setupTeams = findViewById(R.id.setupTeams)
+        closeSetupTeams = findViewById(R.id.closeSetupTeams)
+        teamsNote = findViewById(R.id.teamsNote)
+        teamASpymasterEdit = findViewById(R.id.teamASpymasterEdit)
+        teamBSpymasterEdit = findViewById(R.id.teamBSpymasterEdit)
+        teamAMemberEdit = findViewById(R.id.teamAMemberEdit)
+        teamBMemberEdit = findViewById(R.id.teamBMemberEdit)
 
         buttonClick = MediaPlayer.create(this, R.raw.buttonclick)
 
@@ -145,6 +169,28 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
             startActivity(i)
         }
 
+        setupTeams?.setOnClickListener {
+            buttonClick?.start()
+
+            teamsWindowOpen = true
+
+            toggleTeamsWindow()
+
+            setupTeamsBox?.visibility = View.VISIBLE
+        }
+
+        closeSetupTeams?.setOnClickListener {
+            buttonClick?.start()
+
+            teamsWindowOpen = false
+
+            toggleTeamsWindow()
+
+            setupTeamsBox?.visibility = View.GONE
+
+            addTeams()
+        }
+
         playButton?.setOnClickListener {
             buttonClick?.start()
 
@@ -160,6 +206,14 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
                 i.putExtra("teamBSquares", intent.getIntExtra("teamBSquares", 8))
                 i.putExtra("startingTeam", intent.getStringExtra("startingTeam"))
                 i.putStringArrayListExtra("customWords", intent.getStringArrayListExtra("customWords"))
+            }
+
+            if (teamsAdded) {
+                i.putExtra("hasTeams", true)
+                i.putExtra("spymasterA", spymasterA)
+                i.putExtra("spymasterB", spymasterB)
+                i.putExtra("teamAMembers", teamAMembers)
+                i.putExtra("teamBMembers", teamBMembers)
             }
 
             startActivity(i)
@@ -269,6 +323,39 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    private fun toggleTeamsWindow() {
+        backButton?.isEnabled = !teamsWindowOpen
+        gameOptionsButton?.isEnabled = !teamsWindowOpen
+        playButton?.isEnabled = !teamsWindowOpen
+        setupTeams?.isEnabled = !teamsWindowOpen
+    }
+
+    private fun addTeams() {
+        if (teamASpymasterEdit?.text.toString() == "" && teamBSpymasterEdit?.text.toString() == "" && teamAMemberEdit?.text.toString() == "" && teamBMemberEdit?.text.toString() == "") {
+            teamsAdded = false
+        } else {
+            if (teamASpymasterEdit?.text.toString() != "") {
+                spymasterA = teamASpymasterEdit?.text.toString()
+                teamsAdded = true
+            }
+
+            if (teamBSpymasterEdit?.text.toString() != "") {
+                spymasterB = teamBSpymasterEdit?.text.toString()
+                teamsAdded = true
+            }
+
+            if (teamAMemberEdit?.text.toString() != "") {
+                teamAMembers = teamAMemberEdit?.text.toString().split(",").toCollection(ArrayList())
+                teamsAdded = true
+            }
+
+            if (teamBMemberEdit?.text.toString() != "") {
+                teamBMembers = teamBMemberEdit?.text.toString().split(",").toCollection(ArrayList())
+                teamsAdded = true
+            }
+        }
+    }
+
     fun updateColours() {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -277,10 +364,13 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         menuTextColour = preferences.getInt("menuText", -1)
         
         constraintLayout?.setBackgroundColor(applicationBackgroundColour)
+        setupTeamsBox?.setBackgroundColor(applicationBackgroundColour)
 
         backButton?.setBackgroundColor(menuButtonsColour)
         gameOptionsButton?.setBackgroundColor(menuButtonsColour)
         playButton?.setBackgroundColor(menuButtonsColour)
+        setupTeams?.setBackgroundColor(menuButtonsColour)
+        closeSetupTeams?.setBackgroundColor(menuButtonsColour)
 
         localSetupTitle?.setTextColor(menuTextColour)
         localSetupSubtitle?.setTextColor(menuTextColour)
@@ -293,6 +383,9 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         backButton?.setTextColor(menuTextColour)
         gameOptionsButton?.setTextColor(menuTextColour)
         playButton?.setTextColor(menuTextColour)
+        setupTeams?.setTextColor(menuTextColour)
+        closeSetupTeams?.setTextColor(menuTextColour)
+        teamsNote?.setTextColor(menuTextColour)
 
         for (t in customWordTexts) {
             t?.setTextColor(menuTextColour)

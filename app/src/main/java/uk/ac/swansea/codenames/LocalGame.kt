@@ -18,6 +18,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
 import java.io.IOException
 import java.util.*
+import kotlin.collections.ArrayList
 
 class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var gamePhase: LocalPhase? = null
@@ -27,6 +28,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var teamBSquaresCount = 8
     private var startingTeam = "A"
     private var messageBoxOpen = false
+    private var teamsBoxOpen = false
     private var ttsOpen = false
     private var gameOpOpen = true
     private var customWords: ArrayList<String>? = null
@@ -40,6 +42,9 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var confirmButton: MaterialButton? = null
     private var turnAction: MaterialButton? = null
     private var ttsButton: MaterialButton? = null
+    private var viewTeams: MaterialButton? = null
+    private var closeTeamsBox: MaterialButton? = null
+    private var settingsButton: MaterialButton? = null
     private var viewPreviousHints: MaterialButton? = null
     private var hidePreviousHints: MaterialButton? = null
     private var yesButton: MaterialButton? = null
@@ -55,6 +60,8 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var closeTts: MaterialButton? = null
     private var teamACount: MaterialTextView? = null
     private var teamBCount: MaterialTextView? = null
+    private var teamAHeader: MaterialTextView? = null
+    private var teamBHeader: MaterialTextView? = null
     private var teamCounterLine: MaterialTextView? = null
     private var messageText: MaterialTextView? = null
     private var hintText: MaterialTextView? = null
@@ -62,8 +69,11 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var messageBox: ConstraintLayout? = null
     private var ttsBox: ConstraintLayout? = null
     private var constraintLayout: ConstraintLayout? = null
+    private var viewTeamsBox: ConstraintLayout? = null
     private var outline: ConstraintLayout? = null
     private var gameOperationsLinear: LinearLayout? = null
+    private var teamALinear: LinearLayout? = null
+    private var teamBLinear: LinearLayout? = null
     private var previousHintsLinear: LinearLayout? = null
     private var scoreLinear: LinearLayout? = null
     private var squareOne: WordButton? = null
@@ -117,6 +127,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         outline = findViewById(R.id.outline)
         constraintLayout = findViewById(R.id.constraintLayout)
+        viewTeamsBox = findViewById(R.id.viewTeamsBox)
         exitButton = findViewById(R.id.exitButton)
         messageBox = findViewById(R.id.messageBox)
         ttsBox = findViewById(R.id.ttsBox)
@@ -135,14 +146,21 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         closeTts = findViewById(R.id.closeTTS)
         teamACount = findViewById(R.id.teamACount)
         teamBCount = findViewById(R.id.teamBCount)
+        teamAHeader = findViewById(R.id.teamAHeader)
+        teamBHeader = findViewById(R.id.teamBHeader)
         teamCounterLine = findViewById(R.id.teamCounterLine)
         hintText = findViewById(R.id.hintText)
         editHint = findViewById(R.id.editHint)
         hintNumber = findViewById(R.id.hintNumber)
         turnAction = findViewById(R.id.turnAction)
         ttsButton = findViewById(R.id.ttsButton)
+        viewTeams = findViewById(R.id.viewTeams)
+        closeTeamsBox = findViewById(R.id.closeTeamsBox)
+        settingsButton = findViewById(R.id.settingsButton)
         viewPreviousHints = findViewById(R.id.viewPreviousHints)
         gameOperations = findViewById(R.id.gameOperations)
+        teamALinear = findViewById(R.id.teamALinear)
+        teamBLinear = findViewById(R.id.teamBLinear)
         gameOperationsLinear = findViewById(R.id.gameOperationsLinear)
         previousHintsScroll = findViewById(R.id.previousHintsScroll)
         previousHintsLinear = findViewById(R.id.previousHintsLinear)
@@ -191,6 +209,95 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             teamBSquaresCount = intent.getIntExtra("teamBSquares", 8)
             startingTeam = intent.getStringExtra("startingTeam").toString()
             customWords = intent.getStringArrayListExtra("customWords")
+        }
+
+        if (intent.getBooleanExtra("hasTeams", false)) {
+            val teamASpymaster = MaterialTextView(this)
+            val teamBSpymaster = MaterialTextView(this)
+
+            menuTextColour = preferences.getInt("menuTextColour", -1)
+
+            val params = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+
+            params.gravity = Gravity.CENTER
+
+            teamASpymaster.text = getString(R.string.spymaster_name, intent.getStringExtra("spymasterA"))
+            teamBSpymaster.text = getString(R.string.spymaster_name, intent.getStringExtra("spymasterB"))
+
+            teamASpymaster.layoutParams = params
+            teamBSpymaster.layoutParams = params
+
+            teamASpymaster.setTextColor(menuTextColour)
+            teamBSpymaster.setTextColor(menuTextColour)
+            teamASpymaster.textSize = 30f
+            teamBSpymaster.textSize = 30f
+
+            runOnUiThread {
+                teamALinear?.addView(teamASpymaster)
+                teamBLinear?.addView(teamBSpymaster)
+            }
+
+            teamASpymaster.setOnLongClickListener {
+                speakOut(teamASpymaster.text.toString())
+                true
+            }
+
+            teamBSpymaster.setOnLongClickListener {
+                speakOut(teamBSpymaster.text.toString())
+                true
+            }
+
+            val teamAMembers = intent.getStringArrayListExtra("teamAMembers")
+            val teamBMembers = intent.getStringArrayListExtra("teamBMembers")
+
+            if (teamAMembers != null) {
+                for (p in teamAMembers) {
+                    val newMember = MaterialTextView(this)
+
+                    newMember.text = p
+
+                    newMember.layoutParams = params
+
+                    newMember.setTextColor(menuTextColour)
+                    newMember.textSize = 30f
+
+                    runOnUiThread {
+                        teamALinear?.addView(newMember)
+                    }
+
+                    newMember.setOnLongClickListener {
+                        speakOut(newMember.text.toString())
+                        true
+                    }
+                }
+            }
+
+            if (teamBMembers != null) {
+                for (p in teamBMembers) {
+                    val newMember = MaterialTextView(this)
+
+                    newMember.text = p
+
+                    newMember.layoutParams = params
+
+                    newMember.setTextColor(menuTextColour)
+                    newMember.textSize = 30f
+
+                    runOnUiThread {
+                        teamBLinear?.addView(newMember)
+                    }
+
+                    newMember.setOnLongClickListener {
+                        speakOut(newMember.text.toString())
+                        true
+                    }
+                }
+            }
+        } else {
+            viewTeams?.visibility = View.GONE
         }
 
         bombWords = ArrayList(bombSquaresCount)
@@ -822,6 +929,26 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             toggleTtsBox(true)
         }
 
+        viewTeams?.setOnClickListener {
+            buttonClick?.start()
+
+            teamsBoxOpen = true
+
+            toggleTeamsBox()
+
+            viewTeamsBox?.visibility = View.VISIBLE
+        }
+
+        closeTeamsBox?.setOnClickListener {
+            buttonClick?.start()
+
+            teamsBoxOpen = false
+
+            toggleTeamsBox()
+
+            viewTeamsBox?.visibility = View.INVISIBLE
+        }
+
         ttsAll?.setOnClickListener {
             buttonClick?.start()
 
@@ -1034,6 +1161,12 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }
 
+        settingsButton?.setOnClickListener {
+            buttonClick?.start()
+
+            //Yoyo
+        }
+
         yesButton?.setOnClickListener {
             buttonClick?.start()
 
@@ -1075,6 +1208,21 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         ttsButton?.setOnLongClickListener {
             speakOut(getString(R.string.text_to_speech))
+            true
+        }
+
+        viewTeams?.setOnLongClickListener {
+            speakOut(viewTeams?.text.toString())
+            true
+        }
+
+        closeTeamsBox?.setOnLongClickListener {
+            speakOut(closeTeamsBox?.text.toString())
+            true
+        }
+
+        settingsButton?.setOnLongClickListener {
+            speakOut(settingsButton?.text.toString())
             true
         }
 
@@ -1155,6 +1303,51 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         closeTts?.setOnLongClickListener {
             speakOut(closeTts?.text.toString())
+            true
+        }
+
+        teamAHeader?.setOnLongClickListener {
+            var message = ""
+
+            message += "Team Ay members. \n"
+
+            for (i in 0 until teamALinear?.childCount!!) {
+                val member = teamALinear?.getChildAt(i) as MaterialTextView
+                var memberStr = member.text.toString()
+
+                val regex = Regex("[^A-Za-z0-9]")
+                memberStr = regex.replace(memberStr, "")
+
+                message += memberStr + "\n"
+            }
+
+            if (message == "Team Ay members. \n") {
+                message += getString(R.string.none_found)
+            }
+
+            speakOut(message)
+            true
+        }
+
+        teamBHeader?.setOnLongClickListener {
+            var message = ""
+
+            message += "Team B members. \n"
+
+            for (i in 0 until teamBLinear?.childCount!!) {
+                val member = teamBLinear?.getChildAt(i) as MaterialTextView
+                var memberStr = member.text.toString()
+                val regex = Regex("[^A-Za-z0-9]")
+                memberStr = regex.replace(memberStr, "")
+
+                message += memberStr + "\n"
+            }
+
+            if (message == "Team B members. \n") {
+                message += getString(R.string.none_found)
+            }
+
+            speakOut(message)
             true
         }
 
@@ -1439,6 +1632,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         hintNumber?.isEnabled = !enabled
         turnAction?.isEnabled = !enabled
         ttsButton?.isEnabled = !enabled
+        viewTeams?.isEnabled = !enabled
         viewPreviousHints?.isEnabled = !enabled
 
         if (type == 0) {
@@ -1470,7 +1664,23 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         hintNumber?.isEnabled = !enabled
         turnAction?.isEnabled = !enabled
         ttsButton?.isEnabled = !enabled
+        viewTeams?.isEnabled = !enabled
         viewPreviousHints?.isEnabled = !enabled
+    }
+
+    private fun toggleTeamsBox() {
+        for (wb in wordButtons) {
+            wb?.isEnabled = !teamsBoxOpen
+        }
+
+        gameOpToggleButton?.isEnabled = !teamsBoxOpen
+        exitButton?.isEnabled = !teamsBoxOpen
+        editHint?.isEnabled = !teamsBoxOpen
+        hintNumber?.isEnabled = !teamsBoxOpen
+        turnAction?.isEnabled = !teamsBoxOpen
+        ttsButton?.isEnabled = !teamsBoxOpen
+        viewTeams?.isEnabled = !teamsBoxOpen
+        viewPreviousHints?.isEnabled = !teamsBoxOpen
     }
 
     private fun addHint(hint: String?) {
@@ -1578,6 +1788,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         previousHintsScroll?.setBackgroundColor(applicationBackgroundColour)
         messageBox?.setBackgroundColor(applicationBackgroundColour)
         ttsBox?.setBackgroundColor(applicationBackgroundColour)
+        viewTeamsBox?.setBackgroundColor(applicationBackgroundColour)
 
         exitButton?.setBackgroundColor(menuButtonsColour)
         confirmButton?.setBackgroundColor(menuButtonsColour)
@@ -1591,6 +1802,9 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         ttsAll?.setBackgroundColor(menuButtonsColour)
         ttsClicked?.setBackgroundColor(menuButtonsColour)
         closeTts?.setBackgroundColor(menuButtonsColour)
+        viewTeams?.setBackgroundColor(menuButtonsColour)
+        closeTeamsBox?.setBackgroundColor(menuButtonsColour)
+        settingsButton?.setBackgroundColor(menuButtonsColour)
 
         exitButton?.setTextColor(menuTextColour)
         confirmButton?.setTextColor(menuTextColour)
@@ -1603,6 +1817,12 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         ttsButton?.setTextColor(menuTextColour)
         viewPreviousHints?.setTextColor(menuTextColour)
         hidePreviousHints?.setTextColor(menuTextColour)
+        viewTeams?.setTextColor(menuTextColour)
+        closeTeamsBox?.setTextColor(menuTextColour)
+        settingsButton?.setTextColor(menuTextColour)
+
+        teamAHeader?.setTextColor(teamAColour)
+        teamBHeader?.setTextColor(teamBColour)
 
         when (gamePhase) {
             LocalPhase.START, LocalPhase.TEAM_A_INTERMISSION, LocalPhase.TEAM_B_INTERMISSION -> {
