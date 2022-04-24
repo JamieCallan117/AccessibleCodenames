@@ -41,7 +41,6 @@
     <string name="unable_server">Unable to connect to server.</string>
     <string name="connecting_server">Connecting to server…</string>
     <string name="custom_words">Custom Words:</string>
-    <string name="reset">Reset</string>
     <string name="menu_text">Menu\n Text</string>
     <string name="menu_buttons">Menu\n Buttons</string>
     <string name="application_background">Application\n Background</string>
@@ -151,4 +150,10 @@
     <string name="team_a_spymaster">Team A Spymaster..</string>
     <string name="set_up_teams">Set up teams</string>
     <string name="team_info">Add the spymaster and members of each team here.\n\nFor members, include a comma between each name.</string>
+    <string name="options">Options</string>
+    <string name="reset">Reset</string>
+    <string name="load">Load</string>
+    <string name="slot_one">Slot 1</string>
+    <string name="slot_two">Slot 2</string>
+    <string name="slot_three">Slot 3</string>
 </resources>

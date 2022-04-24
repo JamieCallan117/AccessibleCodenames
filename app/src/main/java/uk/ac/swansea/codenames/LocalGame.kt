@@ -44,7 +44,6 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var ttsButton: MaterialButton? = null
     private var viewTeams: MaterialButton? = null
     private var closeTeamsBox: MaterialButton? = null
-    private var settingsButton: MaterialButton? = null
     private var viewPreviousHints: MaterialButton? = null
     private var hidePreviousHints: MaterialButton? = null
     private var yesButton: MaterialButton? = null
@@ -156,7 +155,6 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         ttsButton = findViewById(R.id.ttsButton)
         viewTeams = findViewById(R.id.viewTeams)
         closeTeamsBox = findViewById(R.id.closeTeamsBox)
-        settingsButton = findViewById(R.id.settingsButton)
         viewPreviousHints = findViewById(R.id.viewPreviousHints)
         gameOperations = findViewById(R.id.gameOperations)
         teamALinear = findViewById(R.id.teamALinear)
@@ -1161,12 +1159,6 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }
 
-        settingsButton?.setOnClickListener {
-            buttonClick?.start()
-
-            //Yoyo
-        }
-
         yesButton?.setOnClickListener {
             buttonClick?.start()
 
@@ -1218,11 +1210,6 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         closeTeamsBox?.setOnLongClickListener {
             speakOut(closeTeamsBox?.text.toString())
-            true
-        }
-
-        settingsButton?.setOnLongClickListener {
-            speakOut(settingsButton?.text.toString())
             true
         }
 
@@ -1804,7 +1791,6 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         closeTts?.setBackgroundColor(menuButtonsColour)
         viewTeams?.setBackgroundColor(menuButtonsColour)
         closeTeamsBox?.setBackgroundColor(menuButtonsColour)
-        settingsButton?.setBackgroundColor(menuButtonsColour)
 
         exitButton?.setTextColor(menuTextColour)
         confirmButton?.setTextColor(menuTextColour)
@@ -1819,7 +1805,6 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         hidePreviousHints?.setTextColor(menuTextColour)
         viewTeams?.setTextColor(menuTextColour)
         closeTeamsBox?.setTextColor(menuTextColour)
-        settingsButton?.setTextColor(menuTextColour)
 
         teamAHeader?.setTextColor(teamAColour)
         teamBHeader?.setTextColor(teamBColour)

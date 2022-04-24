@@ -451,16 +451,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="@string/previous_hints"
-                    android:soundEffectsEnabled="false" />
+                    android:enabled="false"
+                    android:soundEffectsEnabled="false"
+                    android:text="@string/previous_hints" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/settingsButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/settings"
-                    android:soundEffectsEnabled="false" />
             </LinearLayout>
         </ScrollView>
 

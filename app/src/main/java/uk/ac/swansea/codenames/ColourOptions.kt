@@ -2,31 +2,40 @@ package uk.ac.swansea.codenames
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.os.Bundle
 import android.content.Intent
 import android.graphics.Color
 import android.media.MediaPlayer
 import android.speech.tts.TextToSpeech
-import android.widget.Button
+import android.view.View
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textview.MaterialTextView
 import yuku.ambilwarna.AmbilWarnaDialog
 import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener
 import java.util.*
 
 class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
-    private var teamAButton: Button? = null
-    private var teamBButton: Button? = null
-    private var bombSquareButton: Button? = null
-    private var neutralSquareButton: Button? = null
-    private var unmodifiedSquareButton: Button? = null
-    private var applicationBackgroundButton: Button? = null
-    private var menuButtonsButton: Button? = null
-    private var menuTextButton: Button? = null
-    private var backButton: Button? = null
-    private var resetColoursButton: Button? = null
-    private var colourTitle: TextView? = null
+    private var teamAButton: MaterialButton? = null
+    private var teamBButton: MaterialButton? = null
+    private var bombSquareButton: MaterialButton? = null
+    private var neutralSquareButton: MaterialButton? = null
+    private var unmodifiedSquareButton: MaterialButton? = null
+    private var applicationBackgroundButton: MaterialButton? = null
+    private var menuButtonsButton: MaterialButton? = null
+    private var menuTextButton: MaterialButton? = null
+    private var backButton: MaterialButton? = null
+    private var optionsButton: MaterialButton? = null
+    private var closeOptionsButton: MaterialButton? = null
+    private var saveButton: MaterialButton? = null
+    private var loadButton: MaterialButton? = null
+    private var resetButton: MaterialButton? = null
+    private var slotOne: MaterialButton? = null
+    private var slotTwo: MaterialButton? = null
+    private var slotThree: MaterialButton? = null
+    private var colourTitle: MaterialTextView? = null
     private var constraintLayout: ConstraintLayout? = null
+    private var optionsBox: ConstraintLayout? = null
     private var defaultColour = 0
     private var teamAColour = -16773377
     private var teamBColour = -65536
@@ -38,6 +47,9 @@ class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var menuTextColour = -1
     private var textToSpeech: TextToSpeech? = null
     private var buttonClick: MediaPlayer? = null
+    private var optionsBoxOpen = false
+    private var saving = false
+    private var loading = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,9 +64,17 @@ class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         menuButtonsButton = findViewById(R.id.menuButtonsButton)
         menuTextButton = findViewById(R.id.menuTextButton)
         backButton = findViewById(R.id.backButton)
-        resetColoursButton = findViewById(R.id.resetColoursButton)
+        optionsButton = findViewById(R.id.optionsButton)
         colourTitle = findViewById(R.id.colourTitle)
         constraintLayout = findViewById(R.id.constraintLayout)
+        optionsBox = findViewById(R.id.optionsBox)
+        closeOptionsButton = findViewById(R.id.closeOptionsButton)
+        saveButton = findViewById(R.id.saveButton)
+        loadButton = findViewById(R.id.loadButton)
+        resetButton = findViewById(R.id.resetButton)
+        slotOne = findViewById(R.id.slotOne)
+        slotTwo = findViewById(R.id.slotTwo)
+        slotThree = findViewById(R.id.slotThree)
 
         buttonClick = MediaPlayer.create(this, R.raw.buttonclick)
 
@@ -82,8 +102,46 @@ class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
             startActivity(i)
         }
 
-        resetColoursButton?.setOnClickListener {
+        optionsButton?.setOnClickListener {
             buttonClick?.start()
+
+            optionsBoxOpen = true
+
+            toggleOptionsBox()
+
+            optionsBox?.visibility = View.VISIBLE
+
+
+        }
+
+        saveButton?.setOnClickListener {
+            buttonClick?.start()
+
+            saving = true
+            loading = false
+
+            saveButton?.alpha = 1.0f
+            loadButton?.alpha = 0.5f
+            resetButton?.alpha = 0.5f
+        }
+
+        loadButton?.setOnClickListener {
+            buttonClick?.start()
+
+            loading = true
+            saving = false
+
+            loadButton?.alpha = 1.0f
+            saveButton?.alpha = 0.5f
+            resetButton?.alpha = 0.5f
+        }
+
+        resetButton?.setOnClickListener {
+            buttonClick?.start()
+
+            saveButton?.alpha = 1.0f
+            resetButton?.alpha = 1.0f
+            loadButton?.alpha = 1.0f
 
             val editor = preferences!!.edit()
             editor.putInt("teamA", -16773377)
@@ -97,6 +155,185 @@ class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
             editor.apply()
 
             updateColours()
+        }
+
+        closeOptionsButton?.setOnClickListener {
+            buttonClick?.start()
+
+            optionsBoxOpen = false
+
+            toggleOptionsBox()
+
+            optionsBox?.visibility = View.GONE
+
+            saveButton?.alpha = 1.0f
+            resetButton?.alpha = 1.0f
+            loadButton?.alpha = 1.0f
+        }
+
+        slotOne?.setOnClickListener {
+            buttonClick?.start()
+
+            if (saving) {
+                teamAColour = preferences.getInt("teamA", -16773377)
+                teamBColour = preferences.getInt("teamB", -65536)
+                bombColour = preferences.getInt("bomb", -14342875)
+                neutralColour = preferences.getInt("neutral", -11731092)
+                unmodifiedColour = preferences.getInt("unmodified", -3684409)
+                applicationBackgroundColour = preferences.getInt("applicationBackground", -10921639)
+                menuButtonsColour = preferences.getInt("menuButton", -8164501)
+                menuTextColour = preferences.getInt("menuText", -1)
+
+                val editor = preferences!!.edit()
+                editor.putInt("teamA1", teamAColour)
+                editor.putInt("teamB1", teamBColour)
+                editor.putInt("bomb1", bombColour)
+                editor.putInt("neutral1", neutralColour)
+                editor.putInt("unmodified1", unmodifiedColour)
+                editor.putInt("applicationBackground1", applicationBackgroundColour)
+                editor.putInt("menuButton1", menuButtonsColour)
+                editor.putInt("menuText1", menuTextColour)
+                editor.apply()
+            } else if (loading) {
+                teamAColour = preferences.getInt("teamA1", -16773377)
+                teamBColour = preferences.getInt("teamB1", -65536)
+                bombColour = preferences.getInt("bomb1", -14342875)
+                neutralColour = preferences.getInt("neutral1", -11731092)
+                unmodifiedColour = preferences.getInt("unmodified1", -3684409)
+                applicationBackgroundColour = preferences.getInt("applicationBackground1", -10921639)
+                menuButtonsColour = preferences.getInt("menuButton1", -8164501)
+                menuTextColour = preferences.getInt("menuText1", -1)
+
+                val editor = preferences!!.edit()
+                editor.putInt("teamA", teamAColour)
+                editor.putInt("teamB", teamBColour)
+                editor.putInt("bomb", bombColour)
+                editor.putInt("neutral", neutralColour)
+                editor.putInt("unmodified", unmodifiedColour)
+                editor.putInt("applicationBackground", applicationBackgroundColour)
+                editor.putInt("menuButton", menuButtonsColour)
+                editor.putInt("menuText", menuTextColour)
+                editor.apply()
+
+                updateColours()
+            }
+
+            saveButton?.alpha = 1.0f
+            loadButton?.alpha = 1.0f
+            resetButton?.alpha = 1.0f
+
+            saving = false
+            loading = false
+        }
+
+        slotTwo?.setOnClickListener {
+            buttonClick?.start()
+
+            if (saving) {
+                teamAColour = preferences.getInt("teamA", -16773377)
+                teamBColour = preferences.getInt("teamB", -65536)
+                bombColour = preferences.getInt("bomb", -14342875)
+                neutralColour = preferences.getInt("neutral", -11731092)
+                unmodifiedColour = preferences.getInt("unmodified", -3684409)
+                applicationBackgroundColour = preferences.getInt("applicationBackground", -10921639)
+                menuButtonsColour = preferences.getInt("menuButton", -8164501)
+                menuTextColour = preferences.getInt("menuText", -1)
+
+                val editor = preferences!!.edit()
+                editor.putInt("teamA2", teamAColour)
+                editor.putInt("teamB2", teamBColour)
+                editor.putInt("bomb2", bombColour)
+                editor.putInt("neutral2", neutralColour)
+                editor.putInt("unmodified2", unmodifiedColour)
+                editor.putInt("applicationBackground2", applicationBackgroundColour)
+                editor.putInt("menuButton2", menuButtonsColour)
+                editor.putInt("menuText2", menuTextColour)
+                editor.apply()
+            } else if (loading) {
+                teamAColour = preferences.getInt("teamA2", -16773377)
+                teamBColour = preferences.getInt("teamB2", -65536)
+                bombColour = preferences.getInt("bomb2", -14342875)
+                neutralColour = preferences.getInt("neutral2", -11731092)
+                unmodifiedColour = preferences.getInt("unmodified2", -3684409)
+                applicationBackgroundColour = preferences.getInt("applicationBackground2", -10921639)
+                menuButtonsColour = preferences.getInt("menuButton2", -8164501)
+                menuTextColour = preferences.getInt("menuText2", -1)
+
+                val editor = preferences!!.edit()
+                editor.putInt("teamA", teamAColour)
+                editor.putInt("teamB", teamBColour)
+                editor.putInt("bomb", bombColour)
+                editor.putInt("neutral", neutralColour)
+                editor.putInt("unmodified", unmodifiedColour)
+                editor.putInt("applicationBackground", applicationBackgroundColour)
+                editor.putInt("menuButton", menuButtonsColour)
+                editor.putInt("menuText", menuTextColour)
+                editor.apply()
+
+                updateColours()
+            }
+
+            saveButton?.alpha = 1.0f
+            loadButton?.alpha = 1.0f
+            resetButton?.alpha = 1.0f
+
+            saving = false
+            loading = false
+        }
+
+        slotThree?.setOnClickListener {
+            buttonClick?.start()
+
+            if (saving) {
+                teamAColour = preferences.getInt("teamA", -16773377)
+                teamBColour = preferences.getInt("teamB", -65536)
+                bombColour = preferences.getInt("bomb", -14342875)
+                neutralColour = preferences.getInt("neutral", -11731092)
+                unmodifiedColour = preferences.getInt("unmodified", -3684409)
+                applicationBackgroundColour = preferences.getInt("applicationBackground", -10921639)
+                menuButtonsColour = preferences.getInt("menuButton", -8164501)
+                menuTextColour = preferences.getInt("menuText", -1)
+
+                val editor = preferences!!.edit()
+                editor.putInt("teamA3", teamAColour)
+                editor.putInt("teamB3", teamBColour)
+                editor.putInt("bomb3", bombColour)
+                editor.putInt("neutral3", neutralColour)
+                editor.putInt("unmodified3", unmodifiedColour)
+                editor.putInt("applicationBackground3", applicationBackgroundColour)
+                editor.putInt("menuButton3", menuButtonsColour)
+                editor.putInt("menuText3", menuTextColour)
+                editor.apply()
+            } else if (loading) {
+                teamAColour = preferences.getInt("teamA3", -16773377)
+                teamBColour = preferences.getInt("teamB3", -65536)
+                bombColour = preferences.getInt("bomb3", -14342875)
+                neutralColour = preferences.getInt("neutral3", -11731092)
+                unmodifiedColour = preferences.getInt("unmodified3", -3684409)
+                applicationBackgroundColour = preferences.getInt("applicationBackground3", -10921639)
+                menuButtonsColour = preferences.getInt("menuButton3", -8164501)
+                menuTextColour = preferences.getInt("menuText3", -1)
+
+                val editor = preferences!!.edit()
+                editor.putInt("teamA", teamAColour)
+                editor.putInt("teamB", teamBColour)
+                editor.putInt("bomb", bombColour)
+                editor.putInt("neutral", neutralColour)
+                editor.putInt("unmodified", unmodifiedColour)
+                editor.putInt("applicationBackground", applicationBackgroundColour)
+                editor.putInt("menuButton", menuButtonsColour)
+                editor.putInt("menuText", menuTextColour)
+                editor.apply()
+
+                updateColours()
+            }
+
+            saveButton?.alpha = 1.0f
+            loadButton?.alpha = 1.0f
+            resetButton?.alpha = 1.0f
+
+            saving = false
+            loading = false
         }
 
         teamAButton?.setOnClickListener {
@@ -144,8 +381,43 @@ class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
             true
         }
 
-        resetColoursButton?.setOnLongClickListener {
-            speakOut(resetColoursButton?.text.toString())
+        optionsButton?.setOnLongClickListener {
+            speakOut(optionsButton?.text.toString())
+            true
+        }
+
+        closeOptionsButton?.setOnLongClickListener {
+            speakOut(closeOptionsButton?.text.toString())
+            true
+        }
+
+        saveButton?.setOnLongClickListener {
+            speakOut(saveButton?.text.toString())
+            true
+        }
+
+        loadButton?.setOnLongClickListener {
+            speakOut(loadButton?.text.toString())
+            true
+        }
+
+        resetButton?.setOnLongClickListener {
+            speakOut(resetButton?.text.toString())
+            true
+        }
+
+        slotOne?.setOnLongClickListener {
+            speakOut(slotOne?.text.toString())
+            true
+        }
+
+        slotTwo?.setOnLongClickListener {
+            speakOut(slotTwo?.text.toString())
+            true
+        }
+
+        slotThree?.setOnLongClickListener {
+            speakOut(slotThree?.text.toString())
             true
         }
 
@@ -235,6 +507,19 @@ class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    private fun toggleOptionsBox() {
+        backButton?.isEnabled = !optionsBoxOpen
+        optionsButton?.isEnabled = !optionsBoxOpen
+        teamAButton?.isEnabled = !optionsBoxOpen
+        teamBButton?.isEnabled = !optionsBoxOpen
+        bombSquareButton?.isEnabled = !optionsBoxOpen
+        neutralSquareButton?.isEnabled = !optionsBoxOpen
+        unmodifiedSquareButton?.isEnabled = !optionsBoxOpen
+        applicationBackgroundButton?.isEnabled = !optionsBoxOpen
+        menuButtonsButton?.isEnabled = !optionsBoxOpen
+        menuTextButton?.isEnabled = !optionsBoxOpen
+    }
+
     fun updateColours() {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -274,15 +559,32 @@ class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         applicationBackgroundButton?.setTextColor(applicationBackgroundColourNegative)
         applicationBackgroundButton?.setBackgroundColor(applicationBackgroundColour)
         constraintLayout?.setBackgroundColor(applicationBackgroundColour)
+        optionsBox?.setBackgroundColor(applicationBackgroundColour)
 
         menuButtonsButton?.setTextColor(menuButtonsColourNegative)
         menuButtonsButton?.setBackgroundColor(menuButtonsColour)
         backButton?.setBackgroundColor(menuButtonsColour)
-        resetColoursButton?.setBackgroundColor(menuButtonsColour)
+        optionsButton?.setBackgroundColor(menuButtonsColour)
+        closeOptionsButton?.setBackgroundColor(menuButtonsColour)
+        saveButton?.setBackgroundColor(menuButtonsColour)
+        loadButton?.setBackgroundColor(menuButtonsColour)
+        resetButton?.setBackgroundColor(menuButtonsColour)
+        slotOne?.setBackgroundColor(menuButtonsColour)
+        slotTwo?.setBackgroundColor(menuButtonsColour)
+        slotThree?.setBackgroundColor(menuButtonsColour)
 
         menuTextButton?.setTextColor(menuTextColourNegative)
         menuTextButton?.setBackgroundColor(menuTextColour)
         colourTitle?.setTextColor(menuTextColour)
+        backButton?.setTextColor(menuTextColour)
+        optionsButton?.setTextColor(menuTextColour)
+        closeOptionsButton?.setTextColor(menuTextColour)
+        saveButton?.setTextColor(menuTextColour)
+        loadButton?.setTextColor(menuTextColour)
+        resetButton?.setTextColor(menuTextColour)
+        slotOne?.setTextColor(menuTextColour)
+        slotTwo?.setTextColor(menuTextColour)
+        slotThree?.setTextColor(menuTextColour)
     }
 
     private fun openColourPicker(colourToChange: String?) {
