@@ -15,6 +15,11 @@ import yuku.ambilwarna.AmbilWarnaDialog
 import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener
 import java.util.*
 
+/**
+ * On this scene you can choose the colours of all the elements in the app.
+ * There are 3 save slots you can save to/load from and you can reset back to
+ * default if you wish.
+ */
 class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var teamAButton: MaterialButton? = null
     private var teamBButton: MaterialButton? = null
@@ -51,6 +56,9 @@ class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var saving = false
     private var loading = false
 
+    /**
+     * Load the scene and set up listeners for all elements.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.colour_options)
@@ -469,6 +477,9 @@ class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         updateColours()
     }
 
+    /**
+     * When app is reopened after being minimised.
+     */
     override fun onResume() {
         super.onResume()
 
@@ -479,6 +490,9 @@ class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         startService(intent)
     }
 
+    /**
+     * When app is minimised.
+     */
     override fun onPause() {
         super.onPause()
 
@@ -489,16 +503,25 @@ class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         startService(intent)
     }
 
+    /**
+     * Sets up Text-to-Speech engine.
+     */
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             textToSpeech!!.language = Locale.UK
         }
     }
 
+    /**
+     * When device back button clicked.
+     */
     override fun onBackPressed() {
         backButton?.performClick()
     }
 
+    /**
+     * Read aloud given message if Text-to-Speech enabled.
+     */
     private fun speakOut(message : String) {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -507,6 +530,9 @@ class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Disables all elements when the options box appears.
+     */
     private fun toggleOptionsBox() {
         backButton?.isEnabled = !optionsBoxOpen
         optionsButton?.isEnabled = !optionsBoxOpen
@@ -520,6 +546,9 @@ class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         menuTextButton?.isEnabled = !optionsBoxOpen
     }
 
+    /**
+     * Updates the colours of all elements in the layout.
+     */
     fun updateColours() {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -532,6 +561,7 @@ class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         menuButtonsColour = preferences.getInt("menuButton", -8164501)
         menuTextColour = preferences.getInt("menuText", -1)
 
+        //Calculates the negative of each colour to use as the text on the buttons so it's readable.
         val teamAColourNegative = Color.rgb(255 - Color.red(teamAColour), 255 - Color.green(teamAColour), 255 - Color.blue(teamAColour))
         val teamBColourNegative = Color.rgb(255 - Color.red(teamBColour), 255 - Color.green(teamBColour), 255 - Color.blue(teamBColour))
         val bombColourNegative = Color.rgb(255 - Color.red(bombColour), 255 - Color.green(bombColour), 255 - Color.blue(bombColour))
@@ -587,10 +617,16 @@ class ColourOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         slotThree?.setTextColor(menuTextColour)
     }
 
+    /**
+     * Opens the colour picker.
+     */
     private fun openColourPicker(colourToChange: String?) {
         val ambilWarnaDialog = AmbilWarnaDialog(this, defaultColour, object : OnAmbilWarnaListener {
             override fun onCancel(dialog: AmbilWarnaDialog) {}
 
+            /**
+             * Applies the chosen colour.
+             */
             override fun onOk(dialog: AmbilWarnaDialog, color: Int) {
                 val preferences = applicationContext.getSharedPreferences("preferences", Context.MODE_PRIVATE)
                 val editor = preferences!!.edit()

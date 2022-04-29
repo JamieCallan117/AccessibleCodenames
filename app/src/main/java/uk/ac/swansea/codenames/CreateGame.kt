@@ -21,6 +21,9 @@ import com.google.android.material.textview.MaterialTextView
 import java.io.IOException
 import java.util.*
 
+/**
+ * Scene for creating a game lobby.
+ */
 class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var constraintLayout: ConstraintLayout? = null
     private var messageBox: ConstraintLayout? = null
@@ -49,6 +52,9 @@ class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var messageBoxOpen = false
     private var buttonClick: MediaPlayer? = null
 
+    /**
+     * Sets up the layout and listeners for all the elements.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.create_game)
@@ -95,6 +101,7 @@ class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         startingTeamText?.text = getString(R.string.starting_team, startingTeam)
 
+        //If custom words were added, display them.
         if (intent.getStringArrayListExtra("customWords") != null && intent.getStringArrayListExtra("customWords")!!.isNotEmpty()) {
             customWordsText?.visibility = View.VISIBLE
 
@@ -162,6 +169,7 @@ class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             startActivity(i)
         }
 
+        //Check if game is valid then emit event to server for final checks.
         createButton?.setOnClickListener {
             buttonClick?.start()
 
@@ -173,8 +181,6 @@ class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             roomNameEdit?.isEnabled = false
             passwordEdit?.isEnabled = false
             privateSwitch?.isEnabled = false
-
-            val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
             val username = preferences.getString("username", "")
 
@@ -410,6 +416,9 @@ class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         updateColours()
     }
 
+    /**
+     * When app is reopened after being minimised.
+     */
     override fun onResume() {
         super.onResume()
 
@@ -420,6 +429,9 @@ class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         startService(intent)
     }
 
+    /**
+     * When app is minimised.
+     */
     override fun onPause() {
         super.onPause()
 
@@ -430,18 +442,27 @@ class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         startService(intent)
     }
 
+    /**
+     * Starts up Text-to-Speech engine.
+     */
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             textToSpeech!!.language = Locale.UK
         }
     }
 
+    /**
+     * When device back button pressed.
+     */
     override fun onBackPressed() {
         if (!messageBoxOpen) {
             backButton?.performClick()
         }
     }
 
+    /**
+     * Disables other elements and reads message aloud when message box opened.
+     */
     private fun toggleMessageBox(message: String) {
         messageBoxOpen = true
 
@@ -459,6 +480,9 @@ class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         privateSwitch?.isEnabled = false
     }
 
+    /**
+     * Reads aloud the given message.
+     */
     private fun speakOut(message : String) {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -467,6 +491,9 @@ class CreateGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Updates the colour of elements in the layout.
+     */
     private fun updateColours() {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 

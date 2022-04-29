@@ -7,7 +7,7 @@ import android.media.MediaPlayer
 import android.os.IBinder
 
 /**
- * This service allows for music to be played in the
+ * This service allows for music to be played in the background
  */
 class BackgroundMusicService : Service() {
     private lateinit var player: MediaPlayer
@@ -18,6 +18,9 @@ class BackgroundMusicService : Service() {
         return null
     }
 
+    /**
+     * Called when starting the service, pass in a tag for what action to do
+     */
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
         val musicVolume = preferences.getFloat("musicVolume", 0.5f)
@@ -37,21 +40,21 @@ class BackgroundMusicService : Service() {
         } else if (intent.action != null && intent.action.equals("CHANGE_VOLUME")) {
             player.setVolume(musicVolume, musicVolume)
         } else if (intent.action != null && intent.action.equals("PAUSE")) {
-            if (!::player.isInitialized) {
-                player.pause()
-                length = player.currentPosition
-            }
+            player.pause()
+            length = player.currentPosition
         } else if (intent.action != null && intent.action.equals("RESUME")) {
-            if (!::player.isInitialized) {
                 player.seekTo(length)
-                player.start()
-            }
+            player.start()
         }
 
         return START_STICKY
     }
 
+    /**
+     * When the service is stopped.
+     */
     override fun onDestroy() {
+        super.onDestroy()
         player.stop()
         player.release()
     }

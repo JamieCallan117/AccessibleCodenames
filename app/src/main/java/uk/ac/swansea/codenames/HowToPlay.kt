@@ -11,6 +11,9 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
 import java.util.*
 
+/**
+ * Displays the rules and how to play the game.
+ */
 class HowToPlay : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var backButton: MaterialButton? = null
     private var teamsHelp: MaterialButton? = null
@@ -28,6 +31,9 @@ class HowToPlay : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var textToSpeech: TextToSpeech? = null
     private var buttonClick: MediaPlayer? = null
 
+    /**
+     * Sets up layout and all listeners etc.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.how_to_play)
@@ -160,6 +166,9 @@ class HowToPlay : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * When app is resumed.
+     */
     override fun onResume() {
         super.onResume()
 
@@ -170,6 +179,9 @@ class HowToPlay : AppCompatActivity(), TextToSpeech.OnInitListener {
         startService(intent)
     }
 
+    /**
+     * When app is minimised.
+     */
     override fun onPause() {
         super.onPause()
 
@@ -180,16 +192,25 @@ class HowToPlay : AppCompatActivity(), TextToSpeech.OnInitListener {
         startService(intent)
     }
 
+    /**
+     * Sets up Text-to-Speech engine.
+     */
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             textToSpeech!!.language = Locale.UK
         }
     }
 
+    /**
+     * When device back button pressed.
+     */
     override fun onBackPressed() {
         backButton?.performClick()
     }
 
+    /**
+     * Reads aloud given message.
+     */
     private fun speakOut(message : String) {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -198,6 +219,9 @@ class HowToPlay : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Updates colours of elements in view.
+     */
     private fun updateColours() {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 

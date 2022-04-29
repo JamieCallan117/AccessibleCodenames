@@ -16,6 +16,9 @@ import com.google.android.material.textview.MaterialTextView
 import java.io.IOException
 import java.util.*
 
+/**
+ * Scene for customising game options.
+ */
 class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var constraintLayout: ConstraintLayout? = null
     private var messageBox: ConstraintLayout? = null
@@ -86,6 +89,9 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var textToSpeech: TextToSpeech? = null
     private var buttonClick: MediaPlayer? = null
 
+    /**
+     * Sets up the layout and all listeners for the elements.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.game_options)
@@ -159,6 +165,8 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         val customWordTexts = arrayOf(customWordText1, customWordText2, customWordText3,
             customWordText4, customWordText5, customWordText6, customWordText7,
             customWordText8, customWordText9, customWordText10)
+
+        //Sets value of options if they were previously changed.
 
         bombSquares = intent.getIntExtra("bombSquares", 1)
         bombSquareCount?.text = bombSquares.toString()
@@ -882,6 +890,9 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         updateColours()
     }
 
+    /**
+     * When app is resumed.
+     */
     override fun onResume() {
         super.onResume()
 
@@ -892,6 +903,9 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         startService(intent)
     }
 
+    /**
+     * When app is minimised.
+     */
     override fun onPause() {
         super.onPause()
 
@@ -902,12 +916,18 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         startService(intent)
     }
 
+    /**
+     * Sets up Text-to-Speech engine.
+     */
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             textToSpeech!!.language = Locale.UK
         }
     }
 
+    /**
+     * When device back button pressed.
+     */
     override fun onBackPressed() {
         if (windowOpen) {
             noButton?.performClick()
@@ -916,6 +936,9 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Opens/closes message box and displays given message.
+     */
     private fun toggleMessageBox(message: String, type: Int) {
         if (windowOpen) {
             messageBox?.visibility = View.GONE
@@ -971,10 +994,16 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         windowOpen = !windowOpen
     }
 
+    /**
+     * Updates the display counter for squares used.
+     */
     private fun updateTotalSquares() {
         squaresInUse?.text = getString(R.string.square_counter, totalSquaresInUse)
     }
 
+    /**
+     * Reads aloud given message if enabled.
+     */
     private fun speakOut(message: String) {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -983,6 +1012,9 @@ class GameOptions : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Updates colours of elements in layout.
+     */
     fun updateColours() {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 

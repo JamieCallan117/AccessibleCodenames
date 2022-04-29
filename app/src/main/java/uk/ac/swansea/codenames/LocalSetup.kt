@@ -18,6 +18,9 @@ import com.google.android.material.textview.MaterialTextView
 import java.util.*
 import kotlin.collections.ArrayList
 
+/**
+ * Setting up a local game.
+ */
 class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var constraintLayout: ConstraintLayout? = null
     private var setupTeamsBox: ConstraintLayout? = null
@@ -53,6 +56,9 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var teamAMembers = ArrayList<String>()
     private var teamBMembers = ArrayList<String>()
 
+    /**
+     * Sets up layout and listeners etc.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.local_setup)
@@ -89,6 +95,7 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         textToSpeech = TextToSpeech(this, this)
 
+        //Display settings for the game.
         bombSquaresText?.text = getString(R.string.bomb_squares, intent.getIntExtra("bombSquares", 1))
         neutralSquaresText?.text = getString(R.string.neutral_squares, intent.getIntExtra("neutralSquares", 7))
         teamASquaresText?.text = getString(R.string.team_a_squares, intent.getIntExtra("teamASquares", 9))
@@ -285,6 +292,9 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         updateColours()
     }
 
+    /**
+     * When app is resumed after being minimised.
+     */
     override fun onResume() {
         super.onResume()
 
@@ -295,6 +305,9 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         startService(intent)
     }
 
+    /**
+     * When app is minimised.
+     */
     override fun onPause() {
         super.onPause()
 
@@ -305,16 +318,25 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         startService(intent)
     }
 
+    /**
+     * Sets up Text-to-Speech engine
+     */
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             textToSpeech!!.language = Locale.UK
         }
     }
 
+    /**
+     * When device's back button pressed.
+     */
     override fun onBackPressed() {
         backButton?.performClick()
     }
 
+    /**
+     * Reads aloud given message.
+     */
     private fun speakOut(message: String) {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -323,6 +345,9 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Disables elements whilst teams window open.
+     */
     private fun toggleTeamsWindow() {
         backButton?.isEnabled = !teamsWindowOpen
         gameOptionsButton?.isEnabled = !teamsWindowOpen
@@ -330,6 +355,9 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         setupTeams?.isEnabled = !teamsWindowOpen
     }
 
+    /**
+     * Adds the team spymasters and members ready to be passed to the game scene.
+     */
     private fun addTeams() {
         if (teamASpymasterEdit?.text.toString() == "" && teamBSpymasterEdit?.text.toString() == "" && teamAMemberEdit?.text.toString() == "" && teamBMemberEdit?.text.toString() == "") {
             teamsAdded = false
@@ -356,6 +384,9 @@ class LocalSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Updates colours of elements in layout.
+     */
     fun updateColours() {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 

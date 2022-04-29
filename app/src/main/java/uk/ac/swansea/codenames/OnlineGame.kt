@@ -21,6 +21,9 @@ import org.json.JSONArray
 import org.json.JSONException
 import java.util.*
 
+/**
+ * Games being played online over multiple devices.
+ */
 class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var outline: ConstraintLayout? = null
     private var constraintLayout: ConstraintLayout? = null
@@ -137,6 +140,9 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var winSound: MediaPlayer? = null
     private var lossSound: MediaPlayer? = null
 
+    /**
+     * Sets up the layout and listeners etc.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.online_game)
@@ -250,6 +256,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             squareTwentyTwo, squareTwentyThree, squareTwentyFour, squareTwentyFive
         )
 
+        //Generates random username based on random UUID if somehow no username given.
         val username = if (preferences.getString("username", "").isNullOrEmpty()) {
             UUID.randomUUID().toString().replace("-", "").take(10)
         } else {
@@ -260,6 +267,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             ttsButton?.visibility = View.GONE
         }
 
+        //Creates player object and sets if host.
         player = Player(username)
 
         player?.isHost = intent.getBooleanExtra("isHost", false)
@@ -409,6 +417,8 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }
 
+        //Handles turn action button being clicked.
+        //If guessing make sure enough guesses made, otherwise ensure valid hint.
         turnAction?.setOnClickListener {
             buttonClick?.start()
 
@@ -542,6 +552,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }
 
+        //Set up listeners for all word buttons and only send event to server when in guessing phase and correct team.
         for (wb in wordButtons) {
             wb?.setOnClickListener {
                 buttonClick?.start()
@@ -1008,6 +1019,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             true
         }
 
+        //Failed to start game.
         SocketConnection.socket.on("startFail") { args ->
             runOnUiThread {
                 val reason = args[0] as String
@@ -1026,17 +1038,21 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }
 
+        //When game is valid and has begun
         SocketConnection.socket.on("startSuccess") {
             runOnUiThread {
+                //Hide buttons only used during setup
                 startGame?.visibility = View.GONE
                 changeTeam?.visibility = View.GONE
 
+                //Set the correct starting phase
                 gamePhase = if (startingTeam == "A") {
                     OnlinePhase.TEAM_A_SPY
                 } else {
                     OnlinePhase.TEAM_B_SPY
                 }
 
+                //If player is spymaster, disable their chatting options and set text of the turn action button
                 if (player?.isSpymaster == true) {
                     turnAction?.setText(R.string.give_hint)
                     chatEdit?.visibility = View.GONE
@@ -1045,6 +1061,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     turnAction?.setText(R.string.end_turn)
                 }
 
+                //If player is spymaster and it's their teams turn, show their options
                 if (player?.isSpymaster == true && player?.team == "A" && gamePhase == OnlinePhase.TEAM_A_SPY) {
                     editHint?.visibility = View.VISIBLE
                     hintNumber?.visibility = View.VISIBLE
@@ -1057,11 +1074,13 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     turnAction?.visibility = View.VISIBLE
                 }
 
+                //Update the hint spinner and colours of word buttons
                 updateSpinner()
                 updateWordColours()
             }
         }
 
+        //When the host quits the game or disconnects.
         SocketConnection.socket.on("hostQuit") {
             if (!player!!.isHost) {
                 val i = Intent(this, MainMenu::class.java)
@@ -1071,9 +1090,11 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }
 
+        //When a player quits the game.
         SocketConnection.socket.on("playerQuit") { args ->
             val usernameQuit = args[0] as String
 
+            //Remove them from their team.
             for (p in teamAUsers) {
                 if (p.nickname == usernameQuit) {
                     teamAUsers.remove(p)
@@ -1093,6 +1114,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }
 
+        //When team A's spymaster quits, if in start phase allow requests again or return to main menu if not in win phase.
         SocketConnection.socket.on("spymasterQuitA") {
             if (gamePhase == OnlinePhase.START) {
                 teamASpymaster = null
@@ -1110,6 +1132,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }
 
+        //When team B's spymaster quits, if in start phase allow requests again or return to main menu if not in win phase.
         SocketConnection.socket.on("spymasterQuitB") {
             if (gamePhase == OnlinePhase.START) {
                 teamBSpymaster = null
@@ -1127,7 +1150,9 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }
 
+        //Game details received from server.
         SocketConnection.socket.on("gameDetails") { args ->
+            //Convert details from JSON.
             try {
                 allWords = jsonArrayToStrings(args[0] as JSONArray)
             } catch (e: JSONException) {
@@ -1146,6 +1171,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                 e.printStackTrace()
             }
 
+            //Setup game based on received details.
             teamASpymaster = if (args[3] != null) {
                 Player((args[3] as String))
             } else {
@@ -1230,9 +1256,11 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }
 
+        //Team A's spymaster chosen.
         SocketConnection.socket.on("teamASpymaster") { args ->
             val newUser = args[0] as String
 
+            //Find matching player.
             for (p in teamAUsers) {
                 if (p.nickname == newUser) {
                     p.isSpymaster = true
@@ -1254,9 +1282,11 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }
 
+        //Team B's spymaster chosen.
         SocketConnection.socket.on("teamBSpymaster") { args ->
             val newUser = args[0] as String
 
+            //Find matching player.
             for (p in teamBUsers) {
                 if (p.nickname == newUser) {
                     p.isSpymaster = true
@@ -1278,6 +1308,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }
 
+        //Request for spymaster denied.
         SocketConnection.socket.on("spymasterFail") {
             windowOpen = true
 
@@ -1293,11 +1324,13 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             speakOut(messageText?.text.toString())
         }
 
+        //When someone joins or changes team.
         SocketConnection.socket.on("teamChange") { args ->
             val playerName = args[0] as String
             val team = args[1] as String
             val newPlayer = Player(playerName, team)
 
+            //Find the player
             for (p in teamAUsers) {
                 if (p.nickname == playerName) {
                     teamAUsers.remove(p)
@@ -1312,6 +1345,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                 }
             }
 
+            //Add to their team.
             if (team == "A") {
                 teamAUsers.add(newPlayer)
             } else {
@@ -1333,6 +1367,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             updateTeamsBox()
         }
 
+        //When a word has been pressed by a player.
         SocketConnection.socket.on("wordButton") { args ->
             runOnUiThread {
                 val word = args[0] as String
@@ -1343,6 +1378,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                 wordCounter++
 
+                //Find button clicked.
                 for (i in wordButtons.indices) {
                     if (wordButtons[i]?.text.toString() == word) {
                         index = i
@@ -1352,6 +1388,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                 val buttonClicked = wordButtons[index]
 
+                //Find what type of word was clicked.
                 for (s in teamAWords) {
                     if (s == word) {
                         typeClicked = "A"
@@ -1386,6 +1423,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     }
                 }
 
+                //Handle based on what was clicked.
                 when (typeClicked) {
                     "A" -> {
                         buttonClicked?.setHasBeenClicked(true)
@@ -1588,6 +1626,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }
 
+        //End current teams turn.
         SocketConnection.socket.on("endTurn") {
             gamePhase = if (gamePhase == OnlinePhase.TEAM_A) {
                 OnlinePhase.TEAM_B_SPY
@@ -1639,6 +1678,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }
 
+        //Hint given by spymaster.
         SocketConnection.socket.on("hint") { args ->
             runOnUiThread {
                 val hint = args[0] as String
@@ -1710,6 +1750,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }
 
+        //Chat message received from team A member.
         SocketConnection.socket.on("teamAChat") { args ->
             val usernameChat = args[0] as String
             val message = args[1] as String
@@ -1744,6 +1785,7 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }
 
+        //Chat message received from team B member.
         SocketConnection.socket.on("teamBChat") { args ->
             val usernameChat = args[0] as String
             val message = args[1] as String
@@ -1781,6 +1823,9 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         updateColours()
     }
 
+    /**
+     * When app is resumed after being minimised.
+     */
     override fun onResume() {
         super.onResume()
 
@@ -1791,6 +1836,9 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         startService(intent)
     }
 
+    /**
+     * When app is minimised.
+     */
     override fun onPause() {
         super.onPause()
 
@@ -1801,16 +1849,25 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         startService(intent)
     }
 
+    /**
+     * Sets up Text-to-Speech engine.
+     */
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             textToSpeech!!.language = Locale.UK
         }
     }
 
+    /**
+     * When device's back button is pressed.
+     */
     override fun onBackPressed() {
         exitButton?.performClick()
     }
 
+    /**
+     * When the game is won by a team, display correct message for player.
+     */
     private fun gameWin(winningTeam : String) {
         if (winningTeam == "A") {
             if (player?.team == "A") {
@@ -1853,6 +1910,9 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         updateWordColours()
     }
 
+    /**
+     * Update the teams box for who's on each team.
+     */
     private fun updateTeamsBox() {
         val preferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -1924,6 +1984,9 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Disable all background elements if a window is open.
+     */
     private fun toggleWindow() {
         exitButton?.isEnabled = !windowOpen
         startGame?.isEnabled = !windowOpen
@@ -1945,6 +2008,9 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Converts a JSON array to player objects.
+     */
     @Throws(JSONException::class)
     private fun jsonArrayToPlayers(jsonArray: JSONArray?): ArrayList<Player> {
         val players = ArrayList<Player>()
@@ -1959,6 +2025,9 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         return players
     }
 
+    /**
+     * Converts a JSON array to strings.
+     */
     @Throws(JSONException::class)
     private fun jsonArrayToStrings(jsonArray: JSONArray?): ArrayList<String> {
         val words = ArrayList<String>()
@@ -1973,6 +2042,9 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         return words
     }
 
+    /**
+     * Read aloud given message if enabled.
+     */
     private fun speakOut(message: String) {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -1981,6 +2053,9 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Update spinner for hint numbers available.
+     */
     private fun updateSpinner() {
         val spinnerArray: MutableList<String> = ArrayList()
 
@@ -2003,6 +2078,9 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         hintNumber?.adapter = adapter
     }
 
+    /**
+     * Update colours of elements in the layout besides word buttons.
+     */
     private fun updateColours() {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -2102,6 +2180,9 @@ class OnlineGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         updateWordColours()
     }
 
+    /**
+     * Updates the word buttons based on what role you have.
+     */
     private fun updateWordColours() {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 

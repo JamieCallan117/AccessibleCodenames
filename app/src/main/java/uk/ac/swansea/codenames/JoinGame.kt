@@ -20,6 +20,9 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
 import java.util.*
 
+/**
+ * Scene for joining online games.
+ */
 class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var constraintLayout: ConstraintLayout? = null
     private var messageBox: ConstraintLayout? = null
@@ -45,6 +48,9 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var textToSpeech: TextToSpeech? = null
     private var buttonClick: MediaPlayer? = null
 
+    /**
+     * Sets up layout and listeners etc.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.join_game)
@@ -212,6 +218,7 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     }
                 }
 
+                //Add buttons for every public game found.
                 runOnUiThread {
                     for (name in publicRooms) {
                         val roomLinear = LinearLayout(applicationContext)
@@ -328,6 +335,9 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         updateColours()
     }
 
+    /**
+     * When app is reopened after being minimised.
+     */
     override fun onResume() {
         super.onResume()
 
@@ -338,6 +348,9 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         startService(intent)
     }
 
+    /**
+     * When app is minimised.
+     */
     override fun onPause() {
         super.onPause()
 
@@ -348,16 +361,25 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         startService(intent)
     }
 
+    /**
+     * Sets up Text-to-Speech engine.
+     */
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             textToSpeech!!.language = Locale.UK
         }
     }
 
+    /**
+     * When device's back button pressed.
+     */
     override fun onBackPressed() {
         backButton?.performClick()
     }
 
+    /**
+     * Toggles the message box being opened.
+     */
     private fun toggleMessageBox(message: String) {
         messageBoxOpen = true
 
@@ -374,6 +396,9 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Toggles the nickname box being opened.
+     */
     private fun toggleNicknameBox(message: String) {
         messageBoxOpen = true
 
@@ -390,6 +415,9 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Reads aloud the given text.
+     */
     private fun speakOut(message: String) {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -398,6 +426,9 @@ class JoinGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Updates colours of elements in the layout.
+     */
     private fun updateColours() {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 

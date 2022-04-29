@@ -15,6 +15,9 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
 import java.util.*
 
+/**
+ * Menu for choosing to create or join an online game.
+ */
 class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var constraintLayout: ConstraintLayout? = null
     private var messageBox: ConstraintLayout? = null
@@ -35,6 +38,9 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var messageType = 0
     private var buttonClick: MediaPlayer? = null
 
+    /**
+     * Sets up layout and listeners etc.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.online_setup)
@@ -195,6 +201,9 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         updateColours()
     }
 
+    /**
+     * When app is reopened.
+     */
     override fun onResume() {
         super.onResume()
 
@@ -205,6 +214,9 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         startService(intent)
     }
 
+    /**
+     * When app is minimised.
+     */
     override fun onPause() {
         super.onPause()
 
@@ -215,18 +227,27 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         startService(intent)
     }
 
+    /**
+     * Sets up Text-to-Speech engine.
+     */
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             textToSpeech!!.language = Locale.UK
         }
     }
 
+    /**
+     * When device's back button is pressed.
+     */
     override fun onBackPressed() {
         if (!connectingBoxOpen) {
             backButton?.performClick()
         }
     }
 
+    /**
+     * Opens message box depending on type.
+     */
     private fun toggleMessageBox() {
         if (messageType == 0) {
             if (!SocketConnection.socket.connected()) {
@@ -275,6 +296,9 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Reads aloud given text.
+     */
     private fun speakOut(message : String) {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -283,6 +307,9 @@ class OnlineSetup : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Updates colours of elements in layout.
+     */
     fun updateColours() {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 

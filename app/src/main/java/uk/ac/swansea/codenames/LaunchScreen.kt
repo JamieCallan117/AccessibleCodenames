@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.speech.tts.TextToSpeech
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -16,6 +15,9 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
 import java.util.*
 
+/**
+ * The screen first seen when launching the app for the first time.
+ */
 class LaunchScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var textToSpeech: TextToSpeech? = null
     private var continueButton: MaterialButton? = null
@@ -28,6 +30,9 @@ class LaunchScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var menuTextColour = -1
     private var buttonClick: MediaPlayer? = null
 
+    /**
+     * Sets up layout and listeners.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.launch_screen)
@@ -37,8 +42,6 @@ class LaunchScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
         welcomeText = findViewById(R.id.welcomeText)
         ttsSwitch = findViewById(R.id.ttsSwitch)
         constraintLayout = findViewById(R.id.constraintLayout)
-
-        Log.i("Test", "Launch screen onCreate")
 
         buttonClick = MediaPlayer.create(this, R.raw.buttonclick)
 
@@ -52,6 +55,7 @@ class LaunchScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         val editor = preferences.edit()
 
+        //If first launch remain, otherwise go to the start menu scene.
         if (!preferences.getBoolean("firstLaunch", true)) {
             val musicIntent = Intent(this, BackgroundMusicService::class.java)
 
@@ -89,6 +93,12 @@ class LaunchScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             textToSpeech?.stop()
 
+            val musicIntent = Intent(this, BackgroundMusicService::class.java)
+
+            musicIntent.action = "START_MENU"
+
+            startService(musicIntent)
+
             val intent = Intent(applicationContext, StartScreen::class.java)
             startActivity(intent)
         }
@@ -121,12 +131,18 @@ class LaunchScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
         updateColours()
     }
 
+    /**
+     * Sets up Text-to-Speech engine.
+     */
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             textToSpeech!!.language = Locale.UK
         }
     }
 
+    /**
+     * Reads aloud given message.
+     */
     private fun speakOut(message : String) {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -135,6 +151,9 @@ class LaunchScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Updates colours of layout.
+     */
     private fun updateColours() {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 

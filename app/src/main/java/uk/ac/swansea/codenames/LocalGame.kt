@@ -20,6 +20,9 @@ import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
 
+/**
+ * Games being placed locally on one device.
+ */
 class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var gamePhase: LocalPhase? = null
     private var bombSquaresCount = 1
@@ -120,6 +123,9 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var winSound: MediaPlayer? = null
     private var lossSound: MediaPlayer? = null
 
+    /**
+     * Sets up layout and listeners for the game etc.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.local_game)
@@ -209,6 +215,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             customWords = intent.getStringArrayListExtra("customWords")
         }
 
+        //Sets up team viewer with all members.
         if (intent.getBooleanExtra("hasTeams", false)) {
             val teamASpymaster = MaterialTextView(this)
             val teamBSpymaster = MaterialTextView(this)
@@ -298,6 +305,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             viewTeams?.visibility = View.GONE
         }
 
+        //Sets up game.
         bombWords = ArrayList(bombSquaresCount)
         neutralWords = ArrayList(neutralSquaresCount)
         teamAWords = ArrayList(teamASquaresCount)
@@ -751,12 +759,14 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
             updateColours()
         }
 
+        //Handles when the turn action button clicked for all different phases.
         turnAction?.setOnClickListener {
             buttonClick?.start()
 
             var validHint = true
 
             when (gamePhase) {
+                //Ends team A's turn if they've guessed at least once.
                 LocalPhase.TEAM_A -> {
                     if (wordCounter == 0) {
                         messageText?.text = getString(R.string.minimum_turn)
@@ -779,6 +789,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     }
                 }
 
+                //Ends team B's turn if guessed at least once.
                 LocalPhase.TEAM_B -> {
                     if (wordCounter == 0) {
                         messageText?.text = getString(R.string.minimum_turn)
@@ -801,6 +812,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     }
                 }
 
+                //Gives team A a hint if valid.
                 LocalPhase.TEAM_A_SPY -> {
                     if (editHint?.text.toString() == "") {
                         validHint = false
@@ -853,6 +865,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     }
                 }
 
+                //Gives team B a hint if valid.
                 LocalPhase.TEAM_B_SPY -> {
                     if (editHint?.text.toString() == "") {
                         validHint = false
@@ -904,6 +917,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                         toggleMessageBox(true, 0)
                     }
                 }
+                //If somehow in a different phase, return to main menu as something gone wrong.
                 else -> {
                     val i = Intent(this, MainMenu::class.java)
                     i.putExtra("startMusic", true)
@@ -1341,6 +1355,9 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         updateColours()
     }
 
+    /**
+     * When app is resumed.
+     */
     override fun onResume() {
         super.onResume()
 
@@ -1351,6 +1368,9 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         startService(intent)
     }
 
+    /**
+     * When app is minimised.
+     */
     override fun onPause() {
         super.onPause()
 
@@ -1361,19 +1381,29 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         startService(intent)
     }
 
+    /**
+     * Sets up Text-to-Speech engine.
+     */
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             textToSpeech!!.language = Locale.UK
         }
     }
 
+    /**
+     * When device back button pressed.
+     */
     override fun onBackPressed() {
         if (!messageBoxOpen) {
             exitButton?.performClick()
         }
     }
 
+    /**
+     * When a word button has been pushed.
+     */
     private fun wordButtonPress(buttonPressed: WordButton?) {
+        //Ensure it hasn't been clicked and it's the guessing phase
         if (!buttonPressed?.hasBeenClicked()!! && gamePhase != LocalPhase.TEAM_A_SPY && gamePhase != LocalPhase.TEAM_B_SPY && gamePhase != LocalPhase.TEAM_A_INTERMISSION && gamePhase != LocalPhase.TEAM_B_INTERMISSION && gamePhase != LocalPhase.TEAM_A_WIN && gamePhase != LocalPhase.TEAM_B_WIN) {
             buttonPressed.setHasBeenClicked(true)
 
@@ -1381,6 +1411,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             var buttonType = ""
 
+            //Figure out what type of word was clicked.
             for (s in bombWords!!) {
                 if (buttonPressed.text.toString() == s) {
                     buttonType = "bomb"
@@ -1413,7 +1444,9 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             updateColours()
 
+            //Handle based on what phase it is and what type of word was clicked.
             when (buttonType) {
+                //Bomb ends the game with opposing team victory.
                 "bomb" -> {
                     gamePhase = if (gamePhase == LocalPhase.TEAM_A) {
                         LocalPhase.TEAM_B_WIN
@@ -1431,6 +1464,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     }, 1000)
                 }
 
+                //Neutral ends current turn.
                 "neutral" -> {
                     incorrectGuess?.start()
 
@@ -1464,6 +1498,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     }, 1000)
                 }
 
+                //Ends turn if it's team b, otherwise continue playing unless reached maximum number of guesses.
                 "teamA" -> {
                     if (gamePhase == LocalPhase.TEAM_B) {
                         incorrectGuess?.start()
@@ -1517,6 +1552,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
                     }
                 }
 
+                //Ends turn if it's team a, otherwise continue playing unless reached maximum number of guesses.
                 "teamB" -> {
                     if (gamePhase == LocalPhase.TEAM_A) {
                         incorrectGuess?.start()
@@ -1573,6 +1609,9 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * When the game is won display win message.
+     */
     private fun gameWin() {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -1598,6 +1637,9 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         toggleMessageBox(true, 0)
     }
 
+    /**
+     * Disable other elements whilst message box visible.
+     */
     private fun toggleMessageBox(enabled: Boolean, type: Int) {
         messageBoxOpen = enabled
 
@@ -1633,6 +1675,9 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Disable other elements whilst Text-to-Speech box visible.
+     */
     private fun toggleTtsBox(enabled: Boolean) {
         ttsOpen = enabled
 
@@ -1655,6 +1700,9 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         viewPreviousHints?.isEnabled = !enabled
     }
 
+    /**
+     * Disable other elements whilst teams box visible.
+     */
     private fun toggleTeamsBox() {
         for (wb in wordButtons) {
             wb?.isEnabled = !teamsBoxOpen
@@ -1670,6 +1718,9 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         viewPreviousHints?.isEnabled = !teamsBoxOpen
     }
 
+    /**
+     * Add a hint to the previous hints ScrollView.
+     */
     private fun addHint(hint: String?) {
         val newHint = MaterialTextView(this)
 
@@ -1716,6 +1767,9 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     }
 
+    /**
+     * Update the spinner for how many hints you can give.
+     */
     private fun updateSpinner() {
         val spinnerArray: MutableList<String> = ArrayList()
 
@@ -1738,6 +1792,9 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         hintNumber?.adapter = adapter
     }
 
+    /**
+     * Read aloud given message.
+     */
     private fun speakOut(message: String) {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -1746,6 +1803,9 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Updates colours of elements.
+     */
     fun updateColours() {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -1809,6 +1869,7 @@ class LocalGame : AppCompatActivity(), TextToSpeech.OnInitListener {
         teamAHeader?.setTextColor(teamAColour)
         teamBHeader?.setTextColor(teamBColour)
 
+        //Update colours of word buttons depending on the current phase.
         when (gamePhase) {
             LocalPhase.START, LocalPhase.TEAM_A_INTERMISSION, LocalPhase.TEAM_B_INTERMISSION -> {
                 for (wb in wordButtons) {

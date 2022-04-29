@@ -13,6 +13,9 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
 import java.util.*
 
+/**
+ * Scene for adjusting some settings.
+ */
 class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var constraintLayout: ConstraintLayout? = null
     private var backButton: MaterialButton? = null
@@ -32,6 +35,9 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var textToSpeech: TextToSpeech? = null
     private var buttonClick: MediaPlayer? = null
 
+    /**
+     * Sets up layout and listeners etc.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings)
@@ -166,6 +172,9 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * When app is resumed.
+     */
     override fun onResume() {
         super.onResume()
 
@@ -176,6 +185,9 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
         startService(intent)
     }
 
+    /**
+     * When app is minimised.
+     */
     override fun onPause() {
         super.onPause()
 
@@ -186,16 +198,25 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
         startService(intent)
     }
 
+    /**
+     * Sets up Text-to-Speech engine.
+     */
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             textToSpeech!!.language = Locale.UK
         }
     }
 
+    /**
+     * When back button pressed on device.
+     */
     override fun onBackPressed() {
         backButton?.performClick()
     }
 
+    /**
+     * Read aloud given message if enabled.
+     */
     private fun speakOut(message : String) {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 
@@ -204,6 +225,9 @@ class Settings : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Update colours of elements in layout.
+     */
     fun updateColours() {
         val preferences = this.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 

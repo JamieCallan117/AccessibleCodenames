@@ -14,6 +14,7 @@ import com.google.android.material.textview.MaterialTextView
 import java.util.*
 import kotlin.system.exitProcess
 
+
 /**
  * Starting screen, this is what you will see when you launch the app for the 2nd and onwards time.
  * You can go to the settings or main menu screen.
@@ -157,6 +158,9 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
         updateColours()
     }
 
+    /**
+     * When app is resumed.
+     */
     override fun onResume() {
         super.onResume()
 
@@ -167,6 +171,9 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
         startService(intent)
     }
 
+    /**
+     * When app is minimised.
+     */
     override fun onPause() {
         super.onPause()
 
@@ -178,7 +185,7 @@ class StartScreen : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     /**
-     * Sets up the TextToSpeech engine.
+     * Sets up the Text-to-Speech engine.
      */
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
