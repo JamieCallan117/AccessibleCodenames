@@ -9,6 +9,7 @@ The menus to navigate through the app are fairly basic. There's a main menu, a s
 ## Playing the Game
 
 The app features 2 ways to play. You can play locally which replaces the board game version of the game by passing around the device based on the current turn in-game. The other mode is an online mode where each player plays on their own device. You can either join a public room or create a private room with a password to play with just friends.
+Server repository available here: https://github.com/JamieCallan117/AccessibleCodenamesServer
 
 ## Accessibility
 
